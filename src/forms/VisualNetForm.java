@@ -568,21 +568,20 @@ public class VisualNetForm extends javax.swing.JFrame implements GraphMouseListe
          */
         JMenu menuAlgs = new JMenu("Algs");
         this.menuBar.add(menuAlgs);
+        
         //weighted shortestpath
-        JMenuItem shortestPathWeightedItem = new JMenuItem("Weighted Shortest Path");
+        JMenuItem shortestPathWeightedItem = new JMenuItem("Shortest Path With Weights");
         menuAlgs.add(shortestPathWeightedItem);
         shortestPathWeightedItem.addActionListener(new ActionListener()
         {
             @Override
             public void actionPerformed(ActionEvent e)
             {
-            	// create src & destination node selector
-            	if(CommonData.sourceNode != null && CommonData.destinationNode != null)
-            		generateShortestPathWithWeight();
-            	else
-            		System.out.println("shortest path no source or dest node");
-                //System.out.println("shortest path clicked");
-                    
+            	// check if graph has errors
+				if (isGraphCreated() && isSourceDestSelected()) {
+					// run algorithm
+					generateShortestPathWithWeight();
+				}
             }
         });
         // unweighted shortestPath selector
@@ -590,17 +589,13 @@ public class VisualNetForm extends javax.swing.JFrame implements GraphMouseListe
         menuAlgs.add(shortestPathItem);
         shortestPathItem.addActionListener(new ActionListener()
         {
-            @Override
-            public void actionPerformed(ActionEvent e)
-            {
-            	// create src & destination node selector
-            	if(CommonData.sourceNode != null && CommonData.destinationNode != null)
-            		generateShortestPathWithoutWeight();
-            	else
-            		System.out.println("shortest path no source or dest node");
-                //System.out.println("shortest path clicked");
-                    
-            }
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				// check if graph has errors
+				if (isGraphCreated() && isSourceDestSelected()) {
+					generateShortestPathWithoutWeight();
+				}
+			}
         });
        // randomWalk selector
         JMenuItem randomWalkItem = new JMenuItem("Random Walk");
@@ -610,13 +605,10 @@ public class VisualNetForm extends javax.swing.JFrame implements GraphMouseListe
             @Override
             public void actionPerformed(ActionEvent e)
             {
-            	// create src & destination node selector
-            	if(CommonData.sourceNode != null && CommonData.destinationNode != null)
-            		generateRandomWalk();
-            	else
-            		System.out.println("RandomWalk no source or dest node");
-                //System.out.println("shortest path clicked");
-                    
+				// check if graph has errors
+				if (isGraphCreated() && isSourceDestSelected()) {
+	            	generateRandomWalk();
+				} 
             }
         });
         // spanning tree selector
@@ -627,13 +619,10 @@ public class VisualNetForm extends javax.swing.JFrame implements GraphMouseListe
             @Override
             public void actionPerformed(ActionEvent e)
             {
-            	// create src & destination node selector ///// change ////
-            	//if(CommonData.sourceNode != null && CommonData.destinationNode != null)
+				// check if graph has nodes and edges
+				if (isGraphCreated()) {
             		createSpanningTree();
-            	//else
-            		//System.out.println("RandomWalk no source or dest node");
-                //System.out.println("shortest path clicked");
-                    
+				}
             }
         });
         
@@ -645,21 +634,12 @@ public class VisualNetForm extends javax.swing.JFrame implements GraphMouseListe
             @Override
             public void actionPerformed(ActionEvent e)
             {
-            	createRandomSpanningTree();
+            	if (isGraphCreated()) {
+            		createRandomSpanningTree();
+            	}
             }
         });
         
-        // Weighted Betweenness centrality
-//        JMenuItem betweennessCentralityWeightedItem = new JMenuItem("Betweenness Centrality weighted");
-//        menuAlgs.add(betweennessCentralityWeightedItem);
-//        betweennessCentralityWeightedItem.addActionListener(new ActionListener()
-//        {
-//            @Override
-//            public void actionPerformed(ActionEvent e)
-//            {
-//            	getbetweennessCentrality(true);
-//            }
-//        });
         // Betweenness centrality
         JMenuItem betweennessCentralityItem = new JMenuItem("Betweenness Centrality");
         menuAlgs.add(betweennessCentralityItem);
@@ -668,7 +648,9 @@ public class VisualNetForm extends javax.swing.JFrame implements GraphMouseListe
             @Override
             public void actionPerformed(ActionEvent e)
             {
-            	getbetweennessCentrality();
+            	if (isGraphCreated()) {
+            		getbetweennessCentrality();
+            	}
             }
         });
         // closeness centrality
@@ -679,7 +661,9 @@ public class VisualNetForm extends javax.swing.JFrame implements GraphMouseListe
             @Override
             public void actionPerformed(ActionEvent e)
             {
-            	getclosenessCentrality();
+            	if (isGraphCreated()) {
+            		getclosenessCentrality();
+            	}
             }
         });
         // Random Walks closeness centrality
@@ -690,7 +674,9 @@ public class VisualNetForm extends javax.swing.JFrame implements GraphMouseListe
             @Override
             public void actionPerformed(ActionEvent e)
             {
-            	getRWclosenessCentrality();
+            	if (isGraphCreated()) {
+            		getRWclosenessCentrality();
+            	}
             }
         });
         // EigenvectorCentrality centrality with weights
@@ -701,7 +687,9 @@ public class VisualNetForm extends javax.swing.JFrame implements GraphMouseListe
             @Override
             public void actionPerformed(ActionEvent e)
             {
-            	geteigenvectorCentrality(true);
+            	if (isGraphCreated()) {
+            		geteigenvectorCentrality(true);
+            	}
             }
         });
         // EigenvectorCentrality centrality without weights
@@ -712,7 +700,9 @@ public class VisualNetForm extends javax.swing.JFrame implements GraphMouseListe
             @Override
             public void actionPerformed(ActionEvent e)
             {
-            	geteigenvectorCentrality(false);
+            	if (isGraphCreated()) {
+            		geteigenvectorCentrality(false);
+            	}
             }
         });
         
@@ -843,21 +833,18 @@ public class VisualNetForm extends javax.swing.JFrame implements GraphMouseListe
         generateHosts();
         this.viewer.setGraphLayout(new ISOMLayout<Node, Link>(this.graph));
     }
+    
     // TODO ShortestPathWithoutWeights
     private void generateShortestPathWithoutWeight(){
-    	List<Node> shortestPath;
-    	CommonData.selectedVertex = null;
-    	graphMouse.setMode(ModalGraphMouse.Mode.PICKING);
-    	shortestPath = ShortestPath.withoutWeights(this.graph, CommonData.sourceNode, CommonData.destinationNode);
-    	System.out.println("Unweighted shortestPath");
-    	for(Node x : shortestPath){
-//    				if(x instanceof Switch)
-//    					System.out.println(((Switch) x).getToolTip());
-//    				if(x instanceof Controller)
-//    					System.out.println(((Switch) x).getToolTip());
-    		System.out.println(x.getToolTip());
-    	}
-    	System.out.println();
+	    	List<Node> shortestPath;
+	    	CommonData.selectedVertex = null;
+	    	graphMouse.setMode(ModalGraphMouse.Mode.PICKING);
+	    	shortestPath = ShortestPath.withoutWeights(this.graph, CommonData.sourceNode, CommonData.destinationNode);
+	    	System.out.println("Unweighted shortestPath");
+	    	for(Node x : shortestPath){
+	    		System.out.println(x.getToolTip());
+	    	}
+	    	System.out.println();
     }
  // TODO ShortestPathWithtWeights
     private void generateShortestPathWithWeight(){
@@ -1016,8 +1003,28 @@ public class VisualNetForm extends javax.swing.JFrame implements GraphMouseListe
     }
 	
 	
-	
-	
+	/** TODO
+	 * Methods to check errors and popup msgs
+	 */
+	private boolean isGraphCreated(){
+		if(this.graph.getEdgeCount() > 0 && this.graph.getVertexCount() > 0){
+			return true;
+		} else {
+			JOptionPane.showMessageDialog(null, "The graph has no edges or nodes, please create a graph.",
+					"Graph error", JOptionPane.ERROR_MESSAGE);
+			return false;
+		}
+	}
+	private boolean isSourceDestSelected(){
+		if(CommonData.sourceNode != null && CommonData.destinationNode != null){
+			return true;
+		} else {
+			JOptionPane.showMessageDialog(null, "Please select source and destination nodes.\nRight click a node to select it as source or destination.",
+					"No nodes selected", JOptionPane.ERROR_MESSAGE);
+			return false;
+		}
+	}
+    
 	@SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">                          
     private void initComponents()
