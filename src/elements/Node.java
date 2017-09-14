@@ -14,6 +14,7 @@ public abstract class Node {
 	// TODO
 	private String type = "Node";
 	private Map<Node,NIC> Connections = new HashMap<Node, NIC>();
+	private String routeType = "";
 	
 	
     public Node()
@@ -76,7 +77,6 @@ public abstract class Node {
     {
         return sid;
     }
-
     /**
      * @param sid the sid to set
      */
@@ -84,4 +84,22 @@ public abstract class Node {
     {
         this.sid = sid;
     }
+    /**
+     * method sets route type
+     * @param x
+     * set routeType
+     */
+    public void setRouteType(String x)
+    {
+        this.routeType = x;
+    }
+    /**
+     * method returns routeType
+     * @return routeType
+     */
+    public String getRouteType()
+    {
+        return routeType;
+    }
+    
 }

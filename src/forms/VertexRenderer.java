@@ -38,7 +38,14 @@ public class VertexRenderer implements Renderer.Vertex<Node, Link>
         if( v instanceof Host )
         {
             shape = new Rectangle((int)center.getX()-10, (int)center.getY()-10, 20, 20);
-            color = new Color(127, 127, 0);            
+            
+            if(((Host) v).getRouteType().equals("")){
+            	color = new Color(127, 127, 0); 
+            } else if(((Host) v).getRouteType().equals("SP")){
+            	color = new Color(Color.RED.getRGB()); 
+            }
+            
+            //color = new Color(127, 127, 0);            
         }
         else if( v instanceof Switch )
         {
@@ -58,16 +65,34 @@ public class VertexRenderer implements Renderer.Vertex<Node, Link>
             {
                 color = new Color(Color.BLACK.getRGB());
             }*/
-            color = ((Switch)v).getColor();
+            
+            if(((Switch)v).getRouteType().equals("")){
+            	color = ((Switch)v).getColor();
+            } else if(((Switch)v).getRouteType().equals("SP")){
+            	color = new Color(Color.RED.getRGB()); 
+            }
+            
+            //color = ((Switch)v).getColor();
         }
         else if( v instanceof Controller )
         {
             shape = new Ellipse2D.Double(center.getX()-10, center.getY()-10, 20, 20);
-            color = new Color(0, 127, 127);            
+            
+            
+            if(((Controller)v).getRouteType().equals("")){
+            	color = new Color(0, 127, 127);
+            } else if(((Controller)v).getRouteType().equals("SP")){
+            	color = new Color(Color.RED.getRGB()); 
+            }
+            
+            
+            //color = new Color(0, 127, 127);
+            //color = ((Controller)v).getColor();
         }
         
         graphicsContext.setPaint(color);
         graphicsContext.fill(shape);
+        //graphicsContext.setClip(shape);
     }
 
 }

@@ -27,6 +27,7 @@ public class Switch extends Node
     private final int id;
     private String sid;
     private String type = "Switch";
+    private String routeType = "";
     
     public Switch()
     {
@@ -112,4 +113,22 @@ public class Switch extends Node
 		// TODO Auto-generated method stub
 		return this.type;
 	}
+    /**
+     * method sets route type
+     * @param x
+     * set routeType
+     */
+    public void setRouteType(String x)
+    {
+        this.routeType = x;
+    }
+    /**
+     * method returns routeType
+     * @return routeType
+     */
+    public String getRouteType()
+    {
+        return routeType;
+    }
+	
 }

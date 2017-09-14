@@ -763,7 +763,8 @@ public class VisualNetForm extends javax.swing.JFrame implements GraphMouseListe
             @Override
             public void actionPerformed(ActionEvent e)
             {
-                viewer.setGraphLayout(new StaticLayout<>(graph));
+            	if(isGraphCreated())
+            		viewer.setGraphLayout(new StaticLayout<>(graph));
             }
         });
         
@@ -773,7 +774,8 @@ public class VisualNetForm extends javax.swing.JFrame implements GraphMouseListe
             @Override
             public void actionPerformed(ActionEvent e)
             {
-                viewer.setGraphLayout(new ISOMLayout<>(graph));
+            	if(isGraphCreated())
+                	viewer.setGraphLayout(new ISOMLayout<>(graph));
             }
         });
 
@@ -783,7 +785,8 @@ public class VisualNetForm extends javax.swing.JFrame implements GraphMouseListe
             @Override
             public void actionPerformed(ActionEvent e)
             {
-                viewer.setGraphLayout(new SpringLayout<>(graph));
+            	if(isGraphCreated())
+            		viewer.setGraphLayout(new SpringLayout<>(graph));
             }
         });
         
@@ -793,7 +796,8 @@ public class VisualNetForm extends javax.swing.JFrame implements GraphMouseListe
             @Override
             public void actionPerformed(ActionEvent e)
             {
-                viewer.setGraphLayout(new CircleLayout<>(graph));
+            	if(isGraphCreated())
+            		viewer.setGraphLayout(new CircleLayout<>(graph));
             }
         });
         
@@ -836,6 +840,13 @@ public class VisualNetForm extends javax.swing.JFrame implements GraphMouseListe
     
     // TODO ShortestPathWithoutWeights
     private void generateShortestPathWithoutWeight(){
+    	
+//    	Transformer<Node,Paint> vertexPaint = new Transformer<Node,Paint>() {
+//   		 public Paint transform(Node i) {
+//   		 return Color.GREEN;
+//   		 }
+//   		 }; 
+    	
 	    	List<Node> shortestPath;
 	    	CommonData.selectedVertex = null;
 	    	graphMouse.setMode(ModalGraphMouse.Mode.PICKING);
@@ -843,8 +854,19 @@ public class VisualNetForm extends javax.swing.JFrame implements GraphMouseListe
 	    	System.out.println("Unweighted shortestPath");
 	    	for(Node x : shortestPath){
 	    		System.out.println(x.getToolTip());
+//	    		this.viewer.getRenderContext().setVertexFillPaintTransformer(vertexPaint);
+//	    		this.viewer.repaint();
+	    		x.setRouteType("SP");
+	    		// TODO add refresh func to get all routes to ""
 	    	}
+	    	this.viewer.repaint();
 	    	System.out.println();
+	    	
+	    	
+	    	
+	    	
+	    	
+	    	
     }
  // TODO ShortestPathWithtWeights
     private void generateShortestPathWithWeight(){
@@ -1011,7 +1033,7 @@ public class VisualNetForm extends javax.swing.JFrame implements GraphMouseListe
 			return true;
 		} else {
 			JOptionPane.showMessageDialog(null, "The graph has no edges or nodes, please create a graph.",
-					"Graph error", JOptionPane.ERROR_MESSAGE);
+					"No Graph", JOptionPane.ERROR_MESSAGE);
 			return false;
 		}
 	}

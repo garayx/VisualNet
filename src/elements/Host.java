@@ -9,6 +9,7 @@ public class Host extends Node
     private final int id;
     private String hid;
     private String type = "Host";
+    private String routeType = "";
     
     public Host()
     {
@@ -59,4 +60,21 @@ public class Host extends Node
 		// TODO Auto-generated method stub
 		return this.type;
 	}
+    /**
+     * method sets route type
+     * @param x
+     * set routeType
+     */
+    public void setRouteType(String x)
+    {
+        this.routeType = x;
+    }
+    /**
+     * method returns routeType
+     * @return routeType
+     */
+    public String getRouteType()
+    {
+        return routeType;
+    }
 }

@@ -8,6 +8,7 @@ public class Controller extends Node
     private final int id;
     private String cid;
     private String type = "Controller";
+    private String routeType = "";
     
     public Controller()
     {
@@ -42,4 +43,21 @@ public class Controller extends Node
 		// TODO Auto-generated method stub
 		return this.type;
 	}
+    /**
+     * method sets route type
+     * @param x
+     * set routeType
+     */
+    public void setRouteType(String x)
+    {
+        this.routeType = x;
+    }
+    /**
+     * method returns routeType
+     * @return routeType
+     */
+    public String getRouteType()
+    {
+        return routeType;
+    }
 }
