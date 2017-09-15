@@ -19,6 +19,7 @@ public class CommonData {
 	public static Node nodeRight;
     public static HashMap<String, Integer> idList;
 	
+    public static int switchCount = 0;
 	
     public static ArrayList<String> macAddresses;
     public static ArrayList<String> ipAddresses;

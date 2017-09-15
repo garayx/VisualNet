@@ -1,12 +1,15 @@
 package elements;
 
+import java.awt.Color;
+
 public class Link {
 	private Node nodeLeft;
 	private Node nodeRight;
 	private int portLeft;
 	private int portRight;
 	private int capacity=1 + (int)(Math.random() * 10);
-	
+	private String routeType = "";
+	public static Color Color;
 	
 	public void setNode_left(Node x){
 		this.nodeLeft = x;
@@ -35,5 +38,25 @@ public class Link {
 	public String toString(){
 		
 		return "("+nodeLeft.getSid()+", " + nodeRight.getSid()+")";
+	}
+	
+    public void setRouteType(String x)
+    {
+        this.routeType = x;
+    }
+    /**
+     * method returns routeType
+     * @return routeType
+     */
+    public String getRouteType()
+    {
+        return routeType;
+    }
+	public void setColor(Color x){
+		this.Color = x;
+	}
+
+	public Color getColor(){
+		return this.Color;
 	}
 }

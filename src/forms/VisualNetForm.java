@@ -1,14 +1,8 @@
 package forms;
 
-
-
-// TODO
 import algorithms.*;
 //import com.fasterxml.jackson.databind.ObjectMapper;
 import common.CommonData;
-//import common.Parser;
-import common.Utils;
-import edu.uci.ics.jung.algorithms.generators.random.KleinbergSmallWorldGenerator;
 import elements.Controller;
 import elements.Host;
 import elements.Node;
@@ -16,49 +10,31 @@ import elements.Switch;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
 import java.util.ArrayList;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
-import javax.swing.JPopupMenu;
-import javax.swing.SwingUtilities;
-
 import org.apache.commons.collections15.Factory;
 import edu.uci.ics.jung.algorithms.layout.AbstractLayout;
 import edu.uci.ics.jung.algorithms.layout.CircleLayout;
-import edu.uci.ics.jung.algorithms.layout.FRLayout;
 import edu.uci.ics.jung.algorithms.layout.ISOMLayout;
-import edu.uci.ics.jung.algorithms.layout.KKLayout;
-import edu.uci.ics.jung.algorithms.layout.Layout;
 import edu.uci.ics.jung.algorithms.layout.SpringLayout;
 import edu.uci.ics.jung.algorithms.layout.StaticLayout;
-import edu.uci.ics.jung.algorithms.layout.TreeLayout;
-import edu.uci.ics.jung.algorithms.shortestpath.DijkstraShortestPath;
-import edu.uci.ics.jung.graph.Forest;
 import edu.uci.ics.jung.graph.Graph;
 import edu.uci.ics.jung.graph.SparseGraph;
-import edu.uci.ics.jung.graph.SparseMultigraph;
-import edu.uci.ics.jung.graph.event.GraphEvent.Edge;
-import edu.uci.ics.jung.visualization.DefaultVisualizationModel;
 import edu.uci.ics.jung.visualization.GraphZoomScrollPane;
-import edu.uci.ics.jung.visualization.VisualizationModel;
 import edu.uci.ics.jung.visualization.VisualizationViewer;
-import edu.uci.ics.jung.visualization.annotations.AnnotationControls;
-import edu.uci.ics.jung.visualization.control.CrossoverScalingControl;
+import edu.uci.ics.jung.visualization.control.DefaultModalGraphMouse;
 import edu.uci.ics.jung.visualization.control.EditingModalGraphMouse;
 import edu.uci.ics.jung.visualization.control.GraphMouseListener;
 import edu.uci.ics.jung.visualization.control.ModalGraphMouse;
-import edu.uci.ics.jung.visualization.control.ScalingControl;
 import edu.uci.ics.jung.visualization.decorators.ToStringLabeller;
 //import elements.IpMacEntry;
 import elements.Link;
-import elements.NIC;
 //import elements.Route;
 //import elements.RoutePair;
 //import elements.RoutingEntry;
 import java.awt.BasicStroke;
 import java.awt.Color;
-import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Paint;
@@ -67,29 +43,15 @@ import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.awt.event.MouseMotionListener;
 import java.awt.geom.Point2D;
-import java.io.File;
-import java.io.IOException;
-import java.util.Collections;
-import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Queue;
-import java.util.Random;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import java.util.stream.Collectors;
-import javax.swing.AbstractAction;
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
 import javax.swing.ButtonGroup;
-import javax.swing.DefaultCellEditor;
 import javax.swing.JButton;
 import javax.swing.JColorChooser;
-import javax.swing.JComboBox;
-import javax.swing.JComponent;
-import javax.swing.JFileChooser;
-import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
@@ -97,13 +59,14 @@ import javax.swing.JRadioButtonMenuItem;
 import javax.swing.JScrollPane;
 import javax.swing.JSpinner;
 import javax.swing.JTextArea;
-import javax.swing.JToolBar;
 import javax.swing.SpinnerNumberModel;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import org.apache.commons.collections15.Transformer;
-import org.apache.commons.collections15.functors.MapTransformer;
-import org.apache.commons.collections15.map.LazyMap;
+import javax.swing.GroupLayout.Alignment;
+import javax.swing.GroupLayout;
+import javax.swing.LayoutStyle.ComponentPlacement;
+import javax.swing.SwingConstants;
 //import org.freehep.util.export.ExportDialog;
 
 
@@ -131,15 +94,29 @@ public class VisualNetForm extends javax.swing.JFrame implements GraphMouseListe
         
         this.graph = new SparseGraph<>();
         this.layout = new StaticLayout<>(this.graph, this.pnlMain.getSize());
-        //this.layout = new ISOMLayout<>(this.graph, this.pnlMain.getSize());
+        
+        //this.initToplbl("");
         this.initGraph();
-                
     }
 	
-	
+	private void initToplbl(String lbltext){
+		//System.out.println("kek");
+		pnlTop.removeAll();
+        JLabel lblTop = new JLabel(lbltext);
+        lblTop.setHorizontalAlignment(SwingConstants.CENTER);
+        lblTop.setIcon(null);
+        pnlTop.add(lblTop);
+        
+        
+        
+        pnlTop.updateUI();
+        //pnlTop.ref
+	}
 	
     private void initGraph()
     {
+    	
+    	
         Transformer<Link, Stroke> strokeTransformer = new Transformer<Link, Stroke>()
         {
             @Override
@@ -160,20 +137,7 @@ public class VisualNetForm extends javax.swing.JFrame implements GraphMouseListe
 
         };
 
-        Transformer<Link, Paint> paintTransformer = new Transformer<Link, Paint>()
-        {
-            @Override
-            public Paint transform(Link l)
-            {
-                if (l.getNode_left() instanceof Controller || l.getNode_right() instanceof Controller)
-                {
-                    return Color.GRAY;
-                } else
-                {
-                    return Color.BLACK;
-                }
-            }
-        };
+
 
         this.viewer = new VisualizationViewer<>(layout);
         Dimension pnlSize = this.pnlMain.getBounds().getSize();
@@ -199,30 +163,46 @@ public class VisualNetForm extends javax.swing.JFrame implements GraphMouseListe
         		LazyMap.<Number,String>decorate(new HashMap<Number,String>(), new ToStringLabeller<Number>())));        */
         //this.viewer.getRenderContext().setEdgeLabelTransformer(new ToStringLabeller<>());
         this.viewer.getRenderer().setVertexRenderer(new VertexRenderer());
-
+        //this.viewer.getRenderer().setEdgeRenderer(new EdgeRenderer());
         this.viewer.setVertexToolTipTransformer(this.viewer.getRenderContext().getVertexLabelTransformer());
 
         this.viewer.getRenderContext().setEdgeStrokeTransformer(strokeTransformer);
-        this.viewer.getRenderContext().setEdgeDrawPaintTransformer(paintTransformer);
-
+        //this.viewer.getRenderContext().setEdgeDrawPaintTransformer(paintTransformer);
+        edgePaintTransformer("normal");
         /**
          * *
          */
-        final GraphZoomScrollPane panel = new GraphZoomScrollPane(this.viewer);
-        panel.setName("GraphPanel");
+
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        final GraphZoomScrollPane gPanel = new GraphZoomScrollPane(this.viewer);
+        gPanel.setName("GraphPanel");
         //panel.setSize(size);
-        panel.setPreferredSize(size);
+        gPanel.setPreferredSize(size);
         //panel.setSize(this.viewer.getSize());
-        this.pnlMain.add(panel);
+        this.pnlMain.add(gPanel);
 
         Factory<Node> vertexFactory = new VertexFactory();
         Factory<Link> edgeFactory = new EdgeFactory();
 
-        this.graphMouse = new EditingModalGraphMouse(this.viewer.getRenderContext(), vertexFactory, edgeFactory);
+        this.graphMouse = new EditingModalGraphMouse<Node,Link>(this.viewer.getRenderContext(), vertexFactory, edgeFactory);
 
         graphMouse.remove(graphMouse.getPopupEditingPlugin());
 
-        PopupMousePlugin mousePlugin = new PopupMousePlugin();
+        PopupMousePlugin<Node,Link> mousePlugin = new PopupMousePlugin<Node,Link>();
         graphMouse.add(mousePlugin);
 
         this.viewer.setGraphMouse(graphMouse);
@@ -235,6 +215,7 @@ public class VisualNetForm extends javax.swing.JFrame implements GraphMouseListe
             public void mouseDragged(MouseEvent e)
             {
                 Node n = this.isMouseInNode(e);
+                //System.out.println("mouseDragged in GraphPanel");
                 this.printProperties(n);
 
             }
@@ -246,6 +227,7 @@ public class VisualNetForm extends javax.swing.JFrame implements GraphMouseListe
 
                 this.printProperties(n);
                 this.printEdgeProperties(l);
+                //System.out.println("mouseMoved in GraphPanel");
             }
 
             private Node isMouseInNode(MouseEvent e)
@@ -253,7 +235,7 @@ public class VisualNetForm extends javax.swing.JFrame implements GraphMouseListe
                 Point2D p = e.getPoint();
                 VisualizationViewer ve = (VisualizationViewer) e.getSource();
                 final Node n = (Node) ve.getPickSupport().getVertex(ve.getGraphLayout(), p.getX(), p.getY());
-
+                //System.out.println("isMouseInNode in GraphPanel");
                 return n;
             }
 
@@ -263,10 +245,11 @@ public class VisualNetForm extends javax.swing.JFrame implements GraphMouseListe
                 VisualizationViewer ve = (VisualizationViewer) e.getSource();
 
                 final Link l = (Link) ve.getPickSupport().getEdge(ve.getGraphLayout(), p.getX(), p.getY());
-
+               // System.out.println("isMouseInEdge in GraphPanel");
                 return l;
             }
             // node props print
+            // TODO MAKE STATIC FUNC ACCESSABLE FROM ALL CLASSES
             private void printProperties(Node n)
             {
                 if (n != null)
@@ -490,11 +473,10 @@ public class VisualNetForm extends javax.swing.JFrame implements GraphMouseListe
                 graphMouse.setMode(ModalGraphMouse.Mode.TRANSFORMING);
             }
         });
-
+        
         mouseMode.add(editModeItem);
         mouseMode.add(pickModeItem);
         mouseMode.add(transModeItem);
-
         //menuFile.add(exportItem);
         menuFile.add(closeItem);
 
@@ -801,6 +783,22 @@ public class VisualNetForm extends javax.swing.JFrame implements GraphMouseListe
             }
         });
         
+        JMenuItem refreshGraphItem = new JMenuItem("Refresh Graph");
+        //menuAlgs.add(refreshGraphItem);
+        refreshGraphItem.addActionListener(new ActionListener()
+        {
+            @Override
+            public void actionPerformed(ActionEvent e)
+            {
+            	if (isGraphCreated()) {
+            		refreshGraph();
+            	}
+            }
+        });
+        
+        
+        
+        
         layoutMenu.add(staticLayout);
         layoutMenu.add(isomLayout);
         layoutMenu.add(springLayout);
@@ -822,6 +820,7 @@ public class VisualNetForm extends javax.swing.JFrame implements GraphMouseListe
         toolsMenu.add(graphMenu);        
         toolsMenu.add(networkMenu);
         toolsMenu.add(layoutMenu);
+        toolsMenu.add(refreshGraphItem);
         
         this.menuBar.add(nodeMenu);
         this.menuBar.add(toolsMenu);
@@ -829,9 +828,29 @@ public class VisualNetForm extends javax.swing.JFrame implements GraphMouseListe
         this.nodes = new ArrayList<>();
 
     }
+    private void refreshGraph(){
+//    	common.CommonData.destinationNode = null;
+//    	common.CommonData.sourceNode = null;
+        this.graph.getVertices().stream().forEach(
+                (Node n) ->
+                {
+                	n.setRouteType("");
+                }
+        );
+        this.graph.getEdges().stream().forEach(
+        		(Link l) -> {
+        			l.setRouteType("");
+        		}
+        		);
+        edgePaintTransformer("normal");
+        this.viewer.repaint();
+        this.initToplbl("");
+    }
     
     private void generateRandomGraph()
     {
+    	common.CommonData.destinationNode = null;
+    	common.CommonData.sourceNode = null;
         this.graph = new RandomGraphGenerator(new EdgeFactory(), new VertexFactory(), 6, 8, 0.5f).create();
         addController();
         generateHosts();
@@ -840,58 +859,81 @@ public class VisualNetForm extends javax.swing.JFrame implements GraphMouseListe
     
     // TODO ShortestPathWithoutWeights
     private void generateShortestPathWithoutWeight(){
-    	
-//    	Transformer<Node,Paint> vertexPaint = new Transformer<Node,Paint>() {
-//   		 public Paint transform(Node i) {
-//   		 return Color.GREEN;
-//   		 }
-//   		 }; 
-    	
+    		refreshGraph();
 	    	List<Node> shortestPath;
 	    	CommonData.selectedVertex = null;
 	    	graphMouse.setMode(ModalGraphMouse.Mode.PICKING);
 	    	shortestPath = ShortestPath.withoutWeights(this.graph, CommonData.sourceNode, CommonData.destinationNode);
-	    	System.out.println("Unweighted shortestPath");
-	    	for(Node x : shortestPath){
-	    		System.out.println(x.getToolTip());
-//	    		this.viewer.getRenderContext().setVertexFillPaintTransformer(vertexPaint);
-//	    		this.viewer.repaint();
-	    		x.setRouteType("SP");
-	    		// TODO add refresh func to get all routes to ""
+	    	StringBuilder tmp = new StringBuilder();
+	    	tmp.append("Unweighted shortest path is: ");
+	    	for(int i=0; i< shortestPath.size(); i++){
+	    		if(i == shortestPath.size()-1){
+	    			tmp.append(shortestPath.get(i).getSid());
+	    		}
+	    		else{
+	    			tmp.append(shortestPath.get(i).getSid() + ", ");
+	    			Link currentEdge = this.graph.findEdge(shortestPath.get(i), shortestPath.get(i+1));
+	    			currentEdge.setRouteType("SP");
+	    		}
+	    		shortestPath.get(i).setRouteType("SP");
 	    	}
+	    	edgePaintTransformer("SP");
 	    	this.viewer.repaint();
-	    	System.out.println();
-	    	
-	    	
-	    	
-	    	
-	    	
-	    	
+	    	this.initToplbl(tmp.toString());
     }
+    
  // TODO ShortestPathWithtWeights
     private void generateShortestPathWithWeight(){
+    	refreshGraph();
     	List<Node> shortestPath;
     	CommonData.selectedVertex = null;
     	graphMouse.setMode(ModalGraphMouse.Mode.PICKING);
     	shortestPath = ShortestPath.withWeights(this.graph, CommonData.sourceNode, CommonData.destinationNode);
-    	System.out.println("Weighted shortestPath");
-    	for(Node x : shortestPath){
-    		System.out.println(x.getToolTip());;
+    	StringBuilder tmp = new StringBuilder();
+    	tmp.append("Weighted shortest path is: ");
+    	for(int i=0; i< shortestPath.size(); i++){
+    		if(i == shortestPath.size()-1){
+    			tmp.append(shortestPath.get(i).getSid());
+    		}
+    		else{
+    			tmp.append(shortestPath.get(i).getSid() + ", ");
+    			Link currentEdge = this.graph.findEdge(shortestPath.get(i), shortestPath.get(i+1));
+    			currentEdge.setRouteType("SP");
+    		}
+    		shortestPath.get(i).setRouteType("SP");
     	}
-    	System.out.println();
+    	edgePaintTransformer("SP");
+    	this.viewer.repaint();
+    	this.initToplbl(tmp.toString());
     }
     // TODO generateRandomWalk
     private void generateRandomWalk(){
-    	boolean success = false;
+    	refreshGraph();
+    	//boolean success = false;
     	CommonData.selectedVertex = null;
     	List<Node> randomwalkresult;
     	graphMouse.setMode(ModalGraphMouse.Mode.PICKING);
     	randomwalkresult = new RandomWalk(this.graph).searchNetwork(CommonData.sourceNode, CommonData.destinationNode, 5);
-    	System.out.println();System.out.println(success);
-    	System.out.println();
+    	StringBuilder tmp = new StringBuilder();
+    	tmp.append("Random walk path is: ");
+    	for(int i=0; i< randomwalkresult.size(); i++){
+    		if(i == randomwalkresult.size()-1){
+    			tmp.append(randomwalkresult.get(i).getSid());
+    		}
+    		else{
+    			tmp.append(randomwalkresult.get(i).getSid() + ", ");
+    			Link currentEdge = this.graph.findEdge(randomwalkresult.get(i), randomwalkresult.get(i+1));
+    			currentEdge.setRouteType("SP");
+    		}
+    		randomwalkresult.get(i).setRouteType("SP");
+    	}
+    	edgePaintTransformer("SP");
+    	this.viewer.repaint();
+    	this.initToplbl(tmp.toString());
     }
     // TODO createSpanningTree
     private void createSpanningTree(){
+    	refreshGraph();
     	//Forest<Node, Link> tree;
     	///////////////// delete ////////////
     	CommonData.selectedVertex = null;
@@ -914,6 +956,7 @@ public class VisualNetForm extends javax.swing.JFrame implements GraphMouseListe
     }
     // TODO Random createSpanningTree (without weights)
     private void createRandomSpanningTree(){
+    	refreshGraph();
     	CommonData.selectedVertex = null;
     	graphMouse.setMode(ModalGraphMouse.Mode.PICKING);
     	
@@ -923,6 +966,7 @@ public class VisualNetForm extends javax.swing.JFrame implements GraphMouseListe
     }
  // TODO getbetweennessCentrality
     private void getbetweennessCentrality(){
+    	refreshGraph();
     	//CommonData.selectedVertex = null;
     	//graphMouse.setMode(ModalGraphMouse.Mode.PICKING);
     	
@@ -933,6 +977,7 @@ public class VisualNetForm extends javax.swing.JFrame implements GraphMouseListe
     
     // TODO getclosenessCentrality
     private void getclosenessCentrality(){
+    	refreshGraph();
     	//CommonData.selectedVertex = null;
     	//graphMouse.setMode(ModalGraphMouse.Mode.PICKING);
     	
@@ -943,6 +988,7 @@ public class VisualNetForm extends javax.swing.JFrame implements GraphMouseListe
 
     // TODO getRWclosenessCentrality
     private void  getRWclosenessCentrality(){
+    	refreshGraph();
     	//CommonData.selectedVertex = null;
     	//graphMouse.setMode(ModalGraphMouse.Mode.PICKING);
     	
@@ -968,6 +1014,7 @@ public class VisualNetForm extends javax.swing.JFrame implements GraphMouseListe
     
     // TODO geteigenvectorCentrality
     private void geteigenvectorCentrality(boolean weighted){
+    	refreshGraph();
     	EigenvectorCentralityAlg kek = new EigenvectorCentralityAlg(this.graph, weighted);
     }
     
@@ -980,8 +1027,9 @@ public class VisualNetForm extends javax.swing.JFrame implements GraphMouseListe
     
     private void generateHosts()
     {
+    	if(hasSwitch()){
+    	// TODO check if there is switches
         Queue<Link> queue = new LinkedList<>();
-        
         this.graph.getVertices().stream().filter((n)-> n instanceof Switch).forEach(
                 (Node n) ->
                 {
@@ -997,9 +1045,10 @@ public class VisualNetForm extends javax.swing.JFrame implements GraphMouseListe
         queue.stream().forEach(e -> this.graph.addEdge(e, e.getNode_left(), e.getNode_right()));                        
         this.viewer.setGraphLayout(new ISOMLayout<Node, Link>(this.graph));
         //this.viewer.repaint();
-        
+    	}
     }
     private void addController(){
+    	// TODO handle error (no nodes/switches)
         Controller c = new Controller();
         Queue<Link> queue = new LinkedList<>();
         
@@ -1014,7 +1063,8 @@ public class VisualNetForm extends javax.swing.JFrame implements GraphMouseListe
         
         queue.stream().forEach(l -> graph.addEdge(l, l.getNode_left(), l.getNode_right()));
         
-        viewer.repaint();
+        this.viewer.setGraphLayout(new ISOMLayout<Node, Link>(this.graph));
+        //viewer.repaint();
     }
     
     
@@ -1024,6 +1074,56 @@ public class VisualNetForm extends javax.swing.JFrame implements GraphMouseListe
         System.exit(0);
     }
 	
+    
+    private void edgePaintTransformer(String selector){
+    	if(selector == "normal"){
+            Transformer<Link, Paint> paintTransformer = new Transformer<Link, Paint>()
+            {
+                @Override
+                public Paint transform(Link l)
+                {
+                    if (l.getNode_left() instanceof Controller || l.getNode_right() instanceof Controller)
+                    {
+                    	l.setColor(Color.GRAY);
+                        return Color.GRAY;
+                    } else
+                    {
+                    	l.setColor(Color.BLACK);
+                        return Color.BLACK;
+                    }
+                }
+            };
+            this.viewer.getRenderContext().setEdgeDrawPaintTransformer(paintTransformer);
+    	} else if(selector == "SP"){
+            Transformer<Link, Paint> paintTransformer = new Transformer<Link, Paint>()
+            {
+                @Override
+                public Paint transform(Link l)
+                {
+                    if (l.getRouteType() == "SP")
+                    {
+                    	//l.setColor(Color.RED);
+                        return Color.RED;
+                    } else {
+                    	return l.getColor();
+                    }
+                }
+            };
+            this.viewer.getRenderContext().setEdgeDrawPaintTransformer(paintTransformer);
+    	}
+//      Transformer<Context<Graph<Node, Link>, Link>,  Shape> arrowTransformer = new Transformer<Context<Graph<Node, Link>, Link>,  Shape>()
+//      {
+//          private final Shape arrow = ArrowFactory.getWedgeArrow(10.0f, 20.0f);
+//
+//          @Override
+//          public Shape transform(Context<Graph<Node, Link>, Link> i) {
+//              return arrow;
+//          }
+//      };
+//  	
+//  	
+//  	this.viewer.getRenderContext().setEdgeArrowTransformer(arrowTransformer);
+    }
 	
 	/** TODO
 	 * Methods to check errors and popup msgs
@@ -1034,6 +1134,16 @@ public class VisualNetForm extends javax.swing.JFrame implements GraphMouseListe
 		} else {
 			JOptionPane.showMessageDialog(null, "The graph has no edges or nodes, please create a graph.",
 					"No Graph", JOptionPane.ERROR_MESSAGE);
+			return false;
+		}
+	}
+	private boolean hasSwitch(){
+		//boolean kek = false;
+		if(common.CommonData.switchCount > 0){
+			return true;
+		} else {
+			JOptionPane.showMessageDialog(null, "The graph has no switches, please create a switch node.",
+					"No Switch Node", JOptionPane.ERROR_MESSAGE);
 			return false;
 		}
 	}
@@ -1054,28 +1164,47 @@ public class VisualNetForm extends javax.swing.JFrame implements GraphMouseListe
 
         pnlMain = new javax.swing.JPanel();
         menuBar = new javax.swing.JMenuBar();
-
+        pnlTop = new javax.swing.JPanel();
+        
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
         pnlMain.setLayout(new javax.swing.BoxLayout(pnlMain, javax.swing.BoxLayout.LINE_AXIS));
         setJMenuBar(menuBar);
+        
+        
+        //JPanel pnlTop = new JPanel();
+        
+        JPanel pnlBot = new JPanel();
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
-        getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(pnlMain, javax.swing.GroupLayout.DEFAULT_SIZE, 267, Short.MAX_VALUE)
-                .addContainerGap())
+        	layout.createParallelGroup(Alignment.LEADING)
+        		.addComponent(pnlBot, Alignment.TRAILING, GroupLayout.DEFAULT_SIZE, 421, Short.MAX_VALUE)
+        		.addGroup(layout.createSequentialGroup()
+        			.addContainerGap()
+        			.addComponent(pnlMain, GroupLayout.DEFAULT_SIZE, 401, Short.MAX_VALUE)
+        			.addContainerGap())
+        		.addComponent(pnlTop, GroupLayout.DEFAULT_SIZE, 421, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(pnlMain, javax.swing.GroupLayout.DEFAULT_SIZE, 249, Short.MAX_VALUE)
-                .addContainerGap())
+        	layout.createParallelGroup(Alignment.LEADING)
+        		.addGroup(layout.createSequentialGroup()
+        			.addComponent(pnlTop, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+        			.addPreferredGap(ComponentPlacement.RELATED)
+        			.addComponent(pnlMain, GroupLayout.DEFAULT_SIZE, 333, Short.MAX_VALUE)
+        			.addPreferredGap(ComponentPlacement.RELATED)
+        			.addComponent(pnlBot, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
         );
+        
+        JLabel lblBot = new JLabel("kek2");
+        lblBot.setVerticalAlignment(SwingConstants.TOP);
+        pnlBot.add(lblBot);
+        
+//        JLabel lblTop = new JLabel("");
+//        lblTop.setHorizontalAlignment(SwingConstants.CENTER);
+//        lblTop.setIcon(null);
+//        pnlTop.add(lblTop);
+        getContentPane().setLayout(layout);
 
         pack();
     }// </editor-fold>               
@@ -1086,6 +1215,7 @@ public class VisualNetForm extends javax.swing.JFrame implements GraphMouseListe
     // Variables declaration - do not modify                     
     private javax.swing.JMenuBar menuBar;
     private javax.swing.JPanel pnlMain;
+    private javax.swing.JPanel pnlTop;
     // End of variables declaration                   
 
     @Override

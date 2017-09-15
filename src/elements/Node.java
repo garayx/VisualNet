@@ -66,7 +66,7 @@ public abstract class Node {
 		return this.Color;
 	}
 	public void removeNode(){
-		System.out.println("TODO: RemoveNode");
+		//System.out.println("TODO: RemoveNode");
 	}
 	// TODO
 	public String getType() {

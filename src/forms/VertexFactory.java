@@ -50,6 +50,8 @@ public class VertexFactory implements Factory<Node>
             Switch sw = new Switch();
             CommonData.idList.put("Switch", sw.getID());
             sw.setColor(CommonData.currentColor);
+            common.CommonData.switchCount = common.CommonData.switchCount + 1;
+            
             //sw.setRouteType(CommonData.domainName);
             //sw.setDomainIndex(CommonData.domainIndex);
             
