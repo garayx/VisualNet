@@ -1,14 +1,13 @@
 package visualnet;
 
+import java.awt.Font;
 import javax.swing.JFrame;
-
 import forms.VisualNetForm;
 
 public class VisualNet {
 
 	public static void main(String[] args) {
-		// TODO Auto-generated method stub
-		System.out.println("kek");
+		// TODO Auto-generated method stub/
 		
         System.setProperty("org.graphstream.ui.renderer", "org.graphstream.ui.j2dviewer.J2DGraphRenderer");
         
@@ -16,7 +15,10 @@ public class VisualNet {
                
         VisualNetForm vnw = new VisualNetForm();        
         vnw.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);           
-        vnw.setSize(1024, 768);
+        //vnw.setSize(1024, 768);
+        vnw.setTitle("SDN");
+        vnw.setFont(new Font("Tahoma", Font.PLAIN, 12));
+        vnw.setExtendedState(JFrame.MAXIMIZED_BOTH);
         vnw.setVisible(true);
 		
 		

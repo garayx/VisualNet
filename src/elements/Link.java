@@ -9,6 +9,7 @@ public class Link {
 	private int portRight;
 	private int capacity=1 + (int)(Math.random() * 10);
 	private String routeType = "";
+	private String arrowType = "";
 	public static Color Color;
 	
 	public void setNode_left(Node x){
@@ -59,4 +60,24 @@ public class Link {
 	public Color getColor(){
 		return this.Color;
 	}
+	
+	
+	
+    public void setArrowType(String x)
+    {
+        this.arrowType = x;
+    }
+    public String getArrowType()
+    {
+        return arrowType;
+    }
+	
+	
+	
+	
+	
+	
+	
+	
+	
 }

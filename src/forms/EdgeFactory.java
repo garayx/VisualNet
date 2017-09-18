@@ -6,6 +6,7 @@
 package forms;
 
 import common.CommonData;
+import elements.Controller;
 import elements.Link;
 import elements.NIC;
 import elements.Switch;
@@ -37,7 +38,12 @@ public class EdgeFactory implements Factory<Link>
 	
 	        l.setPort_left(left.getPort());
 	        l.setPort_right(right.getPort());
-	
+	        
+	        if(l.getNode_left() instanceof Controller || l.getNode_right() instanceof Controller){
+	        	l.setArrowType("controllerEdge");
+	        	//System.out.println("conEdge");
+	        } 
+	        
 	        return l;
     	//} else {
     		//return null;

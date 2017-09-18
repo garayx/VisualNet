@@ -8,6 +8,7 @@ package forms;
 import common.CommonData;
 import edu.uci.ics.jung.graph.Graph;
 import edu.uci.ics.jung.graph.SparseGraph;
+import edu.uci.ics.jung.graph.util.EdgeType;
 import elements.Link;
 import elements.Node;
 import java.util.Random;
@@ -62,7 +63,7 @@ public class RandomGraphGenerator
                     
                         Link l = edgeFactory.create();
 
-                        graph.addEdge(l, common.CommonData.nodeLeft, common.CommonData.nodeRight);           
+                        graph.addEdge(l, common.CommonData.nodeLeft, common.CommonData.nodeRight, EdgeType.UNDIRECTED);           
                     }
                                                
                 }
