@@ -111,7 +111,7 @@ public class ArrowShapeTransformer<Node, Link> implements Transformer< Context<G
      * Return the arrow that should be used for each edge of the network.
      */
     public Shape transform(Context<Graph<Node, Link>, Link> context) {
-    	System.out.println("Arrow_Shape_Transform");
+    	//System.out.println("Arrow_Shape_Transform");
 		Link e = (Link) context.element;
 		String type = ((elements.Link) e).getArrowType();
 

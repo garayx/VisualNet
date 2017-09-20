@@ -26,6 +26,7 @@ import edu.uci.ics.jung.algorithms.layout.SpringLayout;
 import edu.uci.ics.jung.algorithms.layout.StaticLayout;
 import edu.uci.ics.jung.graph.Graph;
 import edu.uci.ics.jung.graph.SparseGraph;
+import edu.uci.ics.jung.graph.util.EdgeType;
 import edu.uci.ics.jung.visualization.GraphZoomScrollPane;
 import edu.uci.ics.jung.visualization.VisualizationViewer;
 import edu.uci.ics.jung.visualization.control.DefaultModalGraphMouse;
@@ -71,6 +72,9 @@ import javax.swing.SpinnerNumberModel;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import org.apache.commons.collections15.Transformer;
+
+import com.rits.cloning.Cloner;
+
 import javax.swing.GroupLayout.Alignment;
 import javax.swing.GroupLayout;
 import javax.swing.LayoutStyle.ComponentPlacement;
@@ -82,14 +86,13 @@ import java.awt.GraphicsEnvironment;
 //import org.freehep.util.export.ExportDialog;
 
 
+@SuppressWarnings("rawtypes")
 public class VisualNetForm extends javax.swing.JFrame implements GraphMouseListener {
     
-    /**
-	 * 
-	 */
 	private static final long serialVersionUID = 5778688505441868388L;
-	private ArrayList<Node> nodes;
+	//private ArrayList<Node> nodes;
     private Graph<Node, Link> graph = null;
+    //private Graph<Node, Link> backupGraph = new SparseGraph<Node,Link>();
     private AbstractLayout<Node, Link> layout = null;
     private VisualizationViewer<Node, Link> viewer = null;
     private EditingModalGraphMouse<Node, Link> graphMouse;
@@ -97,17 +100,19 @@ public class VisualNetForm extends javax.swing.JFrame implements GraphMouseListe
     private ArrayList<Integer> domains;
     private ArrayList<String> routeNames;
     
+	private List<Link> edgesList = null;
+	private List<Link> newEdgesList = null;
     
+    
+	/*
+	 * Transformers
+	 */
     private ArrowShapeTransformer<Node,Link> arrowTransformer_ = null;
-    /**
-     * Defines different color (can be used for edge and arrow head) for the different type of interactions.
-     * This transformer is used for the edge and the outside shape of the arrow heads.
-     */
     private EdgeArrowColorTransformer<Link> edgeArrowColorTransformer_ = null;
     private EdgeArrowColorTransformer<Link> insideArrowColorTransformer_ = null;
     private EdgeTransformer<Link> edgeTransformer_ = null;
 	
-    static String mouseMode;
+    //static String mouseMode;
     
 	public VisualNetForm()
     {
@@ -188,16 +193,18 @@ public class VisualNetForm extends javax.swing.JFrame implements GraphMouseListe
         		LazyMap.<Number,String>decorate(new HashMap<Number,String>(), new ToStringLabeller<Number>())));        */
         //this.viewer.getRenderContext().setEdgeLabelTransformer(new ToStringLabeller<>());
        
+        
+        // TODO Fix the scrolling problem!
         this.viewer.getRenderer().setVertexRenderer(new VertexRenderer());
-        //this.viewer.getRenderer().setEdgeRenderer(new EdgeRenderer());
         this.viewer.setVertexToolTipTransformer(this.viewer.getRenderContext().getVertexLabelTransformer());
 
         //this.viewer.getRenderContext().setEdgeStrokeTransformer(strokeTransformer);
         //this.viewer.getRenderContext().setEdgeDrawPaintTransformer(paintTransformer);
         //edgePaintTransformer("normal");
-
-        this.viewer.getRenderContext().setEdgeShapeTransformer(new EdgeShape.Line<Node,Link>());
-        
+        // direct Lines
+        //this.viewer.getRenderContext().setEdgeShapeTransformer(new EdgeShape.Line<Node,Link>());
+        // curve lines
+        this.viewer.getRenderContext().setEdgeShapeTransformer(new EdgeShape.QuadCurve<Node,Link>());
         this.viewer.getRenderContext().setEdgeArrowTransformer(arrowTransformer_);
         this.viewer.getRenderContext().setEdgeDrawPaintTransformer(edgeArrowColorTransformer_); // edge color
         this.viewer.getRenderContext().setArrowFillPaintTransformer(insideArrowColorTransformer_); // arrow inside color
@@ -856,12 +863,22 @@ public class VisualNetForm extends javax.swing.JFrame implements GraphMouseListe
         this.menuBar.add(nodeMenu);
         this.menuBar.add(toolsMenu);
 
-        this.nodes = new ArrayList<>();
+        //this.nodes = new ArrayList<>();
 
     }
+    /**
+     * refreshGraph method
+     */
     private void refreshGraph(){
 //    	common.CommonData.destinationNode = null;
 //    	common.CommonData.sourceNode = null;
+		if (newEdgesList != null && edgesList != null) {
+			for (Link l : newEdgesList)
+				this.graph.removeEdge(l);
+			for (Link l : edgesList)
+				this.graph.addEdge(l, l.getNode_left(), l.getNode_right());
+		}
+    	
         this.graph.getVertices().stream().forEach(
                 (Node n) ->
                 {
@@ -878,8 +895,10 @@ public class VisualNetForm extends javax.swing.JFrame implements GraphMouseListe
         	        }
         		}
         		);
-        //edgePaintTransformer("normal");
         
+        newEdgesList = null;
+        edgesList = null;
+        //this.viewer.getRenderContext().setEdgeShapeTransformer(new EdgeShape.Line<Node,Link>());
         this.viewer.repaint();
         this.initToplbl("");
     }
@@ -894,115 +913,198 @@ public class VisualNetForm extends javax.swing.JFrame implements GraphMouseListe
         this.viewer.setGraphLayout(new ISOMLayout<Node, Link>(this.graph));
     }
     
-    // TODO ShortestPathWithoutWeights
+    /**
+     * ShortestPathWithoutWeights
+     */
     private void generateShortestPathWithoutWeight(){
-    		refreshGraph();
-	    	List<Node> shortestPath;
-	    	CommonData.selectedVertex = null;
-	    	graphMouse.setMode(ModalGraphMouse.Mode.PICKING);
-	    	shortestPath = ShortestPath.withoutWeights(this.graph, CommonData.sourceNode, CommonData.destinationNode);
-	    	StringBuilder tmp = new StringBuilder();
-	    	tmp.append("Unweighted shortest path is: ");
-	    	for(int i=0; i< shortestPath.size(); i++){
-	    		if(i == shortestPath.size()-1){
-	    			tmp.append(shortestPath.get(i).getSid());
-	    		}
-	    		else{
-	    			tmp.append(shortestPath.get(i).getSid() + ", ");
-	    			Link currentEdge = this.graph.findEdge(shortestPath.get(i), shortestPath.get(i+1));
-	    			currentEdge.setArrowType("SP");
-	    		}
-	    		shortestPath.get(i).setRouteType("SP");
-	    	}
-	    	//edgePaintTransformer("SP");
-	    	this.viewer.repaint();
-	    	this.initToplbl(tmp.toString());
-    }
-    
- // TODO ShortestPathWithtWeights
-    private void generateShortestPathWithWeight(){
+    	// refresh graph before running
     	refreshGraph();
-    	List<Node> shortestPath;
     	CommonData.selectedVertex = null;
+    	// init lists
+    	List<Node> shortestPathResults;
+    	edgesList = new ArrayList<Link>();
+    	newEdgesList = new ArrayList<Link>();
+    	List<Node> nodesList = new ArrayList<Node>();
+    	// change mouseType to picking
     	graphMouse.setMode(ModalGraphMouse.Mode.PICKING);
-    	shortestPath = ShortestPath.withWeights(this.graph, CommonData.sourceNode, CommonData.destinationNode);
-    	StringBuilder tmp = new StringBuilder();
-    	tmp.append("Weighted shortest path is: ");
-    	for(int i=0; i< shortestPath.size(); i++){
-    		if(i == shortestPath.size()-1){
-    			tmp.append(shortestPath.get(i).getSid());
+    	//run algorithm to find shortestPath
+    	shortestPathResults = ShortestPath.withoutWeights(this.graph, CommonData.sourceNode, CommonData.destinationNode);
+    	// create string builder to display it on topPnl
+		StringBuilder strTmp = new StringBuilder();
+    	strTmp.append("Unweighted shortest path is: ");
+    	for(int i=0; i< shortestPathResults.size(); i++){
+    		if(i == shortestPathResults.size()-1){
+				// appent string
+    			strTmp.append(shortestPathResults.get(i).getSid());
     		}
     		else{
-    			tmp.append(shortestPath.get(i).getSid() + ", ");
-    			Link currentEdge = this.graph.findEdge(shortestPath.get(i), shortestPath.get(i+1));
-    			currentEdge.setArrowType("SP");
-    		}
-    		shortestPath.get(i).setRouteType("SP");
-    	}
-    	//edgePaintTransformer("SP");
-    	this.viewer.repaint();
-    	this.initToplbl(tmp.toString());
-    }
-    // TODO generateRandomWalk
-    private void generateRandomWalk(){
-    	refreshGraph();
-    	//boolean success = false;
-    	CommonData.selectedVertex = null;
-    	List<Node> randomwalkresult;
-    	List<Link> edgesList = new ArrayList<Link>();
-    	
-    	graphMouse.setMode(ModalGraphMouse.Mode.PICKING);
-    	randomwalkresult = new RandomWalk(this.graph).searchNetwork(CommonData.sourceNode, CommonData.destinationNode, 5);
-    	StringBuilder tmp = new StringBuilder();
-    	tmp.append("Random walk path is: ");
-    	for(int i=0; i< randomwalkresult.size(); i++){
-    		if(i == randomwalkresult.size()-1){
-    			tmp.append(randomwalkresult.get(i).getSid());
-    		}
-    		else{
-    			tmp.append(randomwalkresult.get(i).getSid() + ", ");
-    			Link currentEdge = this.graph.findEdge(randomwalkresult.get(i), randomwalkresult.get(i+1));
-    			currentEdge.setArrowType("SP");
-    			
-    			// TODO Save edges, make them transperent (or delete)
-    			// create new EdgeType.DIRECTED edges by the randomwalk results and display them
+    			strTmp.append(shortestPathResults.get(i).getSid() + ", ");
+    			Link currentEdge = this.graph.findEdge(shortestPathResults.get(i), shortestPathResults.get(i+1));
+				// add all randomWalk path edges to list
     			edgesList.add(currentEdge);
     		}
-    		randomwalkresult.get(i).setRouteType("SP");
+			// set Nodes routeType to change their color
+    		shortestPathResults.get(i).setRouteType("SP");
+			// add all randomWalk path node to list
+    		nodesList.add(shortestPathResults.get(i));
     	}
-    	//edgePaintTransformer("SP");
+		// remove old edges from graph
+    	for(Link l : edgesList){
+    		this.graph.removeEdge(l);
+    	}
+    	// change edges to directed type edges and keep their capacity
+    	for(int i=0; i < nodesList.size()-1; i++){
+	    	for(Link l : edgesList){
+	    		if(l.getNode_left() == nodesList.get(i) && l.getNode_right() == nodesList.get(i+1)){
+		    		l.setArrowType("SP");
+		    		this.graph.addEdge(l, l.getNode_left(), l.getNode_right(), EdgeType.DIRECTED);
+		    		newEdgesList.add(l);
+	    		} else if(l.getNode_left() == nodesList.get(i+1) && l.getNode_right() == nodesList.get(i)){
+		    		l.setArrowType("SP");
+		    		this.graph.addEdge(l, l.getNode_right(), l.getNode_left(), EdgeType.DIRECTED);
+		    		newEdgesList.add(l);
+	    		}
+	    	}
+    	}
+		// update topLBL
     	this.viewer.repaint();
-    	this.initToplbl(tmp.toString());
+    	this.initToplbl(strTmp.toString());
     }
-    // TODO createSpanningTree
+    
+ /**
+  * ShortestPathWithtWeights
+  */
+    private void generateShortestPathWithWeight(){
+    	// refresh graph before running
+    	refreshGraph();
+    	CommonData.selectedVertex = null;
+    	// init lists
+    	List<Node> shortestPathResults;
+    	edgesList = new ArrayList<Link>();
+    	newEdgesList = new ArrayList<Link>();
+    	List<Node> nodesList = new ArrayList<Node>();
+    	// change mouseType to picking
+    	graphMouse.setMode(ModalGraphMouse.Mode.PICKING);
+    	//run algorithm to find shortestPath
+    	shortestPathResults = ShortestPath.withWeights(this.graph, CommonData.sourceNode, CommonData.destinationNode);
+    	// create string builder to display it on topPnl
+		StringBuilder strTmp = new StringBuilder();
+    	strTmp.append("Weighted shortest path is: ");
+    	for(int i=0; i< shortestPathResults.size(); i++){
+    		if(i == shortestPathResults.size()-1){
+				// appent string
+    			strTmp.append(shortestPathResults.get(i).getSid());
+    		}
+    		else{
+    			strTmp.append(shortestPathResults.get(i).getSid() + ", ");
+    			Link currentEdge = this.graph.findEdge(shortestPathResults.get(i), shortestPathResults.get(i+1));
+				// add all randomWalk path edges to list
+    			edgesList.add(currentEdge);
+    		}
+			// set Nodes routeType to change their color
+    		shortestPathResults.get(i).setRouteType("SP");
+			// add all randomWalk path node to list
+    		nodesList.add(shortestPathResults.get(i));
+    	}
+		// remove old edges from graph
+    	for(Link l : edgesList){
+    		this.graph.removeEdge(l);
+    	}
+    	// change edges to directed type edges and keep their capacity
+    	for(int i=0; i < nodesList.size()-1; i++){
+	    	for(Link l : edgesList){
+	    		// if there is i -> i+1 edge create
+	    		if(l.getNode_left() == nodesList.get(i) && l.getNode_right() == nodesList.get(i+1)){
+		    		l.setArrowType("SP");
+		    		this.graph.addEdge(l, l.getNode_left(), l.getNode_right(), EdgeType.DIRECTED);
+		    		newEdgesList.add(l);
+		    		// if there is no i -> i+1 edge create it in reverse direction
+	    		} else if(l.getNode_left() == nodesList.get(i+1) && l.getNode_right() == nodesList.get(i)){
+		    		l.setArrowType("SP");
+		    		this.graph.addEdge(l, l.getNode_right(), l.getNode_left(), EdgeType.DIRECTED);
+		    		newEdgesList.add(l);
+	    		}
+	    	}
+    	}
+		// update topLBL
+    	this.viewer.repaint();
+    	this.initToplbl(strTmp.toString());
+    }
+    /**
+     * generateRandomWalk method
+     * 
+     */
+    private void generateRandomWalk(){
+    	// refresh graph before running
+    	refreshGraph();
+    	CommonData.selectedVertex = null;
+    	// init lists
+    	List<Node> randomwalkresult;
+    	edgesList = new ArrayList<Link>();
+    	newEdgesList = new ArrayList<Link>();
+    	List<Node> nodesList = new ArrayList<Node>();
+    	// change mouseType to picking
+    	graphMouse.setMode(ModalGraphMouse.Mode.PICKING);
+    	//run algorithm to find randomwalk
+    	randomwalkresult = new RandomWalk(this.graph).searchNetwork(CommonData.sourceNode, CommonData.destinationNode, 5);
+    	// create string builder to display it on topPnl
+    	StringBuilder strTmp = new StringBuilder();
+    	strTmp.append("Random walk path is: ");
+    	for(int i=0; i< randomwalkresult.size(); i++){
+    		if(i == randomwalkresult.size()-1){
+    			// appent string
+    			strTmp.append(randomwalkresult.get(i).getSid());
+    		}
+    		else{
+    			strTmp.append(randomwalkresult.get(i).getSid() + ", ");
+    			Link currentEdge = this.graph.findEdge(randomwalkresult.get(i), randomwalkresult.get(i+1));
+    			// add all randomWalk path edges to list
+    			edgesList.add(currentEdge);
+    		}
+    		// set Nodes routeType to change their color
+    		randomwalkresult.get(i).setRouteType("SP");
+    		// add all randomWalk path node to list
+    		nodesList.add(randomwalkresult.get(i));
+    	}
+    	// remove old edges from graph
+    	for(Link l : edgesList){
+    		this.graph.removeEdge(l);
+    	}
+    	// create new edges from randomWalk path with arrows
+    	for(int i=0; i < nodesList.size()-1; i++){
+    		CommonData.nodeLeft = nodesList.get(i);
+            CommonData.nodeRight = nodesList.get(i+1);
+            // create new edge
+            Link l = new EdgeFactory().create();
+            // set edgeType to SP
+            l.setArrowType("SP");
+            // save all newly added edges to remove them later
+            newEdgesList.add(l);
+            // add directed type edges
+    		this.graph.addEdge(l, l.getNode_left(), l.getNode_right(), EdgeType.DIRECTED);
+    	}
+    	this.viewer.repaint();
+    	// update topLBL
+    	this.initToplbl(strTmp.toString());
+    }
+    /**
+     * createSpanningTree
+     */
     private void createSpanningTree(){
     	refreshGraph();
-    	//Forest<Node, Link> tree;
-    	///////////////// delete ////////////
     	CommonData.selectedVertex = null;
     	graphMouse.setMode(ModalGraphMouse.Mode.PICKING);
-    	
     	SpanningTree kek = new SpanningTree(this.graph);
-    	//kek.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-//    	kek.getContentPane().add(new MinimumSpanningTreeDemo());
     	kek.pack();
     	kek.setVisible(true);
-    	
-    	
-    	///////////////// delete ////////////
-    	//tree = SpanningTree.getSpanningTree(graph);
-//    	Dimension preferredSizeRect = new Dimension(500,250);
-//    	Layout<Node, Link> layout1 = new TreeLayout<Node, Link>(tree);
-//    	VisualizationModel<Node, Link> vm1 = new DefaultVisualizationModel<Node, Link>(layout1, preferredSizeRect);
-//    	
-    	//create a popup window with the created spanning tree printed.
     }
-    // TODO Random createSpanningTree (without weights)
+    /**
+     * createSpanningTree (without weights)
+     */
     private void createRandomSpanningTree(){
     	refreshGraph();
     	CommonData.selectedVertex = null;
     	graphMouse.setMode(ModalGraphMouse.Mode.PICKING);
-    	
     	RandomSpanningTree kek = new RandomSpanningTree(this.graph);
     	kek.pack();
     	kek.setVisible(true);
@@ -1012,10 +1114,7 @@ public class VisualNetForm extends javax.swing.JFrame implements GraphMouseListe
     	refreshGraph();
     	//CommonData.selectedVertex = null;
     	//graphMouse.setMode(ModalGraphMouse.Mode.PICKING);
-    	
     	BetweennessCentralityAlg kek = new BetweennessCentralityAlg(this.graph);
-    	//kek.pack();
-    	//kek.setVisible(true);
     }
     
     // TODO getclosenessCentrality
@@ -1025,8 +1124,6 @@ public class VisualNetForm extends javax.swing.JFrame implements GraphMouseListe
     	//graphMouse.setMode(ModalGraphMouse.Mode.PICKING);
     	
     	ClosenessCentralityAlg kek = new ClosenessCentralityAlg(this.graph);
-    	//kek.pack();
-    	//kek.setVisible(true);
     }
 
     // TODO getRWclosenessCentrality
@@ -1051,8 +1148,6 @@ public class VisualNetForm extends javax.swing.JFrame implements GraphMouseListe
 		}
 		 System.out.println("Highest RW Closeness Centrality Node:");
 		 System.out.println(highestRWCCnode.getToolTip() + "\tCC Score:\t"+ highestRWCC);
-    	//kek.pack();
-    	//kek.setVisible(true);
     }
     
     // TODO geteigenvectorCentrality
@@ -1067,11 +1162,9 @@ public class VisualNetForm extends javax.swing.JFrame implements GraphMouseListe
         this.graph = new WattsStrogatzSmallWorldGenerator(new EdgeFactory(), new VertexFactory(), 50, 8, 0.2f).create();                
         this.viewer.setGraphLayout(new ISOMLayout<Node, Link>(this.graph));
     }
-    
     private void generateHosts()
     {
     	if(hasSwitch()){
-    	// TODO check if there is switches
         Queue<Link> queue = new LinkedList<>();
         this.graph.getVertices().stream().filter((n)-> n instanceof Switch).forEach(
                 (Node n) ->
@@ -1087,11 +1180,9 @@ public class VisualNetForm extends javax.swing.JFrame implements GraphMouseListe
         
         queue.stream().forEach(e -> this.graph.addEdge(e, e.getNode_left(), e.getNode_right()));                        
         this.viewer.setGraphLayout(new ISOMLayout<Node, Link>(this.graph));
-        //this.viewer.repaint();
     	}
     }
     private void addController(){
-    	// TODO handle error (no nodes/switches)
         Controller c = new Controller();
         Queue<Link> queue = new LinkedList<>();
         
@@ -1109,63 +1200,11 @@ public class VisualNetForm extends javax.swing.JFrame implements GraphMouseListe
         this.viewer.setGraphLayout(new ISOMLayout<Node, Link>(this.graph));
         //this.viewer.repaint();
     }
-    
-    
+
     private void close()
     {
         this.dispose();
         System.exit(0);
-    }
-	
-    
-    private void edgePaintTransformer(String selector){
-    	if(selector == "normal"){
-            Transformer<Link, Paint> paintTransformer = new Transformer<Link, Paint>()
-            {
-                @Override
-                public Paint transform(Link l)
-                {
-                    if (l.getNode_left() instanceof Controller || l.getNode_right() instanceof Controller)
-                    {
-                    	l.setColor(Color.GRAY);
-                        return Color.GRAY;
-                    } else
-                    {
-                    	l.setColor(Color.BLACK);
-                        return Color.BLACK;
-                    }
-                }
-            };
-            this.viewer.getRenderContext().setEdgeDrawPaintTransformer(paintTransformer);
-    	} else if(selector == "SP"){
-            Transformer<Link, Paint> paintTransformer = new Transformer<Link, Paint>()
-            {
-                @Override
-                public Paint transform(Link l)
-                {
-                    if (l.getRouteType() == "SP")
-                    {
-                    	//l.setColor(Color.RED);
-                        return Color.RED;
-                    } else {
-                    	return l.getColor();
-                    }
-                }
-            };
-            this.viewer.getRenderContext().setEdgeDrawPaintTransformer(paintTransformer);
-    	}
-//      Transformer<Context<Graph<Node, Link>, Link>,  Shape> arrowTransformer = new Transformer<Context<Graph<Node, Link>, Link>,  Shape>()
-//      {
-//          private final Shape arrow = ArrowFactory.getWedgeArrow(10.0f, 20.0f);
-//
-//          @Override
-//          public Shape transform(Context<Graph<Node, Link>, Link> i) {
-//              return arrow;
-//          }
-//      };
-//  	
-//  	
-//  	this.viewer.getRenderContext().setEdgeArrowTransformer(arrowTransformer);
     }
 	
 	/** TODO
@@ -1214,9 +1253,6 @@ public class VisualNetForm extends javax.swing.JFrame implements GraphMouseListe
         
         setJMenuBar(menuBar);
         
-        
-        //JPanel pnlTop = new JPanel();
-        
         JPanel pnlBot = new JPanel();
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -1244,7 +1280,6 @@ public class VisualNetForm extends javax.swing.JFrame implements GraphMouseListe
         
         getContentPane().setLayout(layout);
        
-        // TODO maybe deleted
         pack();
     }// </editor-fold>               
 	
