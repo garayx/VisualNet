@@ -10,6 +10,8 @@ import elements.Switch;
 import transformers.ArrowShapeTransformer;
 import transformers.EdgeArrowColorTransformer;
 import transformers.EdgeTransformer;
+import transformers.NodeFillColorTransformer;
+import transformers.NodeShapeTransformer;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -35,6 +37,7 @@ import edu.uci.ics.jung.visualization.control.GraphMouseListener;
 import edu.uci.ics.jung.visualization.control.ModalGraphMouse;
 import edu.uci.ics.jung.visualization.decorators.EdgeShape;
 import edu.uci.ics.jung.visualization.decorators.ToStringLabeller;
+import edu.uci.ics.jung.visualization.picking.PickedState;
 //import elements.IpMacEntry;
 import elements.Link;
 //import elements.Route;
@@ -111,7 +114,10 @@ public class VisualNetForm extends javax.swing.JFrame implements GraphMouseListe
     private EdgeArrowColorTransformer<Link> edgeArrowColorTransformer_ = null;
     private EdgeArrowColorTransformer<Link> insideArrowColorTransformer_ = null;
     private EdgeTransformer<Link> edgeTransformer_ = null;
-	
+    private NodeShapeTransformer<Node> nodeShapeTransformer_ = null;
+    private NodeFillColorTransformer<Node> nodeFillColorTransformer_ = null;
+    
+    private PickedState<Node> pickedState_ = null;
     //static String mouseMode;
     
 	public VisualNetForm()
@@ -141,43 +147,32 @@ public class VisualNetForm extends javax.swing.JFrame implements GraphMouseListe
 	
     private void initGraph()
     {
-    	
-    	arrowTransformer_ = new ArrowShapeTransformer<Node,Link>(false);
-    	edgeArrowColorTransformer_ = new EdgeArrowColorTransformer<Link>(false);
-    	edgeTransformer_ = new EdgeTransformer<Link>(false);
-    	insideArrowColorTransformer_ = new EdgeArrowColorTransformer<Link>(false);
-    	
-//        Transformer<Link, Stroke> strokeTransformer = new Transformer<Link, Stroke>()
-//        {
-//            @Override
-//            public Stroke transform(Link l)
-//            {
-//                if (l.getNode_left() instanceof Controller || l.getNode_right() instanceof Controller)
-//                {
-//                    return new BasicStroke(1.0f, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER,
-//                            10.0f, new float[]
-//                            {
-//                                10.0f
-//                            }, 0.0f);
-//                } else
-//                {
-//                    return new BasicStroke();
-//                }
-//            }
-//
-//        };
-
-        
         // TODO comment firstLine to design
         this.viewer = new VisualizationViewer<>(layout);
+        pickedState_ = this.viewer.getPickedVertexState();
         Dimension pnlSize = this.pnlMain.getBounds().getSize();
-
+        pickedState_ = this.viewer.getPickedVertexState();
         Dimension size = new Dimension(pnlSize.width, pnlSize.height);
-
+        
         this.viewer.setPreferredSize(size);
         this.viewer.setBackground(Color.WHITE);
         this.viewer.addGraphMouseListener(this);
 
+        
+        
+    	arrowTransformer_ = new ArrowShapeTransformer<Node,Link>(false);
+    	edgeArrowColorTransformer_ = new EdgeArrowColorTransformer<Link>(false);
+    	edgeTransformer_ = new EdgeTransformer<Link>(false);
+    	insideArrowColorTransformer_ = new EdgeArrowColorTransformer<Link>(false);
+    	nodeShapeTransformer_ = new NodeShapeTransformer();
+        nodeFillColorTransformer_ = new NodeFillColorTransformer(pickedState_);
+        
+        
+        
+        
+        
+        
+        
         this.viewer.getRenderContext().setVertexLabelTransformer(new ToStringLabeller<Node>()
         {
             @Override
@@ -194,23 +189,26 @@ public class VisualNetForm extends javax.swing.JFrame implements GraphMouseListe
         //this.viewer.getRenderContext().setEdgeLabelTransformer(new ToStringLabeller<>());
        
         
-        // TODO Fix the scrolling problem!
-        this.viewer.getRenderer().setVertexRenderer(new VertexRenderer());
+        // Fixed the scrolling problem!
+        //this.viewer.getRenderer().setVertexRenderer(new VertexRenderer());
+        
+        
         this.viewer.setVertexToolTipTransformer(this.viewer.getRenderContext().getVertexLabelTransformer());
 
-        //this.viewer.getRenderContext().setEdgeStrokeTransformer(strokeTransformer);
-        //this.viewer.getRenderContext().setEdgeDrawPaintTransformer(paintTransformer);
-        //edgePaintTransformer("normal");
+        
+        
+        
         // direct Lines
         //this.viewer.getRenderContext().setEdgeShapeTransformer(new EdgeShape.Line<Node,Link>());
         // curve lines
         this.viewer.getRenderContext().setEdgeShapeTransformer(new EdgeShape.QuadCurve<Node,Link>());
-        this.viewer.getRenderContext().setEdgeArrowTransformer(arrowTransformer_);
+        this.viewer.getRenderContext().setEdgeArrowTransformer(arrowTransformer_); // arrow shape
         this.viewer.getRenderContext().setEdgeDrawPaintTransformer(edgeArrowColorTransformer_); // edge color
         this.viewer.getRenderContext().setArrowFillPaintTransformer(insideArrowColorTransformer_); // arrow inside color
         this.viewer.getRenderContext().setArrowDrawPaintTransformer(edgeArrowColorTransformer_); // arrow outside color
-        this.viewer.getRenderContext().setEdgeStrokeTransformer(edgeTransformer_);
-
+        this.viewer.getRenderContext().setEdgeStrokeTransformer(edgeTransformer_); // edge stroke
+        this.viewer.getRenderContext().setVertexShapeTransformer(nodeShapeTransformer_);
+        this.viewer.getRenderContext().setVertexFillPaintTransformer(nodeFillColorTransformer_);
         
         
         

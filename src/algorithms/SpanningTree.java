@@ -95,7 +95,7 @@ public class SpanningTree extends JFrame {
 		vv1.getRenderContext().setEdgeDrawPaintTransformer(
 				new PickableEdgePaintTransformer<Link>(vv1.getPickedEdgeState(), Color.black, Color.red));
 		vv1.getRenderContext().setVertexFillPaintTransformer(
-				new PickableVertexPaintTransformer<Node>(vv1.getPickedVertexState(), Color.yellow, Color.orange));
+				new PickableVertexPaintTransformer<Node>(vv1.getPickedVertexState(), Color.ORANGE, Color.YELLOW));
 
 		//vv1.setVertexToolTipTransformer(new ToStringLabeller());
 		vv1.setVertexToolTipTransformer(this.vv1.getRenderContext().getVertexLabelTransformer());
