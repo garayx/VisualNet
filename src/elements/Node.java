@@ -15,7 +15,7 @@ public abstract class Node {
 	private String type = "Node";
 	private Map<Node,NIC> Connections = new HashMap<Node, NIC>();
 	private String routeType = "";
-	
+	private final int port = 0 + (int)(Math.random() * 65535);
 	
     public Node()
     {
@@ -23,7 +23,7 @@ public abstract class Node {
     }
 	
 	public NIC addConnection(Node node) {
-		NIC nic = new NIC("MAC", "IP");
+		NIC nic = new NIC(port);
 		Connections.put(node, nic);
 		return nic;
 	}

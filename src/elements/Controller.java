@@ -2,10 +2,11 @@ package elements;
 
 public class Controller extends Node
 {
-    private NIC nic;
+    //private NIC nic;
 
     private static int _id = 0;
     private final int id;
+    //private final int port = 0 + (int)(Math.random() * 65535);
     private String cid;
     private String type = "Controller";
     private String routeType = "";
@@ -16,8 +17,11 @@ public class Controller extends Node
         
         this.id = _id;
         
-        this.cid = "c" + this.id;        
+        //0 to 65535
         
+        
+        this.cid = "c" + this.id;        
+        //this.nic = new NIC(this.port);
     }
 
     /**

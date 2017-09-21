@@ -24,8 +24,8 @@ public class NIC
 
     public NIC(int i) {
 		// TODO Auto-generated constructor stub
-        this.mac = null;
-        this.ip = null;
+        this.mac = common.Utils.generateMAC();
+        this.ip = common.Utils.getUniqueIP();
         this.port = i;
 	}
 

@@ -20,6 +20,8 @@ public class CommonData {
     public static HashMap<String, Integer> idList;
 	
     public static int switchCount = 0;
+    public static int hostsCount = 0;
+    public static int controllerCount = 0;
 	
     public static ArrayList<String> macAddresses;
     public static ArrayList<String> ipAddresses;

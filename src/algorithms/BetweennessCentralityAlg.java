@@ -10,12 +10,18 @@ import elements.Link;
 import elements.Node;
 
 public class BetweennessCentralityAlg {
-	private Map<Node, Double> nodeBC = new HashMap<Node, Double>();
-	private Map<Link, Double> linkBC = new HashMap<Link, Double>();
-
+	private Map<Node, Double> nodeBC = null;
+	private Map<Link, Double> linkBC = null;
+	private double nodeAvgBC;
+	private double linkAvgBC;
 
 	//public BetweennessCentralityAlg(Graph<Node, Link> g, boolean withWeights) {
 	public BetweennessCentralityAlg(Graph<Node, Link> g) {
+		nodeBC = new HashMap<Node, Double>();
+		linkBC = new HashMap<Link, Double>();
+		nodeAvgBC = 0.0;
+		linkAvgBC = 0.0;
+		
 		BetweennessCentrality<Node, Link> ranker = new BetweennessCentrality<Node, Link>(g);
 		ranker.setRemoveRankScoresOnFinalize(false);
 //		if(withWeights){
@@ -23,9 +29,7 @@ public class BetweennessCentralityAlg {
 //			ranker.setEdgeWeights(getWeights(g));
 //		}
 		ranker.evaluate();
-		// TODO create popup window with information
-		double nodeAvgBC = 0.0;
-		double linkAvgBC = 0.0;
+
 		Iterator<Node> nodeItearator = g.getVertices().iterator();
 		while (nodeItearator.hasNext()) {
 			Node tmpnode = nodeItearator.next();
@@ -56,15 +60,9 @@ public class BetweennessCentralityAlg {
 		System.out.println("Nodes average betweencentrality: " + nodeAvgBC);
 		System.out.println("Edges average betweencentrality: " + linkAvgBC);
 	}
-
-//	private Map<Link, Number> getWeights(Graph<Node, Link> g) {
-//		// g.getEdges().
-//		Map<Link, Number> resultsMap = new HashMap<Link, Number>();
-//		Iterator<Link> linkItearator = g.getEdges().iterator();
-//		while (linkItearator.hasNext()) {
-//			Link edge = linkItearator.next();
-//			resultsMap.put(edge, edge.getCapacity());
-//		}
-//		return resultsMap;
-//	}
+	// public methods
+	public Map<Node, Double> getNodeBC(){ return this.nodeBC; }
+	public Map<Link, Double> getEdgeBC(){ return this.linkBC; }
+	public double getNodeAvgBC(){ return this.nodeAvgBC; }
+	public double getEdgeAvgBC(){ return this.linkAvgBC; }
 }

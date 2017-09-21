@@ -15,6 +15,7 @@ import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
 import org.apache.commons.collections15.Factory;
 
+//import forms.VisualNetForm;
 /**
  *
  * @author Daniel
@@ -42,6 +43,7 @@ public class VertexFactory implements Factory<Node>
             //host.setColor(CommonData.currentColor);
             //System.out.println("NEW HOST CREATED");
             CommonData.idList.put("Host", host.getID());
+            common.CommonData.hostsCount = common.CommonData.hostsCount + 1;
             node = host;
         }
         //else if(common.CommonData.selectedNode == CommonData.NodeType.Switch)
@@ -62,6 +64,7 @@ public class VertexFactory implements Factory<Node>
         {
             Controller cont = new Controller();
             CommonData.idList.put("Controller", cont.getID());
+            common.CommonData.controllerCount = common.CommonData.controllerCount + 1;
             node = cont;
         }
         
@@ -98,7 +101,7 @@ public class VertexFactory implements Factory<Node>
         }
         
         //CommonData.nodesMap.put(node.getID(), node);
-        
+        //forms.VisualNetForm.updateSidePnl();
         return node;
     }
         

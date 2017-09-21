@@ -55,6 +55,7 @@ import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.awt.event.MouseMotionListener;
 import java.awt.geom.Point2D;
+import java.text.DecimalFormat;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -76,8 +77,6 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import org.apache.commons.collections15.Transformer;
 
-import com.rits.cloning.Cloner;
-
 import javax.swing.GroupLayout.Alignment;
 import javax.swing.GroupLayout;
 import javax.swing.LayoutStyle.ComponentPlacement;
@@ -86,6 +85,13 @@ import java.awt.Font;
 import java.awt.Frame;
 import java.awt.GraphicsConfiguration;
 import java.awt.GraphicsEnvironment;
+import javax.swing.border.TitledBorder;
+import java.awt.ComponentOrientation;
+import java.awt.Point;
+import java.awt.Component;
+import java.awt.event.MouseAdapter;
+import java.awt.Cursor;
+import java.awt.SystemColor;
 //import org.freehep.util.export.ExportDialog;
 
 
@@ -130,21 +136,7 @@ public class VisualNetForm extends javax.swing.JFrame implements GraphMouseListe
 
         this.initGraph();
     }
-	
-	private void initToplbl(String lbltext){
-		//System.out.println("kek");
-		pnlTop.removeAll();
-        JLabel lblTop = new JLabel(lbltext);
-        lblTop.setHorizontalAlignment(SwingConstants.CENTER);
-        lblTop.setIcon(null);
-        pnlTop.add(lblTop);
-        
-        
-        
-        pnlTop.updateUI();
-        //pnlTop.ref
-	}
-	
+
     private void initGraph()
     {
         // TODO comment firstLine to design
@@ -353,13 +345,148 @@ public class VisualNetForm extends javax.swing.JFrame implements GraphMouseListe
         //this.pnlMain.add(pnlSide);
 
         JPanel pnlRight = new JPanel();
-        pnlRight.setLayout(new BoxLayout(pnlRight, BoxLayout.PAGE_AXIS));
-        pnlRight.add(pnlSide);
+        
+        //JPanel pnlGraphProperties = new JPanel();
+        pnlGraphProperties.setOpaque(false);
+        pnlGraphProperties.setAlignmentY(Component.TOP_ALIGNMENT);
+        pnlGraphProperties.setComponentOrientation(ComponentOrientation.LEFT_TO_RIGHT);
+        pnlGraphProperties.setBorder(new TitledBorder(null, "Graph Properties", TitledBorder.LEADING, TitledBorder.TOP, null, null));
+        
+        JLabel lblControllers = new JLabel("Controllers:");
+        lblControllers.setVerticalTextPosition(SwingConstants.TOP);
+        lblControllers.setVerticalAlignment(SwingConstants.TOP);
+        lblControllers.setName("");
+        lblControllers.setHorizontalTextPosition(SwingConstants.LEFT);
+        lblControllers.setHorizontalAlignment(SwingConstants.LEFT);
+        lblControllers.setComponentOrientation(ComponentOrientation.LEFT_TO_RIGHT);
+        
+       // JLabel lblSwitchesNumber = new JLabel(" ");
+        
+        JLabel lblSwitches = new JLabel("Switches:");
+        
+       // JLabel lblControllersNumber = new JLabel(" ");
+        
+        JLabel lblHosts = new JLabel("Hosts:");
+        lblHosts.setComponentOrientation(ComponentOrientation.LEFT_TO_RIGHT);
+        
+        //JLabel lblHostsNumber = new JLabel(" ");
+        
+        JLabel label_3 = new JLabel("Eigenvector Centrality:");
+        label_3.setFont(new Font("Tahoma", Font.BOLD, 12));
+        label_3.setHorizontalAlignment(SwingConstants.LEFT);
+        
+        JLabel lblBc = new JLabel("Betweenness Centrality:");
+        lblBc.setFont(new Font("Tahoma", Font.BOLD, 12));
+        lblBc.setHorizontalAlignment(SwingConstants.LEFT);
+        
+        JLabel label_1 = new JLabel("Closeness Centrality:");
+        label_1.setFont(new Font("Tahoma", Font.BOLD, 12));
+        label_1.setHorizontalTextPosition(SwingConstants.LEFT);
+        
+        //JLabel lblBcNodeAvg = new JLabel("Nodes average betweennesscentrality:");
+        lblBcNodeAvg.setVisible(false);
+        
+        //JLabel lblBcEdgeAvg = new JLabel("Edges average betweennesscentrality:");
+        lblBcEdgeAvg.setVisible(false);
+        
+        //JLabel lblBcNodeAvgNumber = new JLabel("0");
+        lblBcNodeAvgNumber.setVisible(false);
+        
+        //JLabel lblBcEdgeAvgNumber = new JLabel("0");
+        lblBcEdgeAvgNumber.setVisible(false);
+        
+        //JLabel lblBcRunAlg = new JLabel("Please run algorithm to see details");
+        lblBcRunAlg.setEnabled(false);
+        
+        //JButton btnBcDetails = new JButton("Details");
+        btnBcDetails.setVisible(false);
+        btnBcDetails.setToolTipText("Click to view betweenness cenrality details!");
+        btnBcDetails.setHorizontalAlignment(SwingConstants.LEFT);
+        btnBcDetails.setOpaque(false);
+        btnBcDetails.setBorder(null);
+        btnBcDetails.setBorderPainted(false);
+        GroupLayout gl_pnlGraphProperties = new GroupLayout(pnlGraphProperties);
+        gl_pnlGraphProperties.setHorizontalGroup(
+        	gl_pnlGraphProperties.createParallelGroup(Alignment.LEADING)
+        		.addGroup(gl_pnlGraphProperties.createSequentialGroup()
+        			.addContainerGap()
+        			.addGroup(gl_pnlGraphProperties.createParallelGroup(Alignment.LEADING)
+        				.addGroup(gl_pnlGraphProperties.createSequentialGroup()
+        					.addGroup(gl_pnlGraphProperties.createParallelGroup(Alignment.LEADING, false)
+        						.addComponent(lblSwitches, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+        						.addComponent(lblHosts, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+        						.addComponent(lblControllers, GroupLayout.DEFAULT_SIZE, 75, Short.MAX_VALUE))
+        					.addPreferredGap(ComponentPlacement.RELATED)
+        					.addGroup(gl_pnlGraphProperties.createParallelGroup(Alignment.LEADING)
+        						.addComponent(lblControllersNumber, GroupLayout.DEFAULT_SIZE, 113, Short.MAX_VALUE)
+        						.addComponent(lblHostsNumber, GroupLayout.DEFAULT_SIZE, 113, Short.MAX_VALUE)
+        						.addComponent(lblSwitchesNumber, GroupLayout.DEFAULT_SIZE, 113, Short.MAX_VALUE))
+        					.addGap(119))
+        				.addGroup(gl_pnlGraphProperties.createSequentialGroup()
+        					.addComponent(lblBc)
+        					.addContainerGap(126, Short.MAX_VALUE))
+        				.addGroup(gl_pnlGraphProperties.createSequentialGroup()
+        					.addComponent(label_1, GroupLayout.DEFAULT_SIZE, 156, Short.MAX_VALUE)
+        					.addGap(157))
+        				.addGroup(gl_pnlGraphProperties.createSequentialGroup()
+        					.addComponent(label_3, GroupLayout.PREFERRED_SIZE, 303, Short.MAX_VALUE)
+        					.addContainerGap())
+        				.addGroup(Alignment.TRAILING, gl_pnlGraphProperties.createSequentialGroup()
+        					.addGap(10)
+        					.addGroup(gl_pnlGraphProperties.createParallelGroup(Alignment.TRAILING)
+        						.addComponent(lblBcRunAlg, Alignment.LEADING, GroupLayout.DEFAULT_SIZE, 201, Short.MAX_VALUE)
+        						.addComponent(btnBcDetails, Alignment.LEADING, GroupLayout.DEFAULT_SIZE, 201, Short.MAX_VALUE)
+        						.addComponent(lblBcEdgeAvg, Alignment.LEADING, GroupLayout.DEFAULT_SIZE, 205, Short.MAX_VALUE)
+        						.addComponent(lblBcNodeAvg, GroupLayout.DEFAULT_SIZE, 205, Short.MAX_VALUE))
+        					.addPreferredGap(ComponentPlacement.UNRELATED)
+        					.addGroup(gl_pnlGraphProperties.createParallelGroup(Alignment.TRAILING)
+        						.addComponent(lblBcEdgeAvgNumber, GroupLayout.PREFERRED_SIZE, 82, GroupLayout.PREFERRED_SIZE)
+        						.addGroup(gl_pnlGraphProperties.createSequentialGroup()
+        							.addComponent(lblBcNodeAvgNumber, GroupLayout.PREFERRED_SIZE, 56, GroupLayout.PREFERRED_SIZE)
+        							.addGap(26)))
+        					.addContainerGap())))
+        );
+        gl_pnlGraphProperties.setVerticalGroup(
+        	gl_pnlGraphProperties.createParallelGroup(Alignment.LEADING)
+        		.addGroup(gl_pnlGraphProperties.createSequentialGroup()
+        			.addGroup(gl_pnlGraphProperties.createParallelGroup(Alignment.LEADING)
+        				.addGroup(gl_pnlGraphProperties.createParallelGroup(Alignment.BASELINE)
+        					.addComponent(lblControllers)
+        					.addComponent(lblControllersNumber))
+        				.addGroup(gl_pnlGraphProperties.createSequentialGroup()
+        					.addGap(20)
+        					.addGroup(gl_pnlGraphProperties.createParallelGroup(Alignment.BASELINE)
+        						.addComponent(lblHosts)
+        						.addComponent(lblHostsNumber))))
+        			.addPreferredGap(ComponentPlacement.RELATED)
+        			.addGroup(gl_pnlGraphProperties.createParallelGroup(Alignment.BASELINE)
+        				.addComponent(lblSwitchesNumber)
+        				.addComponent(lblSwitches))
+        			.addPreferredGap(ComponentPlacement.RELATED)
+        			.addComponent(lblBc)
+        			.addPreferredGap(ComponentPlacement.RELATED)
+        			.addGroup(gl_pnlGraphProperties.createParallelGroup(Alignment.BASELINE)
+        				.addComponent(lblBcNodeAvg)
+        				.addComponent(lblBcNodeAvgNumber))
+        			.addPreferredGap(ComponentPlacement.RELATED)
+        			.addGroup(gl_pnlGraphProperties.createParallelGroup(Alignment.BASELINE)
+        				.addComponent(lblBcEdgeAvg, GroupLayout.PREFERRED_SIZE, 14, GroupLayout.PREFERRED_SIZE)
+        				.addComponent(lblBcEdgeAvgNumber))
+        			.addPreferredGap(ComponentPlacement.RELATED)
+        			.addComponent(btnBcDetails)
+        			.addPreferredGap(ComponentPlacement.RELATED)
+        			.addComponent(lblBcRunAlg)
+        			.addPreferredGap(ComponentPlacement.RELATED)
+        			.addComponent(label_1)
+        			.addPreferredGap(ComponentPlacement.RELATED)
+        			.addComponent(label_3)
+        			.addContainerGap(27, Short.MAX_VALUE))
+        );
+        pnlGraphProperties.setLayout(gl_pnlGraphProperties);
 
         JPanel pnlRightBottom = new JPanel();
         //pnlRightBottom.setLayout(new BoxLayout(pnlRightBottom, BoxLayout.LINE_AXIS));
         pnlRightBottom.setLayout(new FlowLayout());
-        pnlRight.add(pnlRightBottom);
 
         JLabel lblDomain = new JLabel("Domain:");
         pnlRightBottom.add(lblDomain);
@@ -424,6 +551,26 @@ public class VisualNetForm extends javax.swing.JFrame implements GraphMouseListe
 
         pnlRightBottom.add(btnColor);
         this.pnlMain.add(pnlRight);
+        GroupLayout gl_pnlRight = new GroupLayout(pnlRight);
+        gl_pnlRight.setHorizontalGroup(
+        	gl_pnlRight.createParallelGroup(Alignment.LEADING)
+        		.addGroup(gl_pnlRight.createSequentialGroup()
+        			.addGroup(gl_pnlRight.createParallelGroup(Alignment.TRAILING)
+        				.addComponent(pnlGraphProperties, Alignment.LEADING, GroupLayout.PREFERRED_SIZE, 297, Short.MAX_VALUE)
+        				.addComponent(pnlRightBottom, Alignment.LEADING, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+        				.addComponent(pnlSide, Alignment.LEADING, GroupLayout.PREFERRED_SIZE, 297, GroupLayout.PREFERRED_SIZE))
+        			.addContainerGap())
+        );
+        gl_pnlRight.setVerticalGroup(
+        	gl_pnlRight.createParallelGroup(Alignment.LEADING)
+        		.addGroup(gl_pnlRight.createSequentialGroup()
+        			.addComponent(pnlGraphProperties, GroupLayout.PREFERRED_SIZE, 246, GroupLayout.PREFERRED_SIZE)
+        			.addGap(47)
+        			.addComponent(pnlSide, GroupLayout.DEFAULT_SIZE, 44, Short.MAX_VALUE)
+        			.addPreferredGap(ComponentPlacement.RELATED)
+        			.addComponent(pnlRightBottom, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+        );
+        pnlRight.setLayout(gl_pnlRight);
 
     }
 	
@@ -435,6 +582,7 @@ public class VisualNetForm extends javax.swing.JFrame implements GraphMouseListe
 	// GUI Menu Initialization
     private void initialize()
     {
+    	
         JMenu menuFile = new JMenu("File");
         this.menuBar.add(menuFile);
         
@@ -899,14 +1047,29 @@ public class VisualNetForm extends javax.swing.JFrame implements GraphMouseListe
         //this.viewer.getRenderContext().setEdgeShapeTransformer(new EdgeShape.Line<Node,Link>());
         this.viewer.repaint();
         this.initToplbl("");
+        //update side pnl
+        updateSidePnl();
     }
     
     private void generateRandomGraph()
     {
+    	// re-init common variables
     	common.CommonData.destinationNode = null;
     	common.CommonData.sourceNode = null;
+		common.CommonData.switchCount = 0;
+		common.CommonData.hostsCount = 0;
+		common.CommonData.controllerCount = 0;
+		common.CommonData.selectedNode = "Switch";
+        newEdgesList = null;
+        edgesList = null;
+        updateSidePnlCentralities();
+		
+		
+		// generates switches
         this.graph = new RandomGraphGenerator(new EdgeFactory(), new VertexFactory(), 6, 8, 0.5f).create();
+        // adds controller
         addController();
+        // adds hosts to the switches
         generateHosts();
         this.viewer.setGraphLayout(new ISOMLayout<Node, Link>(this.graph));
     }
@@ -1112,7 +1275,15 @@ public class VisualNetForm extends javax.swing.JFrame implements GraphMouseListe
     	refreshGraph();
     	//CommonData.selectedVertex = null;
     	//graphMouse.setMode(ModalGraphMouse.Mode.PICKING);
-    	BetweennessCentralityAlg kek = new BetweennessCentralityAlg(this.graph);
+    	BetweennessCentralityAlg bc = new BetweennessCentralityAlg(this.graph);
+    	DecimalFormat df2 = new DecimalFormat(".##");
+        lblBcNodeAvgNumber.setText(""+df2.format(bc.getNodeAvgBC()));
+        lblBcEdgeAvgNumber.setText(""+df2.format(bc.getEdgeAvgBC()));
+    	
+    	
+    	initbetweennessCentrality(true);
+    	
+    	
     }
     
     // TODO getclosenessCentrality
@@ -1156,9 +1327,24 @@ public class VisualNetForm extends javax.swing.JFrame implements GraphMouseListe
     
     
     private void generateSmallWorld()
-    {        
+    {
+    	if (newEdgesList != null && edgesList != null) {
+    		refreshGraph();
+    	}
+    	common.CommonData.destinationNode = null;
+    	common.CommonData.sourceNode = null;
+		common.CommonData.switchCount = 0;
+		common.CommonData.hostsCount = 0;
+		common.CommonData.controllerCount = 0;
+        newEdgesList = null;
+        edgesList = null;
+		
+		
+		//common.CommonData.selectedNode = "Switch";
         this.graph = new WattsStrogatzSmallWorldGenerator(new EdgeFactory(), new VertexFactory(), 50, 8, 0.2f).create();                
         this.viewer.setGraphLayout(new ISOMLayout<Node, Link>(this.graph));
+        //update side pnl
+        updateSidePnl();
     }
     private void generateHosts()
     {
@@ -1171,7 +1357,7 @@ public class VisualNetForm extends javax.swing.JFrame implements GraphMouseListe
 
                     CommonData.nodeLeft = n;
                     CommonData.nodeRight = h;
-
+                    common.CommonData.hostsCount = common.CommonData.hostsCount + 1;
                     queue.add(new EdgeFactory().create());
                 }
         );
@@ -1179,8 +1365,11 @@ public class VisualNetForm extends javax.swing.JFrame implements GraphMouseListe
         queue.stream().forEach(e -> this.graph.addEdge(e, e.getNode_left(), e.getNode_right()));                        
         this.viewer.setGraphLayout(new ISOMLayout<Node, Link>(this.graph));
     	}
+        //update side pnl
+        updateSidePnl();
     }
     private void addController(){
+    	if(hasSwitch()){
         Controller c = new Controller();
         Queue<Link> queue = new LinkedList<>();
         
@@ -1197,6 +1386,12 @@ public class VisualNetForm extends javax.swing.JFrame implements GraphMouseListe
         //graph.addEdge(null, c, c, null);
         this.viewer.setGraphLayout(new ISOMLayout<Node, Link>(this.graph));
         //this.viewer.repaint();
+        
+        common.CommonData.controllerCount = common.CommonData.controllerCount + 1;
+        
+        //update side pnl
+        updateSidePnl();
+    	}
     }
 
     private void close()
@@ -1237,6 +1432,45 @@ public class VisualNetForm extends javax.swing.JFrame implements GraphMouseListe
 		}
 	}
     
+	// TODO
+	private void initbetweennessCentrality(boolean bcEnabled){
+			lblBcNodeAvgNumber.setVisible(bcEnabled);
+			lblBcEdgeAvgNumber.setVisible(bcEnabled);
+			lblBcNodeAvg.setVisible(bcEnabled);
+			lblBcEdgeAvg.setVisible(bcEnabled);
+			btnBcDetails.setVisible(bcEnabled);
+			lblBcRunAlg.setVisible(!bcEnabled);
+			if(bcEnabled == true){
+				// set maps
+			} else {
+				// set maps to null
+			}
+	}
+	private void showDetailsBetweenCentrality(){
+		// if maps isnt null -> create popup and show BC details from maps.
+		// else do nothing (maybe display on topPnl that need to run BC)
+		System.out.println("showDetailsBetweenCentrality()");
+	}
+	
+	private void updateSidePnlCentralities(){
+		initbetweennessCentrality(false);
+	}
+	
+	private void initToplbl(String lbltext){
+		pnlTop.removeAll();
+        JLabel lblTop = new JLabel(lbltext);
+        lblTop.setHorizontalAlignment(SwingConstants.CENTER);
+        lblTop.setIcon(null);
+        pnlTop.add(lblTop);
+        pnlTop.updateUI();
+        //pnlTop.ref
+	}
+	public static void updateSidePnl(){
+		lblControllersNumber.setText(""+common.CommonData.controllerCount);
+		lblHostsNumber.setText(""+common.CommonData.hostsCount);
+		lblSwitchesNumber.setText(""+common.CommonData.switchCount);
+	}
+	
 	@SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">                          
     private void initComponents()
@@ -1245,6 +1479,45 @@ public class VisualNetForm extends javax.swing.JFrame implements GraphMouseListe
         pnlMain = new javax.swing.JPanel();
         menuBar = new javax.swing.JMenuBar();
         pnlTop = new javax.swing.JPanel();
+        pnlGraphProperties = new JPanel();
+        // graph params
+        lblSwitchesNumber = new JLabel("0");
+        lblControllersNumber = new JLabel("0");
+        lblHostsNumber = new JLabel("0");
+        // BC params
+        lblBcNodeAvgNumber = new JLabel("0");
+        lblBcEdgeAvgNumber = new JLabel("0");
+        lblBcNodeAvg = new JLabel("Nodes average betweennesscentrality:");
+        lblBcEdgeAvg = new JLabel("Edges average betweennesscentrality:");
+        btnBcDetails = new JButton("Show Details");
+        btnBcDetails.setFont(new Font("Tahoma", Font.PLAIN, 10));
+        btnBcDetails.setForeground(Color.BLACK);
+        btnBcDetails.setActionCommand("");
+        btnBcDetails.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
+        btnBcDetails.setContentAreaFilled(false);
+        btnBcDetails.addMouseListener(new MouseAdapter() {
+        	@Override
+        	public void mouseClicked(MouseEvent arg0) {
+        		showDetailsBetweenCentrality();
+        	}
+        	@Override
+        	public void mouseEntered(MouseEvent e) {
+        		btnBcDetails.setForeground(Color.ORANGE);
+        	}
+        	@Override
+        	public void mouseExited(MouseEvent e) {
+        		btnBcDetails.setForeground(Color.BLACK);
+        	}
+        	@Override
+        	public void mousePressed(MouseEvent e) {
+        		btnBcDetails.setForeground(Color.RED);
+        	}
+        	@Override
+        	public void mouseReleased(MouseEvent e) {
+        		btnBcDetails.setForeground(Color.ORANGE);
+        	}
+        });
+        lblBcRunAlg = new JLabel("Please run algorithm to see details");
         
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         pnlMain.setLayout(new javax.swing.BoxLayout(pnlMain, javax.swing.BoxLayout.LINE_AXIS));
@@ -1284,10 +1557,25 @@ public class VisualNetForm extends javax.swing.JFrame implements GraphMouseListe
 	
 
 
-    // Variables declaration - do not modify                     
+    // TODO Variables declaration - do not modify     
+	// panels
     private javax.swing.JMenuBar menuBar;
     private javax.swing.JPanel pnlMain;
     private javax.swing.JPanel pnlTop;
+    private javax.swing.JPanel pnlGraphProperties;
+    // labels
+    private static javax.swing.JLabel lblSwitchesNumber;
+    private static javax.swing.JLabel lblControllersNumber;
+    private static javax.swing.JLabel lblHostsNumber;
+    
+    // bc
+    private javax.swing.JLabel lblBcNodeAvgNumber;
+    private javax.swing.JLabel lblBcEdgeAvgNumber;
+    private javax.swing.JLabel lblBcNodeAvg;
+    private javax.swing.JLabel lblBcEdgeAvg;
+    private javax.swing.JButton btnBcDetails;
+    private javax.swing.JLabel lblBcRunAlg;
+    
     // End of variables declaration                   
 
     @Override
@@ -1301,6 +1589,7 @@ public class VisualNetForm extends javax.swing.JFrame implements GraphMouseListe
 
             }
         }
+        //updateSidePnl();
     }
 
     @Override
@@ -1313,6 +1602,7 @@ public class VisualNetForm extends javax.swing.JFrame implements GraphMouseListe
             		common.CommonData.nodeLeft = (Node) v;
             }
         }
+        //updateSidePnl();
     }
 
     @Override
@@ -1323,10 +1613,10 @@ public class VisualNetForm extends javax.swing.JFrame implements GraphMouseListe
             if (me.getButton() == MouseEvent.BUTTON1)
             {
             		common.CommonData.nodeRight = (Node) v;
-
+            		//updateSidePnl();
             }
         }
-
+        updateSidePnl();
     }
 }
 

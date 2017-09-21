@@ -114,9 +114,9 @@ public class EdgeTransformer<Link> implements Transformer<Link,Stroke> {
 			controllerStroke_ =  getBasicStroke(dash);
 			enhancerStroke_ = null;
 			inhibitoryStroke_ = null;
-			float[] dash2 = {21, 9, 3, 9};
-			//shortpathStroke_ = null;
-			shortpathStroke_ = getBasicStroke(dash2);
+			//float[] dash2 = {21, 9, 3, 9};
+			shortpathStroke_ = null;
+			//shortpathStroke_ = getBasicStroke(dash2);
 			unknownStroke_ = null;
 //			float[] dash2 = {21, 9, 3, 9};
 //			unknownStroke_ = getBasicStroke(dash2);

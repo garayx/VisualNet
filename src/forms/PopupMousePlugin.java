@@ -9,6 +9,7 @@ package forms;
 import edu.uci.ics.jung.algorithms.layout.GraphElementAccessor;
 import edu.uci.ics.jung.visualization.control.AbstractPopupGraphMousePlugin;
 import edu.uci.ics.jung.visualization.VisualizationViewer;
+import elements.Controller;
 import elements.Host;
 import elements.Link;
 import elements.Node;
@@ -164,12 +165,12 @@ public class PopupMousePlugin<V,E> extends AbstractPopupGraphMousePlugin
                             
                             n.removeNode();
                             
-                            if(n instanceof Host)
-                            {
-                            	// TODO
-//                                common.CommonData.macAddresses.remove( ((Host)n).getNics().get(0).getMac() );
-//                                common.CommonData.ipAddresses.remove( ((Host)n).getNics().get(0).getIp() );                                
-                            }
+//                            if(n instanceof Host)
+//                            {
+//                            	// TODO
+////                                common.CommonData.macAddresses.remove( ((Host)n).getNics().get(0).getMac() );
+////                                common.CommonData.ipAddresses.remove( ((Host)n).getNics().get(0).getIp() );                                
+//                            }
                             
                             n.getConnections().keySet().stream().forEach((node) ->
                             {                                
@@ -179,6 +180,24 @@ public class PopupMousePlugin<V,E> extends AbstractPopupGraphMousePlugin
                             
                             //common.CommonData.idList.get(n.getType()).remove(n.getID());
                             common.CommonData.idList.remove(n.getType(), n.getID());
+                            
+                            
+                            
+                            
+                            // TODO create func to decrease host/switch/controller num
+                            
+                            if(n instanceof Host){
+                            	common.CommonData.hostsCount -= 1;
+                            } else if (n instanceof Switch){
+                            	common.CommonData.switchCount -= 1;
+                            } else if (n instanceof Controller){
+                            	common.CommonData.controllerCount -= 1;
+                            }
+                            
+                            
+                            forms.VisualNetForm.updateSidePnl();
+                            
+                            
                             ve.repaint();
                         }
                     });
