@@ -10,7 +10,9 @@ import elements.Link;
 import elements.Node;
 
 public class RandomWalkCentrality {
-	public static Map<Node, Double> nodesRWCC = new HashMap<Node, Double>();
+	private Map<Node, Double> nodesRWCC = new HashMap<Node, Double>();
+	private Node highestCCnode = null;
+	private double highestCCscore = 0.0;
 	public RandomWalkCentrality(Graph<Node,Link> g){
 		//Map<Node, Double> nodesRWCC = new HashMap<Node, Double>();
 		//Graph<Node,Link> copyGraph = g;
@@ -33,8 +35,16 @@ public class RandomWalkCentrality {
 				 }
 			 }
 			 double rwcc = (g.getVertexCount() - 1) / srcNodeWeight;
+			 if(rwcc > highestCCscore){
+				 highestCCscore = rwcc;
+				 highestCCnode = sourceNode;
+			 }
 			 nodesRWCC.put(sourceNode, rwcc);
 		 }
+		 
+		 
+		 
+		 
 	}
 	/*
 	 * gets sum of weights of the edges in path
@@ -56,4 +66,8 @@ public class RandomWalkCentrality {
 		return weight;
 	}
 	
+	
+	public Map<Node, Double> getNodeCC(){ return this.nodesRWCC; }
+	public Node getNodeHighestCC(){ return this.highestCCnode; }
+	public double getScoreHighestCC(){ return this.highestCCscore; }
 }

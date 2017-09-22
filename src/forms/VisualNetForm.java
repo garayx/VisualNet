@@ -112,7 +112,13 @@ public class VisualNetForm extends javax.swing.JFrame implements GraphMouseListe
 	private List<Link> edgesList = null;
 	private List<Link> newEdgesList = null;
     
-    
+	// maps for algs results
+	private Map<Node, Double> nodeMapBC = null;
+	private Map<Link, Double> linkMapBC = null;
+	private Map<Node, Double> nodeMapCC = null;
+	private Map<Node, Double> nodeMapRWCC = null;
+	private Map<Node, Double> nodeMapEVC = null;
+	private Map<Node, Double> nodeMapEVCW = null;
 	/*
 	 * Transformers
 	 */
@@ -371,17 +377,17 @@ public class VisualNetForm extends javax.swing.JFrame implements GraphMouseListe
         
         //JLabel lblHostsNumber = new JLabel(" ");
         
-        JLabel label_3 = new JLabel("Eigenvector Centrality:");
-        label_3.setFont(new Font("Tahoma", Font.BOLD, 12));
-        label_3.setHorizontalAlignment(SwingConstants.LEFT);
+        JLabel lblEv = new JLabel("Eigenvector Centrality:");
+        lblEv.setFont(new Font("Tahoma", Font.BOLD, 12));
+        lblEv.setHorizontalAlignment(SwingConstants.LEFT);
         
         JLabel lblBc = new JLabel("Betweenness Centrality:");
         lblBc.setFont(new Font("Tahoma", Font.BOLD, 12));
         lblBc.setHorizontalAlignment(SwingConstants.LEFT);
         
-        JLabel label_1 = new JLabel("Closeness Centrality:");
-        label_1.setFont(new Font("Tahoma", Font.BOLD, 12));
-        label_1.setHorizontalTextPosition(SwingConstants.LEFT);
+        JLabel lblCc = new JLabel("Closeness Centrality:");
+        lblCc.setFont(new Font("Tahoma", Font.BOLD, 12));
+        lblCc.setHorizontalTextPosition(SwingConstants.LEFT);
         
         //JLabel lblBcNodeAvg = new JLabel("Nodes average betweennesscentrality:");
         lblBcNodeAvg.setVisible(false);
@@ -395,6 +401,40 @@ public class VisualNetForm extends javax.swing.JFrame implements GraphMouseListe
         //JLabel lblBcEdgeAvgNumber = new JLabel("0");
         lblBcEdgeAvgNumber.setVisible(false);
         
+        
+        
+        // TODO Move IT!!
+        btnBcDetails.setFont(new Font("Tahoma", Font.PLAIN, 10));
+        btnBcDetails.setForeground(Color.DARK_GRAY);
+        btnBcDetails.setActionCommand("");
+        btnBcDetails.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
+        btnBcDetails.setContentAreaFilled(false);
+        btnBcDetails.addMouseListener(new MouseAdapter() {
+        	@Override
+        	public void mouseClicked(MouseEvent arg0) {
+        		showDetailsBetweenCentrality();
+        	}
+        	@Override
+        	public void mouseEntered(MouseEvent e) {
+        		btnBcDetails.setForeground(Color.ORANGE);
+        	}
+        	@Override
+        	public void mouseExited(MouseEvent e) {
+        		btnBcDetails.setForeground(Color.BLACK);
+        	}
+        	@Override
+        	public void mousePressed(MouseEvent e) {
+        		btnBcDetails.setForeground(Color.RED);
+        	}
+        	@Override
+        	public void mouseReleased(MouseEvent e) {
+        		btnBcDetails.setForeground(Color.ORANGE);
+        	}
+        });
+        lblBcRunAlg = new JLabel("Please run algorithm to see details");
+
+        
+        
         //JLabel lblBcRunAlg = new JLabel("Please run algorithm to see details");
         lblBcRunAlg.setEnabled(false);
         
@@ -405,6 +445,189 @@ public class VisualNetForm extends javax.swing.JFrame implements GraphMouseListe
         btnBcDetails.setOpaque(false);
         btnBcDetails.setBorder(null);
         btnBcDetails.setBorderPainted(false);
+        
+        //JLabel lblCcNodeAvg = new JLabel("Nodes average closenesscentality:");
+        lblCcNodeAvg.setVisible(false);
+        lblCcNodeAvg.setHorizontalAlignment(SwingConstants.CENTER);
+        lblCcNodeAvg.setHorizontalTextPosition(SwingConstants.CENTER);
+        
+        //JLabel lblCcNodeAvgNumber = new JLabel("0");
+        lblCcNodeAvgNumber.setVisible(false);
+        
+        //JButton btnCcDetails = new JButton("Show Details");
+        btnCcDetails.addMouseListener(new MouseAdapter() {
+        	@Override
+        	public void mouseClicked(MouseEvent arg0) {
+        		showDetailsClosenessCentrality();
+        	}
+        	@Override
+        	public void mouseEntered(MouseEvent e) {
+        		btnCcDetails.setForeground(Color.ORANGE);
+        	}
+        	@Override
+        	public void mouseExited(MouseEvent e) {
+        		btnCcDetails.setForeground(Color.BLACK);
+        	}
+        	@Override
+        	public void mousePressed(MouseEvent e) {
+        		btnCcDetails.setForeground(Color.RED);
+        	}
+        	@Override
+        	public void mouseReleased(MouseEvent e) {
+        		btnCcDetails.setForeground(Color.ORANGE);
+        	}
+        });
+        btnCcDetails.setActionCommand("");
+        btnCcDetails.setVisible(false);
+        btnCcDetails.setToolTipText("Click to view closeness cenrality details!");
+        btnCcDetails.setOpaque(false);
+        btnCcDetails.setHorizontalAlignment(SwingConstants.LEFT);
+        btnCcDetails.setForeground(Color.DARK_GRAY);
+        btnCcDetails.setFont(new Font("Tahoma", Font.PLAIN, 10));
+        btnCcDetails.setContentAreaFilled(false);
+        btnCcDetails.setBorderPainted(false);
+        btnCcDetails.setBorder(null);
+        
+        //JLabel lblCcRunAlg = new JLabel("Please run algorithm to see details");
+        lblCcRunAlg.setEnabled(false);
+        
+        //JLabel lblEvNodeAvg = new JLabel("Nodes average eigen vector centality:");
+        lblEvNodeAvg.setVisible(false);
+        
+        //JLabel lblEvNodeAvgNumber = new JLabel("0");
+        lblEvNodeAvgNumber.setVisible(false);
+        
+        //JButton btnEvDetails = new JButton("Show Details");
+        btnEvDetails.addMouseListener(new MouseAdapter() {
+        	@Override
+        	public void mouseClicked(MouseEvent arg0) {
+        		showDetailsEigenvectorCentrality();
+        	}
+        	@Override
+        	public void mouseEntered(MouseEvent e) {
+        		btnEvDetails.setForeground(Color.ORANGE);
+        	}
+        	@Override
+        	public void mouseExited(MouseEvent e) {
+        		btnEvDetails.setForeground(Color.BLACK);
+        	}
+        	@Override
+        	public void mousePressed(MouseEvent e) {
+        		btnEvDetails.setForeground(Color.RED);
+        	}
+        	@Override
+        	public void mouseReleased(MouseEvent e) {
+        		btnEvDetails.setForeground(Color.ORANGE);
+        	}
+        });
+        btnEvDetails.setVisible(false);
+        btnEvDetails.setToolTipText("Click to view eigenvector cenrality details!");
+        btnEvDetails.setHorizontalAlignment(SwingConstants.LEFT);
+        btnEvDetails.setContentAreaFilled(false);
+        btnEvDetails.setActionCommand("");
+        btnEvDetails.setOpaque(false);
+        btnEvDetails.setForeground(Color.DARK_GRAY);
+        btnEvDetails.setFont(new Font("Tahoma", Font.PLAIN, 10));
+        btnEvDetails.setBorderPainted(false);
+        btnEvDetails.setBorder(null);
+        
+        //JLabel lblEvRunAlg = new JLabel("Please run algorithm to see details");
+        lblEvRunAlg.setEnabled(false);
+        
+        JLabel lblCcRw = new JLabel("Random Walk Closeness Centrality:");
+        lblCcRw.setHorizontalTextPosition(SwingConstants.LEFT);
+        lblCcRw.setFont(new Font("Tahoma", Font.BOLD, 12));
+        lblCcRw.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
+        
+        //JLabel lblCcRwNodeAvg = new JLabel("Nodes average closenesscentality:");
+        lblCcRwNodeAvg.setVisible(false);
+        
+        //JLabel lblCcRwNodeAvgNumber = new JLabel("0");
+        lblCcRwNodeAvgNumber.setVisible(false);
+        
+        //JButton btnCcRwDetails = new JButton("Show Details");
+        btnCcRwDetails.addMouseListener(new MouseAdapter() {
+        	@Override
+        	public void mouseClicked(MouseEvent arg0) {
+        		showDetailsClosenessCentralityRw();
+        	}
+        	@Override
+        	public void mouseEntered(MouseEvent e) {
+        		btnCcRwDetails.setForeground(Color.ORANGE);
+        	}
+        	@Override
+        	public void mouseExited(MouseEvent e) {
+        		btnCcRwDetails.setForeground(Color.BLACK);
+        	}
+        	@Override
+        	public void mousePressed(MouseEvent e) {
+        		btnCcRwDetails.setForeground(Color.RED);
+        	}
+        	@Override
+        	public void mouseReleased(MouseEvent e) {
+        		btnCcRwDetails.setForeground(Color.ORANGE);
+        	}
+        });
+        btnCcRwDetails.setVisible(false);
+        btnCcRwDetails.setToolTipText("Click to view random walk closeness cenrality details!");
+        btnCcRwDetails.setOpaque(false);
+        btnCcRwDetails.setHorizontalAlignment(SwingConstants.LEFT);
+        btnCcRwDetails.setForeground(Color.DARK_GRAY);
+        btnCcRwDetails.setFont(new Font("Tahoma", Font.PLAIN, 10));
+        btnCcRwDetails.setContentAreaFilled(false);
+        btnCcRwDetails.setBorderPainted(false);
+        btnCcRwDetails.setBorder(null);
+        btnCcRwDetails.setActionCommand("");
+        
+        //JLabel lblCcRwRunAlg = new JLabel("Please run algorithm to see details");
+        lblCcRwRunAlg.setEnabled(false);
+        
+        JLabel lblEvW = new JLabel("Weighted Eigenvector Centrality:");
+        lblEvW.setHorizontalAlignment(SwingConstants.LEFT);
+        lblEvW.setFont(new Font("Tahoma", Font.BOLD, 12));
+        
+        //JLabel lblEvWNodeAvg = new JLabel("Nodes average eigen vector centality:");
+        lblEvWNodeAvg.setVisible(false);
+        
+        //JLabel lblEvWNodeAvgNumber = new JLabel("0");
+        lblEvWNodeAvgNumber.setVisible(false);
+        
+        //JButton btnEvWDetails = new JButton("Show Details");
+        btnEvWDetails.addMouseListener(new MouseAdapter() {
+        	@Override
+        	public void mouseClicked(MouseEvent arg0) {
+        		showDetailsEigenvectorCentralityW();
+        	}
+        	@Override
+        	public void mouseEntered(MouseEvent e) {
+        		btnEvWDetails.setForeground(Color.ORANGE);
+        	}
+        	@Override
+        	public void mouseExited(MouseEvent e) {
+        		btnEvWDetails.setForeground(Color.BLACK);
+        	}
+        	@Override
+        	public void mousePressed(MouseEvent e) {
+        		btnEvWDetails.setForeground(Color.RED);
+        	}
+        	@Override
+        	public void mouseReleased(MouseEvent e) {
+        		btnEvWDetails.setForeground(Color.ORANGE);
+        	}
+        });
+        btnEvWDetails.setToolTipText("Click to view weighted eigenvector cenrality details!");
+        btnEvWDetails.setVisible(false);
+        btnEvWDetails.setOpaque(false);
+        btnEvWDetails.setHorizontalAlignment(SwingConstants.LEFT);
+        btnEvWDetails.setForeground(Color.DARK_GRAY);
+        btnEvWDetails.setFont(new Font("Tahoma", Font.PLAIN, 10));
+        btnEvWDetails.setContentAreaFilled(false);
+        btnEvWDetails.setBorderPainted(false);
+        btnEvWDetails.setBorder(null);
+        btnEvWDetails.setActionCommand("");
+        
+        //JLabel lblEvWRunAlg = new JLabel("Please run algorithm to see details");
+        lblEvWRunAlg.setEnabled(false);
         GroupLayout gl_pnlGraphProperties = new GroupLayout(pnlGraphProperties);
         gl_pnlGraphProperties.setHorizontalGroup(
         	gl_pnlGraphProperties.createParallelGroup(Alignment.LEADING)
@@ -412,39 +635,81 @@ public class VisualNetForm extends javax.swing.JFrame implements GraphMouseListe
         			.addContainerGap()
         			.addGroup(gl_pnlGraphProperties.createParallelGroup(Alignment.LEADING)
         				.addGroup(gl_pnlGraphProperties.createSequentialGroup()
-        					.addGroup(gl_pnlGraphProperties.createParallelGroup(Alignment.LEADING, false)
-        						.addComponent(lblSwitches, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-        						.addComponent(lblHosts, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-        						.addComponent(lblControllers, GroupLayout.DEFAULT_SIZE, 75, Short.MAX_VALUE))
-        					.addPreferredGap(ComponentPlacement.RELATED)
-        					.addGroup(gl_pnlGraphProperties.createParallelGroup(Alignment.LEADING)
-        						.addComponent(lblControllersNumber, GroupLayout.DEFAULT_SIZE, 113, Short.MAX_VALUE)
-        						.addComponent(lblHostsNumber, GroupLayout.DEFAULT_SIZE, 113, Short.MAX_VALUE)
-        						.addComponent(lblSwitchesNumber, GroupLayout.DEFAULT_SIZE, 113, Short.MAX_VALUE))
-        					.addGap(119))
-        				.addGroup(gl_pnlGraphProperties.createSequentialGroup()
         					.addComponent(lblBc)
         					.addContainerGap(126, Short.MAX_VALUE))
         				.addGroup(gl_pnlGraphProperties.createSequentialGroup()
-        					.addComponent(label_1, GroupLayout.DEFAULT_SIZE, 156, Short.MAX_VALUE)
-        					.addGap(157))
+        					.addComponent(lblCcRw)
+        					.addContainerGap(60, Short.MAX_VALUE))
         				.addGroup(gl_pnlGraphProperties.createSequentialGroup()
-        					.addComponent(label_3, GroupLayout.PREFERRED_SIZE, 303, Short.MAX_VALUE)
-        					.addContainerGap())
-        				.addGroup(Alignment.TRAILING, gl_pnlGraphProperties.createSequentialGroup()
-        					.addGap(10)
         					.addGroup(gl_pnlGraphProperties.createParallelGroup(Alignment.TRAILING)
-        						.addComponent(lblBcRunAlg, Alignment.LEADING, GroupLayout.DEFAULT_SIZE, 201, Short.MAX_VALUE)
-        						.addComponent(btnBcDetails, Alignment.LEADING, GroupLayout.DEFAULT_SIZE, 201, Short.MAX_VALUE)
-        						.addComponent(lblBcEdgeAvg, Alignment.LEADING, GroupLayout.DEFAULT_SIZE, 205, Short.MAX_VALUE)
-        						.addComponent(lblBcNodeAvg, GroupLayout.DEFAULT_SIZE, 205, Short.MAX_VALUE))
-        					.addPreferredGap(ComponentPlacement.UNRELATED)
-        					.addGroup(gl_pnlGraphProperties.createParallelGroup(Alignment.TRAILING)
-        						.addComponent(lblBcEdgeAvgNumber, GroupLayout.PREFERRED_SIZE, 82, GroupLayout.PREFERRED_SIZE)
         						.addGroup(gl_pnlGraphProperties.createSequentialGroup()
-        							.addComponent(lblBcNodeAvgNumber, GroupLayout.PREFERRED_SIZE, 56, GroupLayout.PREFERRED_SIZE)
-        							.addGap(26)))
-        					.addContainerGap())))
+        							.addGroup(gl_pnlGraphProperties.createParallelGroup(Alignment.LEADING, false)
+        								.addComponent(lblSwitches, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+        								.addComponent(lblHosts, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+        								.addComponent(lblControllers, GroupLayout.DEFAULT_SIZE, 75, Short.MAX_VALUE))
+        							.addPreferredGap(ComponentPlacement.RELATED)
+        							.addGroup(gl_pnlGraphProperties.createParallelGroup(Alignment.LEADING)
+        								.addComponent(lblControllersNumber, GroupLayout.DEFAULT_SIZE, 192, Short.MAX_VALUE)
+        								.addComponent(lblHostsNumber, GroupLayout.DEFAULT_SIZE, 192, Short.MAX_VALUE)
+        								.addComponent(lblSwitchesNumber, GroupLayout.DEFAULT_SIZE, 192, Short.MAX_VALUE)))
+        						.addGroup(gl_pnlGraphProperties.createSequentialGroup()
+        							.addGap(10)
+        							.addGroup(gl_pnlGraphProperties.createParallelGroup(Alignment.LEADING)
+        								.addComponent(btnCcRwDetails)
+        								.addComponent(lblCcRwRunAlg)
+        								.addGroup(gl_pnlGraphProperties.createParallelGroup(Alignment.LEADING)
+        									.addGroup(gl_pnlGraphProperties.createSequentialGroup()
+        										.addGroup(gl_pnlGraphProperties.createParallelGroup(Alignment.LEADING)
+        											.addComponent(lblBcRunAlg, GroupLayout.DEFAULT_SIZE, 189, Short.MAX_VALUE)
+        											.addComponent(btnBcDetails, GroupLayout.DEFAULT_SIZE, 189, Short.MAX_VALUE)
+        											.addComponent(lblBcEdgeAvg, GroupLayout.DEFAULT_SIZE, 189, Short.MAX_VALUE)
+        											.addComponent(lblBcNodeAvg, Alignment.TRAILING, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+        											.addGroup(gl_pnlGraphProperties.createSequentialGroup()
+        												.addComponent(btnCcDetails, GroupLayout.PREFERRED_SIZE, 57, GroupLayout.PREFERRED_SIZE)
+        												.addPreferredGap(ComponentPlacement.RELATED, 132, Short.MAX_VALUE))
+        											.addGroup(gl_pnlGraphProperties.createSequentialGroup()
+        												.addComponent(lblCcRunAlg)
+        												.addPreferredGap(ComponentPlacement.RELATED)))
+        										.addGap(18)
+        										.addGroup(gl_pnlGraphProperties.createParallelGroup(Alignment.LEADING, false)
+        											.addComponent(lblBcEdgeAvgNumber, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+        											.addComponent(lblBcNodeAvgNumber, GroupLayout.DEFAULT_SIZE, 56, Short.MAX_VALUE)))
+        									.addGroup(gl_pnlGraphProperties.createSequentialGroup()
+        										.addComponent(lblCcNodeAvg)
+        										.addPreferredGap(ComponentPlacement.RELATED)
+        										.addComponent(lblCcNodeAvgNumber, GroupLayout.PREFERRED_SIZE, 185, GroupLayout.PREFERRED_SIZE))
+        									.addGroup(gl_pnlGraphProperties.createSequentialGroup()
+        										.addComponent(lblCcRwNodeAvg)
+        										.addPreferredGap(ComponentPlacement.RELATED)
+        										.addComponent(lblCcRwNodeAvgNumber, GroupLayout.PREFERRED_SIZE, 185, GroupLayout.PREFERRED_SIZE))))))
+        					.addGap(249))
+        				.addGroup(gl_pnlGraphProperties.createSequentialGroup()
+        					.addGap(10)
+        					.addGroup(gl_pnlGraphProperties.createParallelGroup(Alignment.LEADING, false)
+        						.addComponent(btnEvWDetails)
+        						.addGroup(gl_pnlGraphProperties.createSequentialGroup()
+        							.addPreferredGap(ComponentPlacement.RELATED)
+        							.addComponent(lblEvWNodeAvg)
+        							.addPreferredGap(ComponentPlacement.RELATED)
+        							.addComponent(lblEvWNodeAvgNumber, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        						.addComponent(lblEvWRunAlg)
+        						.addGroup(gl_pnlGraphProperties.createSequentialGroup()
+        							.addPreferredGap(ComponentPlacement.RELATED)
+        							.addComponent(lblEvNodeAvg)
+        							.addPreferredGap(ComponentPlacement.RELATED)
+        							.addComponent(lblEvNodeAvgNumber, GroupLayout.PREFERRED_SIZE, 187, GroupLayout.PREFERRED_SIZE))
+        						.addComponent(btnEvDetails)
+        						.addComponent(lblEvRunAlg))
+        					.addGap(247))
+        				.addGroup(gl_pnlGraphProperties.createSequentialGroup()
+        					.addComponent(lblCc)
+        					.addContainerGap())
+        				.addGroup(gl_pnlGraphProperties.createSequentialGroup()
+        					.addComponent(lblEv)
+        					.addContainerGap(135, Short.MAX_VALUE))
+        				.addGroup(gl_pnlGraphProperties.createSequentialGroup()
+        					.addComponent(lblEvW)
+        					.addContainerGap(72, Short.MAX_VALUE))))
         );
         gl_pnlGraphProperties.setVerticalGroup(
         	gl_pnlGraphProperties.createParallelGroup(Alignment.LEADING)
@@ -467,7 +732,7 @@ public class VisualNetForm extends javax.swing.JFrame implements GraphMouseListe
         			.addPreferredGap(ComponentPlacement.RELATED)
         			.addGroup(gl_pnlGraphProperties.createParallelGroup(Alignment.BASELINE)
         				.addComponent(lblBcNodeAvg)
-        				.addComponent(lblBcNodeAvgNumber))
+        				.addComponent(lblBcNodeAvgNumber, GroupLayout.PREFERRED_SIZE, 14, GroupLayout.PREFERRED_SIZE))
         			.addPreferredGap(ComponentPlacement.RELATED)
         			.addGroup(gl_pnlGraphProperties.createParallelGroup(Alignment.BASELINE)
         				.addComponent(lblBcEdgeAvg, GroupLayout.PREFERRED_SIZE, 14, GroupLayout.PREFERRED_SIZE)
@@ -477,10 +742,46 @@ public class VisualNetForm extends javax.swing.JFrame implements GraphMouseListe
         			.addPreferredGap(ComponentPlacement.RELATED)
         			.addComponent(lblBcRunAlg)
         			.addPreferredGap(ComponentPlacement.RELATED)
-        			.addComponent(label_1)
+        			.addComponent(lblCc)
         			.addPreferredGap(ComponentPlacement.RELATED)
-        			.addComponent(label_3)
-        			.addContainerGap(27, Short.MAX_VALUE))
+        			.addGroup(gl_pnlGraphProperties.createParallelGroup(Alignment.BASELINE)
+        				.addComponent(lblCcNodeAvg)
+        				.addComponent(lblCcNodeAvgNumber))
+        			.addPreferredGap(ComponentPlacement.RELATED)
+        			.addComponent(btnCcDetails)
+        			.addPreferredGap(ComponentPlacement.RELATED)
+        			.addComponent(lblCcRunAlg)
+        			.addPreferredGap(ComponentPlacement.RELATED)
+        			.addComponent(lblCcRw)
+        			.addPreferredGap(ComponentPlacement.RELATED)
+        			.addGroup(gl_pnlGraphProperties.createParallelGroup(Alignment.BASELINE)
+        				.addComponent(lblCcRwNodeAvgNumber)
+        				.addComponent(lblCcRwNodeAvg))
+        			.addPreferredGap(ComponentPlacement.RELATED)
+        			.addComponent(btnCcRwDetails)
+        			.addPreferredGap(ComponentPlacement.RELATED)
+        			.addComponent(lblCcRwRunAlg)
+        			.addPreferredGap(ComponentPlacement.RELATED)
+        			.addComponent(lblEv)
+        			.addPreferredGap(ComponentPlacement.RELATED)
+        			.addGroup(gl_pnlGraphProperties.createParallelGroup(Alignment.BASELINE)
+        				.addComponent(lblEvNodeAvgNumber)
+        				.addComponent(lblEvNodeAvg))
+        			.addPreferredGap(ComponentPlacement.RELATED)
+        			.addComponent(btnEvDetails)
+        			.addPreferredGap(ComponentPlacement.RELATED)
+        			.addComponent(lblEvRunAlg)
+        			.addPreferredGap(ComponentPlacement.RELATED)
+        			.addComponent(lblEvW)
+        			.addPreferredGap(ComponentPlacement.RELATED)
+        			.addGroup(gl_pnlGraphProperties.createParallelGroup(Alignment.BASELINE)
+        				.addComponent(lblEvWNodeAvgNumber)
+        				.addComponent(lblEvWNodeAvg))
+        			.addPreferredGap(ComponentPlacement.RELATED)
+        			.addComponent(btnEvWDetails)
+        			.addPreferredGap(ComponentPlacement.RELATED)
+        			.addComponent(lblEvWRunAlg)
+        			.addGap(0, 0, Short.MAX_VALUE))
         );
         pnlGraphProperties.setLayout(gl_pnlGraphProperties);
 
@@ -555,18 +856,18 @@ public class VisualNetForm extends javax.swing.JFrame implements GraphMouseListe
         gl_pnlRight.setHorizontalGroup(
         	gl_pnlRight.createParallelGroup(Alignment.LEADING)
         		.addGroup(gl_pnlRight.createSequentialGroup()
-        			.addGroup(gl_pnlRight.createParallelGroup(Alignment.TRAILING)
-        				.addComponent(pnlGraphProperties, Alignment.LEADING, GroupLayout.PREFERRED_SIZE, 297, Short.MAX_VALUE)
-        				.addComponent(pnlRightBottom, Alignment.LEADING, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-        				.addComponent(pnlSide, Alignment.LEADING, GroupLayout.PREFERRED_SIZE, 297, GroupLayout.PREFERRED_SIZE))
+        			.addGroup(gl_pnlRight.createParallelGroup(Alignment.LEADING)
+        				.addComponent(pnlGraphProperties, GroupLayout.PREFERRED_SIZE, 297, Short.MAX_VALUE)
+        				.addComponent(pnlRightBottom, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+        				.addComponent(pnlSide, GroupLayout.DEFAULT_SIZE, 297, Short.MAX_VALUE))
         			.addContainerGap())
         );
         gl_pnlRight.setVerticalGroup(
-        	gl_pnlRight.createParallelGroup(Alignment.LEADING)
+        	gl_pnlRight.createParallelGroup(Alignment.TRAILING)
         		.addGroup(gl_pnlRight.createSequentialGroup()
-        			.addComponent(pnlGraphProperties, GroupLayout.PREFERRED_SIZE, 246, GroupLayout.PREFERRED_SIZE)
-        			.addGap(47)
-        			.addComponent(pnlSide, GroupLayout.DEFAULT_SIZE, 44, Short.MAX_VALUE)
+        			.addComponent(pnlGraphProperties, GroupLayout.PREFERRED_SIZE, 496, Short.MAX_VALUE)
+        			.addPreferredGap(ComponentPlacement.RELATED)
+        			.addComponent(pnlSide, GroupLayout.DEFAULT_SIZE, 62, Short.MAX_VALUE)
         			.addPreferredGap(ComponentPlacement.RELATED)
         			.addComponent(pnlRightBottom, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
         );
@@ -1270,59 +1571,68 @@ public class VisualNetForm extends javax.swing.JFrame implements GraphMouseListe
     	kek.pack();
     	kek.setVisible(true);
     }
- // TODO getbetweennessCentrality
+	/**
+	 * getbetweennessCentrality
+	 */
     private void getbetweennessCentrality(){
     	refreshGraph();
-    	//CommonData.selectedVertex = null;
-    	//graphMouse.setMode(ModalGraphMouse.Mode.PICKING);
     	BetweennessCentralityAlg bc = new BetweennessCentralityAlg(this.graph);
-    	DecimalFormat df2 = new DecimalFormat(".##");
-        lblBcNodeAvgNumber.setText(""+df2.format(bc.getNodeAvgBC()));
-        lblBcEdgeAvgNumber.setText(""+df2.format(bc.getEdgeAvgBC()));
+    	//DecimalFormat df2 = new DecimalFormat(".##");
+        lblBcNodeAvgNumber.setText(""+String.format("%.03f", bc.getNodeAvgBC()));
+        lblBcEdgeAvgNumber.setText(""+String.format("%.03f", bc.getEdgeAvgBC()));
     	
-    	
+        nodeMapBC = bc.getNodeBC();
+    	linkMapBC = bc.getEdgeBC();
+        
+        
     	initbetweennessCentrality(true);
-    	
-    	
     }
     
     // TODO getclosenessCentrality
     private void getclosenessCentrality(){
+    	// refresh graph
     	refreshGraph();
-    	//CommonData.selectedVertex = null;
-    	//graphMouse.setMode(ModalGraphMouse.Mode.PICKING);
-    	
-    	ClosenessCentralityAlg kek = new ClosenessCentralityAlg(this.graph);
+    	// run algorithm
+    	ClosenessCentralityAlg cc = new ClosenessCentralityAlg(this.graph);
+    	// format double vars
+    	//DecimalFormat df2 = new DecimalFormat(".##");
+    	// set lbls on right panel
+        lblCcNodeAvgNumber.setText(cc.getNodeHighestCC().getToolTip()+" with score of "+String.format("%.03f", cc.getScoreHighestCC()));
+        //update map
+        nodeMapCC = cc.getNodeCC();
+        //show rightpanel
+        initClosenessCentrality(true);
     }
 
     // TODO getRWclosenessCentrality
     private void  getRWclosenessCentrality(){
+    	// refresh graph
     	refreshGraph();
-    	//CommonData.selectedVertex = null;
-    	//graphMouse.setMode(ModalGraphMouse.Mode.PICKING);
-    	
-    	RandomWalkCentrality kek = new RandomWalkCentrality(this.graph);
-    	
-    	//kek.nodesRWCC
-    	double highestRWCC = 0.0;
-    	Node highestRWCCnode = null;
-		 for (Map.Entry<Node, Double> entry : kek.nodesRWCC.entrySet()) {
-			    String key = entry.getKey().getToolTip();
-			    double value = entry.getValue();
-			    if(entry.getValue() > highestRWCC){
-			    	highestRWCC = entry.getValue();
-			    	highestRWCCnode = entry.getKey();
-			    }
-			    System.out.println(key + "\t" + "RWCC:" +"\t" + value);
-		}
-		 System.out.println("Highest RW Closeness Centrality Node:");
-		 System.out.println(highestRWCCnode.getToolTip() + "\tCC Score:\t"+ highestRWCC);
+    	// run algorithm
+    	RandomWalkCentrality ccrw = new RandomWalkCentrality(this.graph);
+    	// set lbls on right panel
+        lblCcRwNodeAvgNumber.setText(ccrw.getNodeHighestCC().getToolTip()+" with score of "+String.format("%.03f", ccrw.getScoreHighestCC()));
+        //update map
+        nodeMapRWCC = ccrw.getNodeCC();
+        //show rightpanel
+        initClosenessCentralityRw(true);
     }
     
     // TODO geteigenvectorCentrality
     private void geteigenvectorCentrality(boolean weighted){
+    	// refresh graph
     	refreshGraph();
-    	EigenvectorCentralityAlg kek = new EigenvectorCentralityAlg(this.graph, weighted);
+    	// run algorithm
+    	EigenvectorCentralityAlg evc = new EigenvectorCentralityAlg(this.graph, weighted);
+    	if(!evc.getIsWeighted()){
+            lblEvNodeAvgNumber.setText(evc.getNodeHighestEVC().getToolTip()+" with score of "+String.format("%.03f", evc.getScoreHighestEVC()));
+            nodeMapEVC = evc.getNodeEVC();
+            initEigenvectorCentrality(true);
+    	} else {
+            lblEvWNodeAvgNumber.setText(evc.getNodeHighestEVC().getToolTip()+" with score of "+String.format("%6.3e", evc.getScoreHighestEVC()));
+            nodeMapEVCW = evc.getNodeEVC();
+            initEigenvectorCentralityW(true);
+    	}
     }
     
     
@@ -1400,7 +1710,7 @@ public class VisualNetForm extends javax.swing.JFrame implements GraphMouseListe
         System.exit(0);
     }
 	
-	/** TODO
+	/** 
 	 * Methods to check errors and popup msgs
 	 */
 	private boolean isGraphCreated(){
@@ -1440,20 +1750,234 @@ public class VisualNetForm extends javax.swing.JFrame implements GraphMouseListe
 			lblBcEdgeAvg.setVisible(bcEnabled);
 			btnBcDetails.setVisible(bcEnabled);
 			lblBcRunAlg.setVisible(!bcEnabled);
-			if(bcEnabled == true){
-				// set maps
-			} else {
-				// set maps to null
+			if(bcEnabled == false){
+				/*
+				 * maps are set in getBC method
+				 */
+				nodeMapBC = null;
+				linkMapBC = null;
 			}
 	}
-	private void showDetailsBetweenCentrality(){
+	private void initClosenessCentrality(boolean bcEnabled){
+		lblCcNodeAvg.setVisible(bcEnabled);
+		lblCcNodeAvgNumber.setVisible(bcEnabled);
+		btnCcDetails.setVisible(bcEnabled);
+		lblCcRunAlg.setVisible(!bcEnabled);
+		if(bcEnabled == false){
+			/*
+			 * maps are set in getBC method
+			 */
+			nodeMapCC = null;
+		}
+	}
+	private void initClosenessCentralityRw(boolean bcEnabled){
+		lblCcRwNodeAvg.setVisible(bcEnabled);
+		lblCcRwNodeAvgNumber.setVisible(bcEnabled);
+		btnCcRwDetails.setVisible(bcEnabled);
+		lblCcRwRunAlg.setVisible(!bcEnabled);
+		if(bcEnabled == false){
+			/*
+			 * maps are set in getBC method
+			 */
+			nodeMapRWCC = null;
+			//linkMapBC = null;
+		}
+	}
+	private void initEigenvectorCentrality(boolean bcEnabled){
+		lblEvNodeAvg.setVisible(bcEnabled);
+		lblEvNodeAvgNumber.setVisible(bcEnabled);
+		btnEvDetails.setVisible(bcEnabled);
+		lblEvRunAlg.setVisible(!bcEnabled);
+		if(bcEnabled == false){
+			/*
+			 * maps are set in getBC method
+			 */
+			nodeMapEVC = null;
+			//linkMapBC = null;
+		}
+	}
+	private void initEigenvectorCentralityW(boolean bcEnabled){
+		lblEvWNodeAvg.setVisible(bcEnabled);
+		lblEvWNodeAvgNumber.setVisible(bcEnabled);
+		btnEvWDetails.setVisible(bcEnabled);
+		lblEvWRunAlg.setVisible(!bcEnabled);
+		if(bcEnabled == false){
+			/*
+			 * maps are set in getBC method
+			 */
+			nodeMapEVCW = null;
+			//linkMapBC = null;
+		}
+	}
+	
+	
+	
+	/**
+	 * showDetailsBetweenCentrality()
+	 */
+	private void showDetailsBetweenCentrality() {
 		// if maps isnt null -> create popup and show BC details from maps.
 		// else do nothing (maybe display on topPnl that need to run BC)
-		System.out.println("showDetailsBetweenCentrality()");
+		double maxNodeScore = 0.0;
+		String maxNodeScoreNode = null;
+		double maxEdgeScore = 0.0;
+		String maxEdgeScoreEdge = null;
+		if (nodeMapBC != null && linkMapBC != null) {
+			// DecimalFormat df2 = new DecimalFormat(".##");
+			StringBuilder bcDetails = new StringBuilder();
+			bcDetails.append("Nodes Betweenness Centrality:\n");
+			for (Map.Entry<Node, Double> entry : nodeMapBC.entrySet()) {
+				String key = entry.getKey().getToolTip();
+				double value = entry.getValue();
+				if (value > maxNodeScore) {
+					maxNodeScore = value;
+					maxNodeScoreNode = key;
+				}
+				bcDetails.append("Node:"+"\t"+key + "\t" + "Score:" + "\t" + String.format("%.03f", value) + "\n");
+			}
+			bcDetails.append("\nHighest Betweenness Centrality Node:\n");
+			bcDetails.append(maxNodeScoreNode + " with score of: " + String.format("%.03f", maxNodeScore)+"\n");
+			bcDetails.append("\nEdges Betweenness Centrality:\n");
+			for (Map.Entry<Link, Double> entry : linkMapBC.entrySet()) {
+				String key = entry.getKey().toString();
+				double value = entry.getValue();
+				if (value > maxEdgeScore) {
+					maxEdgeScore = value;
+					maxEdgeScoreEdge = key;
+				}
+				bcDetails.append("Edge:"+"\t"+key + "\t" + "Score:" + "\t" + String.format("%.03f", value) + "\n");
+			}
+			bcDetails.append("\nHighest Betweenness Centrality Edge:\n");
+			bcDetails.append(maxEdgeScoreEdge + " with score of: " + String.format("%.03f", maxEdgeScore));
+			showLongTextMessageInDialog(bcDetails.toString(), this, "Betweenness Centrality Details");
+		} else {
+			initToplbl("Please run Betweenness Centrality algorithm to see details.");
+		}
 	}
+
+	/** showDetailsClosenessCentrality()
+	 * 
+	 */
+	private void showDetailsClosenessCentrality() {
+		if (nodeMapCC != null) {
+			double maxScore = 0.0;
+			String maxScoreNode = null;
+			StringBuilder ccDetails = new StringBuilder();
+			ccDetails.append("Nodes ClosenessCentrality:\n");
+			for (Map.Entry<Node, Double> entry : nodeMapCC.entrySet()) {
+				String key = entry.getKey().getToolTip();
+				double value = entry.getValue();
+				if (value > maxScore) {
+					maxScore = value;
+					maxScoreNode = entry.getKey().getToolTip();
+				}
+				ccDetails.append("Node:"+"\t"+key + "\t" + "Score:" + "\t" + String.format("%.03f", value) + "\n");
+			}
+			ccDetails.append("\nHighest Closeness Centrality Node:\n");
+			ccDetails.append(maxScoreNode + " with score of: " + String.format("%.03f", maxScore));
+			showLongTextMessageInDialog(ccDetails.toString(), this, "Closeness Centrality Details");
+		} else {
+			initToplbl("Please run Closeness Centrality algorithm to see details.");
+		}
+	}
+	/** showDetailsClosenessCentralityRw
+	 * 
+	 */
+	private void showDetailsClosenessCentralityRw(){
+		//nodeMapRWCC
+		if (nodeMapRWCC != null) {
+			double maxScore = 0.0;
+			String maxScoreNode = null;
+			StringBuilder ccDetails = new StringBuilder();
+			ccDetails.append("Nodes RandomWalk ClosenessCentrality:\n");
+			for (Map.Entry<Node, Double> entry : nodeMapRWCC.entrySet()) {
+				String key = entry.getKey().getToolTip();
+				double value = entry.getValue();
+				if (value > maxScore) {
+					maxScore = value;
+					maxScoreNode = entry.getKey().getToolTip();
+				}
+				ccDetails.append("Node:"+"\t"+key + "\t" + "Score:" + "\t" + String.format("%.03f", value) + "\n");
+			}
+			ccDetails.append("\nHighest RandomWalk Closeness Centrality Node:\n");
+			ccDetails.append(maxScoreNode + " with score of: " + String.format("%.03f", maxScore));
+			showLongTextMessageInDialog(ccDetails.toString(), this, "RandomWalk Closeness Centrality Details");
+		} else {
+			initToplbl("Please run RandomWalk Closeness Centrality algorithm to see details.");
+		}
+	}
+	// TODO showDetailsEigenvectorCentrality()
+	private void showDetailsEigenvectorCentrality(){
+		if (nodeMapEVC != null) {
+			double maxScore = 0.0;
+			String maxScoreNode = null;
+			StringBuilder evDetails = new StringBuilder();
+			evDetails.append("Nodes Eigenvector Centrality:\n");
+			for (Map.Entry<Node, Double> entry : nodeMapEVC.entrySet()) {
+				String key = entry.getKey().getToolTip();
+				double value = entry.getValue();
+				if (value > maxScore) {
+					maxScore = value;
+					maxScoreNode = entry.getKey().getToolTip();
+				}
+				evDetails.append("Node:"+"\t"+key + "\t" + "Score:" + "\t" + String.format("%.03f", value) + "\n");
+			}
+			evDetails.append("\nHighest Eigenvector Centrality Node:\n");
+			evDetails.append(maxScoreNode + " with score of: " + String.format("%.03f", maxScore));
+			showLongTextMessageInDialog(evDetails.toString(), this, "Eigenvector Centrality Details");
+		} else {
+			initToplbl("Please run Eigenvector Centrality algorithm to see details.");
+		}
+	}
+
+	// TODO showDetailsEigenvectorCentralityW()
+	private void showDetailsEigenvectorCentralityW(){
+		if (nodeMapEVCW != null) {
+			double maxScore = 0.0;
+			String maxScoreNode = null;
+			StringBuilder evDetails = new StringBuilder();
+			evDetails.append("Nodes Weighted Eigenvector Centrality:\n");
+			for (Map.Entry<Node, Double> entry : nodeMapEVCW.entrySet()) {
+				String key = entry.getKey().getToolTip();
+				double value = entry.getValue();
+				if (value > maxScore) {
+					maxScore = value;
+					maxScoreNode = entry.getKey().getToolTip();
+				}
+				evDetails.append("Node:"+"\t"+key + "\t" + "Score:" + "\t" + String.format("%6.3e", value) + "\n");
+				//evDetails.append(key + "\t" + "CC:" + "\t" + value + "\n");
+			}
+			evDetails.append("\nHighest Weighted Eigenvector Centrality Node:\n");
+			evDetails.append(maxScoreNode + " with score of: " + String.format("%6.3e", maxScore));
+			//evDetails.append(maxScoreNode + " with score of: " + maxScore);
+			showLongTextMessageInDialog(evDetails.toString(), this, "Weighted Eigenvector Centrality Details");
+		} else {
+			initToplbl("Please run Weighted Eigenvector Centrality algorithm to see details.");
+		}
+	}
+	
+	/**
+	 * method to show centralities algs details
+	 * @param longMessage
+	 * @param frame
+	 */
+	private void showLongTextMessageInDialog(String longMessage, Frame frame, String title) {
+	    JTextArea textArea = new JTextArea(33, 35);
+	    textArea.setText(longMessage);
+	    textArea.setEditable(false);
+	    JScrollPane scrollPane = new JScrollPane(textArea);
+	    
+	    JOptionPane.showMessageDialog(frame, scrollPane, title, JOptionPane.INFORMATION_MESSAGE);
+	}
+	
+	
 	
 	private void updateSidePnlCentralities(){
 		initbetweennessCentrality(false);
+		initClosenessCentrality(false);
+		initClosenessCentralityRw(false);
+		initEigenvectorCentrality(false);
+		initEigenvectorCentralityW(false);
 	}
 	
 	private void initToplbl(String lbltext){
@@ -1490,34 +2014,66 @@ public class VisualNetForm extends javax.swing.JFrame implements GraphMouseListe
         lblBcNodeAvg = new JLabel("Nodes average betweennesscentrality:");
         lblBcEdgeAvg = new JLabel("Edges average betweennesscentrality:");
         btnBcDetails = new JButton("Show Details");
-        btnBcDetails.setFont(new Font("Tahoma", Font.PLAIN, 10));
-        btnBcDetails.setForeground(Color.BLACK);
-        btnBcDetails.setActionCommand("");
-        btnBcDetails.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
-        btnBcDetails.setContentAreaFilled(false);
-        btnBcDetails.addMouseListener(new MouseAdapter() {
-        	@Override
-        	public void mouseClicked(MouseEvent arg0) {
-        		showDetailsBetweenCentrality();
-        	}
-        	@Override
-        	public void mouseEntered(MouseEvent e) {
-        		btnBcDetails.setForeground(Color.ORANGE);
-        	}
-        	@Override
-        	public void mouseExited(MouseEvent e) {
-        		btnBcDetails.setForeground(Color.BLACK);
-        	}
-        	@Override
-        	public void mousePressed(MouseEvent e) {
-        		btnBcDetails.setForeground(Color.RED);
-        	}
-        	@Override
-        	public void mouseReleased(MouseEvent e) {
-        		btnBcDetails.setForeground(Color.ORANGE);
-        	}
-        });
-        lblBcRunAlg = new JLabel("Please run algorithm to see details");
+        // CC params
+        // TODO change to highest score
+        lblCcNodeAvg = new JLabel("Highest score: ");
+        lblCcNodeAvgNumber = new JLabel("0");
+        btnCcDetails = new JButton("Show Details");
+        lblCcRunAlg = new JLabel("Please run algorithm to see details");
+        // RWCC params
+        lblCcRwNodeAvg = new JLabel("Highest score: ");
+        lblCcRwNodeAvgNumber = new JLabel("0");
+        btnCcRwDetails = new JButton("Show Details");
+        lblCcRwRunAlg = new JLabel("Please run algorithm to see details");
+        // EVC params
+        lblEvNodeAvg = new JLabel("Highest score: ");
+        lblEvNodeAvgNumber = new JLabel("0");
+        btnEvDetails = new JButton("Show Details");
+        lblEvRunAlg = new JLabel("Please run algorithm to see details");
+        // EVCW params
+        lblEvWNodeAvg = new JLabel("Highest score: ");
+        lblEvWNodeAvgNumber = new JLabel("0");
+        btnEvWDetails = new JButton("Show Details");
+        lblEvWRunAlg = new JLabel("Please run algorithm to see details");
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+//        // TODO Move IT!!
+//        btnBcDetails.setFont(new Font("Tahoma", Font.PLAIN, 10));
+//        btnBcDetails.setForeground(Color.BLACK);
+//        btnBcDetails.setActionCommand("");
+//        btnBcDetails.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
+//        btnBcDetails.setContentAreaFilled(false);
+//        btnBcDetails.addMouseListener(new MouseAdapter() {
+//        	@Override
+//        	public void mouseClicked(MouseEvent arg0) {
+//        		showDetailsBetweenCentrality();
+//        	}
+//        	@Override
+//        	public void mouseEntered(MouseEvent e) {
+//        		btnBcDetails.setForeground(Color.ORANGE);
+//        	}
+//        	@Override
+//        	public void mouseExited(MouseEvent e) {
+//        		btnBcDetails.setForeground(Color.BLACK);
+//        	}
+//        	@Override
+//        	public void mousePressed(MouseEvent e) {
+//        		btnBcDetails.setForeground(Color.RED);
+//        	}
+//        	@Override
+//        	public void mouseReleased(MouseEvent e) {
+//        		btnBcDetails.setForeground(Color.ORANGE);
+//        	}
+//        });
+//        lblBcRunAlg = new JLabel("Please run algorithm to see details");
         
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         pnlMain.setLayout(new javax.swing.BoxLayout(pnlMain, javax.swing.BoxLayout.LINE_AXIS));
@@ -1575,6 +2131,31 @@ public class VisualNetForm extends javax.swing.JFrame implements GraphMouseListe
     private javax.swing.JLabel lblBcEdgeAvg;
     private javax.swing.JButton btnBcDetails;
     private javax.swing.JLabel lblBcRunAlg;
+    // cc
+    private javax.swing.JLabel lblCcNodeAvg;
+    private javax.swing.JLabel lblCcNodeAvgNumber;
+    private javax.swing.JButton btnCcDetails;
+    private javax.swing.JLabel lblCcRunAlg;
+    // RWCC
+    private javax.swing.JLabel lblCcRwNodeAvg;
+    private javax.swing.JLabel lblCcRwNodeAvgNumber;
+    private javax.swing.JButton btnCcRwDetails;
+    private javax.swing.JLabel lblCcRwRunAlg;
+    // EVC
+    private javax.swing.JLabel lblEvNodeAvg;
+    private javax.swing.JLabel lblEvNodeAvgNumber;
+    private javax.swing.JButton btnEvDetails;
+    private javax.swing.JLabel lblEvRunAlg;
+    // EVCW
+    private javax.swing.JLabel lblEvWNodeAvg;
+    private javax.swing.JLabel lblEvWNodeAvgNumber;
+    private javax.swing.JButton btnEvWDetails;
+    private javax.swing.JLabel lblEvWRunAlg;
+    
+    
+    
+    
+    
     
     // End of variables declaration                   
 

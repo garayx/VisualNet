@@ -45,20 +45,20 @@ public class BetweennessCentralityAlg {
 
 		nodeAvgBC /= g.getVertexCount();
 		linkAvgBC /= g.getEdgeCount();
-		System.out.println("Node betweencentrality:");
-		for (Map.Entry<Node, Double> entry : nodeBC.entrySet()) {
-			String key = entry.getKey().getToolTip();
-			double value = entry.getValue();
-			System.out.println(key + "\t" + "BC:" + "\t" + value);
-		}
-		System.out.println("Edge betweencentrality:");
-		for (Map.Entry<Link, Double> entry : linkBC.entrySet()) {
-			String key = entry.getKey().toString();
-			double value = entry.getValue();
-			System.out.println(key + "\t" + "BC:" + "\t" + value);
-		}
-		System.out.println("Nodes average betweencentrality: " + nodeAvgBC);
-		System.out.println("Edges average betweencentrality: " + linkAvgBC);
+//		System.out.println("Node betweencentrality:");
+//		for (Map.Entry<Node, Double> entry : nodeBC.entrySet()) {
+//			String key = entry.getKey().getToolTip();
+//			double value = entry.getValue();
+//			System.out.println(key + "\t" + "BC:" + "\t" + value);
+//		}
+//		System.out.println("Edge betweencentrality:");
+//		for (Map.Entry<Link, Double> entry : linkBC.entrySet()) {
+//			String key = entry.getKey().toString();
+//			double value = entry.getValue();
+//			System.out.println(key + "\t" + "BC:" + "\t" + value);
+//		}
+//		System.out.println("Nodes average betweencentrality: " + nodeAvgBC);
+//		System.out.println("Edges average betweencentrality: " + linkAvgBC);
 	}
 	// public methods
 	public Map<Node, Double> getNodeBC(){ return this.nodeBC; }
