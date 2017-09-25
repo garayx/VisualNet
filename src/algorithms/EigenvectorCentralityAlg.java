@@ -39,16 +39,16 @@ public class EigenvectorCentralityAlg {
 			 }
 			nodeEC.put(tmpnode, ec.getVertexScore(tmpnode));
 		}
-		System.out.println("isWeighted: "+isWeighted);
-		System.out.println("Node Eigenvector Centrality:");
-		
-		for (Map.Entry<Node, Double> entry : nodeEC.entrySet()) {
-			String key = entry.getKey().getToolTip();
-			double value = entry.getValue();
-			
-			
-			System.out.println(key + "\t" + "EC:" + "\t" + value);
-		}
+//		System.out.println("isWeighted: "+isWeighted);
+//		System.out.println("Node Eigenvector Centrality:");
+//		
+//		for (Map.Entry<Node, Double> entry : nodeEC.entrySet()) {
+//			String key = entry.getKey().getToolTip();
+//			double value = entry.getValue();
+//			
+//			
+//			System.out.println(key + "\t" + "EC:" + "\t" + value);
+//		}
 	}
 	
 	private void init(boolean isWeighted_){

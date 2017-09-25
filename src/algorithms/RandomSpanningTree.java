@@ -76,8 +76,19 @@ public class RandomSpanningTree extends JFrame{
 		Node sourceNode = nodes.get(randNum);
 		
 		// Put the source node to completed nodes list
+		if(nodes.size() == 2){
+			edges = new ArrayList<Link>();
+			Link tmp = new Link();
+			//Node tmpNode;
+			tmp.setNode_left(sourceNode);
+			for(Node x : nodes){
+				if(!x.equals(sourceNode) && g.isNeighbor(sourceNode, x))
+					tmp.setNode_right(x);
+			}
+			edges.add(tmp);
+		} else {
 		edges = new RandomWalk(g).searchNetwork(sourceNode);
-		
+		}
 		
 		graph = new DelegateForest<>();
 		for (Node x : nodes) {

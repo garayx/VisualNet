@@ -28,12 +28,7 @@ public class NodeFillColorTransformer<Node> implements Transformer<Node,Paint> {
 	    
 	    public NodeFillColorTransformer(PickedInfo<Node> pi) {
 	        pi_ = pi;
-//	        defaultNodeColor = new Color(113, 153, 255); 		// Blue light
-//	        pickedColor_ = Color.YELLOW;
-//	        possibleNodeColor_ = new Color(255, 186, 0); 		// Orange
-//	        solutionNodeColor_ = new Color(255, 70, 0); 		// Red
-//	        solutionNodeColor_ = new Color(170, 255, 170); 	// Pistachio
-	        
+	        // set default colors
 	        defaultNodeColor = new Color(113, 153, 255); 		// Blue light
 	        defaultControllerColor = new Color(0, 127, 127);
 	        defaultSwitchColor = Color.ORANGE;

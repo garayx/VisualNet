@@ -37,14 +37,14 @@ public class ClosenessCentralityAlg {
 			 }
 			 nodeCC.put(node, cc.getVertexScore(node));
 		 }
-		 System.out.println("Node ClosenessCentrality:");
-		 for (Map.Entry<Node, Double> entry : nodeCC.entrySet()) {
-			    String key = entry.getKey().getToolTip();
-			    double value = entry.getValue();
-			    System.out.println(key + "\t" + "CC:" +"\t" + value);
-			}
-		 System.out.println("Highest Closeness Centrality Node:");
-		 System.out.println(highestCCnode.getToolTip() + "\tCC Score:\t"+ highestCCscore);
+//		 System.out.println("Node ClosenessCentrality:");
+//		 for (Map.Entry<Node, Double> entry : nodeCC.entrySet()) {
+//			    String key = entry.getKey().getToolTip();
+//			    double value = entry.getValue();
+//			    System.out.println(key + "\t" + "CC:" +"\t" + value);
+//			}
+//		 System.out.println("Highest Closeness Centrality Node:");
+//		 System.out.println(highestCCnode.getToolTip() + "\tCC Score:\t"+ highestCCscore);
 		
 	}
 	

@@ -2,6 +2,7 @@ package elements;
 
 import java.awt.Color;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 
 import common.CommonData;
@@ -9,30 +10,43 @@ import common.CommonData;
 public abstract class Node {
 	private int id;
 	public static Color Color;
-	private String MAC;
+	private String mac;
+	private String ip;
 	private String sid;
 	// TODO
 	private String type = "Node";
 	private Map<Node,NIC> Connections = new HashMap<Node, NIC>();
 	private String routeType = "";
 	private final int port = 0 + (int)(Math.random() * 65535);
+	//private NIC nNic;
 	
     public Node()
     {
-    	
+    	//nNic = new NIC(port);
+        this.mac = common.Utils.generateMAC();
+        this.ip = common.Utils.getUniqueIP();
     }
 	
 	public NIC addConnection(Node node) {
-		NIC nic = new NIC(port);
+		NIC nic = new NIC(node.getMAC(), node.getIP());
 		Connections.put(node, nic);
 		return nic;
 	}
 	// TODO
 	public void removeConnection(Node x){
-		for(Map.Entry<Node, NIC> entry: Connections.entrySet()){
-			if(entry.equals(x))
-				Connections.remove(entry);
-		}
+//		for(Map.Entry<Node, NIC> entry: Connections.entrySet()){
+//			if(entry.getKey().equals(x)){
+//				//Connections.remove(entry);
+//				boolean kek = Connections.remove(x, entry);
+//				System.out.println("removed: "+x.getToolTip()+" "+entry.getValue()+ " " + kek);
+//			}
+//		}
+	    for(Iterator<Map.Entry<Node, NIC>> it = Connections.entrySet().iterator(); it.hasNext(); ) {
+	        Map.Entry<Node, NIC> entry = it.next();
+	        if(entry.getKey().equals(x)) {
+	          it.remove();
+	        }
+	}
 	}
 	// TODO
 	public Map<Node, NIC> getConnections(){
@@ -100,6 +114,12 @@ public abstract class Node {
     public String getRouteType()
     {
         return routeType;
+    }
+    public String getIP(){
+    	return this.ip;
+    }
+    public String getMAC(){
+    	return this.mac;
     }
     
 }

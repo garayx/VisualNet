@@ -313,6 +313,8 @@ public class RandomWalk {
 							}
 					} else if (currentIndex == currentPosition) {
 						failReason = "isolated node in search!!";
+						//completedNodes.add(currentIndex);
+						//looking = false;
 //						System.out.println(failReason);
 						// return false;
 					}
@@ -322,6 +324,7 @@ public class RandomWalk {
 			// Node has no neighbors.. Isolated in space !
 			else {
 				failReason = "isolated node in search!!";
+				//completedNodes.add(currentNode);
 //				System.out.println(failReason);
 				// return false;
 			}

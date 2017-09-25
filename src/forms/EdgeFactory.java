@@ -46,7 +46,7 @@ public class EdgeFactory implements Factory<Link>
 	        
 	        return l;
     	//} else {
-    		//return null;
+    	//	return new Link();
     	//}
     }
     
