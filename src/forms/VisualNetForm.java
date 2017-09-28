@@ -1205,7 +1205,7 @@ public class VisualNetForm extends javax.swing.JFrame implements GraphMouseListe
 				}
 			}
         });
-       // randomWalk selector
+       // randomWalk selector s
         JMenuItem randomWalkItem = new JMenuItem("Random Walk");
         menuAlgs.add(randomWalkItem);
         randomWalkItem.addActionListener(new ActionListener()
