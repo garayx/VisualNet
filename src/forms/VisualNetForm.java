@@ -1205,7 +1205,7 @@ public class VisualNetForm extends javax.swing.JFrame implements GraphMouseListe
 				}
 			}
         });
-       // randomWalk selector
+       // randomWalk selector s
         JMenuItem randomWalkItem = new JMenuItem("Random Walk");
         menuAlgs.add(randomWalkItem);
         randomWalkItem.addActionListener(new ActionListener()
@@ -1214,8 +1214,10 @@ public class VisualNetForm extends javax.swing.JFrame implements GraphMouseListe
             public void actionPerformed(ActionEvent e)
             {
 				// check if graph has errors
-				if (isGraphCreated() && isSourceDestSelected() && isSCGraph()) {
-	            	generateRandomWalk();
+				if (isGraphCreated() && isSourceDestSelected()) {
+					refreshGraph();
+					if(isSCGraph())
+						generateRandomWalk();
 				} 
             }
         });
@@ -1638,9 +1640,10 @@ public class VisualNetForm extends javax.swing.JFrame implements GraphMouseListe
      * generateRandomWalk method
      * 
      */
+    // TODO add transformer for SP path to diplay edges number 1....N
     private void generateRandomWalk(){
     	// refresh graph before running
-    	refreshGraph();
+    	//refreshGraph();
     	CommonData.selectedVertex = null;
     	// init lists
     	List<Node> randomwalkresult;
