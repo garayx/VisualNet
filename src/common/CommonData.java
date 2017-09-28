@@ -3,8 +3,10 @@ package common;
 import java.awt.Color;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 import elements.Controller;
+import elements.Link;
 import elements.Node;
 
 public class CommonData {
@@ -23,6 +25,13 @@ public class CommonData {
     public static int hostsCount = 0;
     public static int controllerCount = 0;
 	
+    //public boolean isListsEmpty = true;
+    public static List<Link> edgesList = null;
+    public static List<Link> newEdgesList = null;
+    
+    
+    
+    
     public static ArrayList<String> macAddresses;
     public static ArrayList<String> ipAddresses;
     public static ArrayList<String> dpidAddresses;

@@ -57,6 +57,7 @@ public class RandomSpanningTree extends JFrame{
 	private static final long serialVersionUID = -7641790928990256138L;
 	JFrame frame = new JFrame();
 	VisualizationViewer<Node, Link> vv1;
+	//private Graph<Node, Link> g = null;
 	//Dimension preferredSizeRect = new Dimension(500, 250);
 	
 	//private Graph<Node, Link> graph;
@@ -66,30 +67,63 @@ public class RandomSpanningTree extends JFrame{
 	public RandomSpanningTree(Graph<Node, Link> g){
 		super("Random Spanning Tree");
 		Graph<Node, Link> graph;
+		
 		List<Node> nodes;
 		List<Link> edges = new ArrayList<Link>();
 		nodes = new ArrayList<Node>(g.getVertices());
+		Node sourceNode = null;
+		
+		List<Node> unconnectedNodes = getUnVertex(nodes,g);
+//		if(unconnectedNodes.size() == 0){
+//			System.out.println("No Unconnedcted Nodes");
+//			Random rand = new Random();
+//			int randNum = rand.nextInt(g.getVertexCount() - 1);
+//			sourceNode = nodes.get(randNum);
+//		} else {
+//			System.out.println("Unconnedcted Nodes");
+			for(Node x: unconnectedNodes){
+				System.out.println(x.getToolTip());
+				nodes.remove(x);
+			}
+			
+			Random rand = new Random();
+			int randNum = rand.nextInt(nodes.size() - 1);
+			sourceNode = nodes.get(randNum);
+			
+			
+//			
+//			Random rand = new Random();
+//			int randNum = rand.nextInt(nodes.size() - 1);
+//			sourceNode = nodes.get(randNum);
+//		}
+
+		
 		
 		// Get random source node to start randomWalks
-		Random rand = new Random();
-		int randNum = rand.nextInt(g.getVertexCount() - 1);
-		Node sourceNode = nodes.get(randNum);
-		
+
+
+//		for(Node x : nodes){
+//			g.inDegree(x);
+//		}
 		// Put the source node to completed nodes list
-		if(nodes.size() == 2){
-			edges = new ArrayList<Link>();
-			Link tmp = new Link();
-			//Node tmpNode;
-			tmp.setNode_left(sourceNode);
-			for(Node x : nodes){
-				if(!x.equals(sourceNode) && g.isNeighbor(sourceNode, x))
-					tmp.setNode_right(x);
-			}
-			edges.add(tmp);
-		} else {
-		edges = new RandomWalk(g).searchNetwork(sourceNode);
-		}
+//		if(nodes.size() == 2){
+//			edges = new ArrayList<Link>();
+//			Link tmp = new Link();
+//			//Node tmpNode;
+//			tmp.setNode_left(sourceNode);
+//			for(Node x : nodes){
+//				if(!x.equals(sourceNode) && g.isNeighbor(sourceNode, x))
+//					tmp.setNode_right(x);
+//			}
+//			edges.add(tmp);
+//		} else {
 		
+		edges = new RandomWalk(g).searchNetwork();
+//		}
+		for(Node x: unconnectedNodes){
+			//System.out.println(x.getToolTip());
+			nodes.add(x);
+		}
 		graph = new DelegateForest<>();
 		for (Node x : nodes) {
 			graph.addVertex(x);
@@ -204,5 +238,14 @@ public class RandomSpanningTree extends JFrame{
 		controls.add(zoomPanel);
 		controls.add(modePanel);
 		content.add(controls, BorderLayout.SOUTH);
+	}
+	
+	private List<Node> getUnVertex(List<Node> nodesList, Graph<Node,Link> g){
+		List<Node> nodes = new ArrayList<Node>();
+		for(Node x : nodesList){
+			if(g.inDegree(x) == 0)
+				nodes.add(x);
+		}
+		return nodes;
 	}
 }

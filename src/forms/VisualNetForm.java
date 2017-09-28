@@ -65,6 +65,8 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Queue;
+import java.util.Set;
+
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
 import javax.swing.ButtonGroup;
@@ -114,8 +116,8 @@ public class VisualNetForm extends javax.swing.JFrame implements GraphMouseListe
     private ArrayList<Integer> domains;
     private ArrayList<String> routeNames;
     
-	private List<Link> edgesList = null;
-	private List<Link> newEdgesList = null;
+//	private List<Link> edgesList = null;
+//	private List<Link> newEdgesList = null;
     
 	// maps for algs results
 	private Map<Node, Double> nodeMapBC = null;
@@ -134,6 +136,7 @@ public class VisualNetForm extends javax.swing.JFrame implements GraphMouseListe
     private NodeShapeTransformer<Node> nodeShapeTransformer_ = null;
     private NodeFillColorTransformer<Node> nodeFillColorTransformer_ = null;
     
+    // picked stated for edges and nodes
     private PickedState<Node> pickedState_ = null;
     private PickedState<Link> pickedStateLink_ = null;
     //static String mouseMode;
@@ -1211,7 +1214,7 @@ public class VisualNetForm extends javax.swing.JFrame implements GraphMouseListe
             public void actionPerformed(ActionEvent e)
             {
 				// check if graph has errors
-				if (isGraphCreated() && isSourceDestSelected()) {
+				if (isGraphCreated() && isSourceDestSelected() && isSCGraph()) {
 	            	generateRandomWalk();
 				} 
             }
@@ -1280,7 +1283,7 @@ public class VisualNetForm extends javax.swing.JFrame implements GraphMouseListe
             @Override
             public void actionPerformed(ActionEvent e)
             {
-            	if (isGraphCreated()) {
+            	if (isGraphCreated() && isSCGraph()) {
             		getRWclosenessCentrality();
             	}
             }
@@ -1458,10 +1461,10 @@ public class VisualNetForm extends javax.swing.JFrame implements GraphMouseListe
     private void refreshGraph(){
 //    	common.CommonData.destinationNode = null;
 //    	common.CommonData.sourceNode = null;
-		if (newEdgesList != null && edgesList != null) {
-			for (Link l : newEdgesList)
+		if (common.CommonData.newEdgesList != null && common.CommonData.edgesList != null) {
+			for (Link l : common.CommonData.newEdgesList)
 				this.graph.removeEdge(l);
-			for (Link l : edgesList)
+			for (Link l : common.CommonData.edgesList)
 				this.graph.addEdge(l, l.getNode_left(), l.getNode_right());
 		}
     	
@@ -1482,8 +1485,8 @@ public class VisualNetForm extends javax.swing.JFrame implements GraphMouseListe
         		}
         		);
         
-        newEdgesList = null;
-        edgesList = null;
+        common.CommonData.newEdgesList = null;
+        common.CommonData.edgesList = null;
         //this.viewer.getRenderContext().setEdgeShapeTransformer(new EdgeShape.Line<Node,Link>());
         this.viewer.repaint();
         this.initToplbl("");
@@ -1500,8 +1503,8 @@ public class VisualNetForm extends javax.swing.JFrame implements GraphMouseListe
 		common.CommonData.hostsCount = 0;
 		common.CommonData.controllerCount = 0;
 		common.CommonData.selectedNode = "Switch";
-        newEdgesList = null;
-        edgesList = null;
+		common.CommonData.newEdgesList = null;
+		common.CommonData.edgesList = null;
         updateSidePnlCentralities();
 		
 		
@@ -1523,8 +1526,8 @@ public class VisualNetForm extends javax.swing.JFrame implements GraphMouseListe
     	CommonData.selectedVertex = null;
     	// init lists
     	List<Node> shortestPathResults;
-    	edgesList = new ArrayList<Link>();
-    	newEdgesList = new ArrayList<Link>();
+    	common.CommonData.edgesList = new ArrayList<Link>();
+    	common.CommonData.newEdgesList = new ArrayList<Link>();
     	List<Node> nodesList = new ArrayList<Node>();
     	// change mouseType to picking
     	graphMouse.setMode(ModalGraphMouse.Mode.PICKING);
@@ -1542,7 +1545,7 @@ public class VisualNetForm extends javax.swing.JFrame implements GraphMouseListe
     			strTmp.append(shortestPathResults.get(i).getSid() + ", ");
     			Link currentEdge = this.graph.findEdge(shortestPathResults.get(i), shortestPathResults.get(i+1));
 				// add all randomWalk path edges to list
-    			edgesList.add(currentEdge);
+    			common.CommonData.edgesList.add(currentEdge);
     		}
 			// set Nodes routeType to change their color
     		shortestPathResults.get(i).setRouteType("SP");
@@ -1550,20 +1553,20 @@ public class VisualNetForm extends javax.swing.JFrame implements GraphMouseListe
     		nodesList.add(shortestPathResults.get(i));
     	}
 		// remove old edges from graph
-    	for(Link l : edgesList){
+    	for(Link l : common.CommonData.edgesList){
     		this.graph.removeEdge(l);
     	}
     	// change edges to directed type edges and keep their capacity
     	for(int i=0; i < nodesList.size()-1; i++){
-	    	for(Link l : edgesList){
+	    	for(Link l : common.CommonData.edgesList){
 	    		if(l.getNode_left() == nodesList.get(i) && l.getNode_right() == nodesList.get(i+1)){
 		    		l.setArrowType("SP");
 		    		this.graph.addEdge(l, l.getNode_left(), l.getNode_right(), EdgeType.DIRECTED);
-		    		newEdgesList.add(l);
+		    		common.CommonData.newEdgesList.add(l);
 	    		} else if(l.getNode_left() == nodesList.get(i+1) && l.getNode_right() == nodesList.get(i)){
 		    		l.setArrowType("SP");
 		    		this.graph.addEdge(l, l.getNode_right(), l.getNode_left(), EdgeType.DIRECTED);
-		    		newEdgesList.add(l);
+		    		common.CommonData.newEdgesList.add(l);
 	    		}
 	    	}
     	}
@@ -1581,8 +1584,8 @@ public class VisualNetForm extends javax.swing.JFrame implements GraphMouseListe
     	CommonData.selectedVertex = null;
     	// init lists
     	List<Node> shortestPathResults;
-    	edgesList = new ArrayList<Link>();
-    	newEdgesList = new ArrayList<Link>();
+    	common.CommonData.edgesList = new ArrayList<Link>();
+    	common.CommonData.newEdgesList = new ArrayList<Link>();
     	List<Node> nodesList = new ArrayList<Node>();
     	// change mouseType to picking
     	graphMouse.setMode(ModalGraphMouse.Mode.PICKING);
@@ -1600,7 +1603,7 @@ public class VisualNetForm extends javax.swing.JFrame implements GraphMouseListe
     			strTmp.append(shortestPathResults.get(i).getSid() + ", ");
     			Link currentEdge = this.graph.findEdge(shortestPathResults.get(i), shortestPathResults.get(i+1));
 				// add all randomWalk path edges to list
-    			edgesList.add(currentEdge);
+    			common.CommonData.edgesList.add(currentEdge);
     		}
 			// set Nodes routeType to change their color
     		shortestPathResults.get(i).setRouteType("SP");
@@ -1608,22 +1611,22 @@ public class VisualNetForm extends javax.swing.JFrame implements GraphMouseListe
     		nodesList.add(shortestPathResults.get(i));
     	}
 		// remove old edges from graph
-    	for(Link l : edgesList){
+    	for(Link l : common.CommonData.edgesList){
     		this.graph.removeEdge(l);
     	}
     	// change edges to directed type edges and keep their capacity
     	for(int i=0; i < nodesList.size()-1; i++){
-	    	for(Link l : edgesList){
+	    	for(Link l : common.CommonData.edgesList){
 	    		// if there is i -> i+1 edge create
 	    		if(l.getNode_left() == nodesList.get(i) && l.getNode_right() == nodesList.get(i+1)){
 		    		l.setArrowType("SP");
 		    		this.graph.addEdge(l, l.getNode_left(), l.getNode_right(), EdgeType.DIRECTED);
-		    		newEdgesList.add(l);
+		    		common.CommonData.newEdgesList.add(l);
 		    		// if there is no i -> i+1 edge create it in reverse direction
 	    		} else if(l.getNode_left() == nodesList.get(i+1) && l.getNode_right() == nodesList.get(i)){
 		    		l.setArrowType("SP");
 		    		this.graph.addEdge(l, l.getNode_right(), l.getNode_left(), EdgeType.DIRECTED);
-		    		newEdgesList.add(l);
+		    		common.CommonData.newEdgesList.add(l);
 	    		}
 	    	}
     	}
@@ -1641,8 +1644,8 @@ public class VisualNetForm extends javax.swing.JFrame implements GraphMouseListe
     	CommonData.selectedVertex = null;
     	// init lists
     	List<Node> randomwalkresult;
-    	edgesList = new ArrayList<Link>();
-    	newEdgesList = new ArrayList<Link>();
+    	common.CommonData.edgesList = new ArrayList<Link>();
+    	common.CommonData.newEdgesList = new ArrayList<Link>();
     	List<Node> nodesList = new ArrayList<Node>();
     	// change mouseType to picking
     	graphMouse.setMode(ModalGraphMouse.Mode.PICKING);
@@ -1660,7 +1663,7 @@ public class VisualNetForm extends javax.swing.JFrame implements GraphMouseListe
     			strTmp.append(randomwalkresult.get(i).getSid() + ", ");
     			Link currentEdge = this.graph.findEdge(randomwalkresult.get(i), randomwalkresult.get(i+1));
     			// add all randomWalk path edges to list
-    			edgesList.add(currentEdge);
+    			common.CommonData.edgesList.add(currentEdge);
     		}
     		// set Nodes routeType to change their color
     		randomwalkresult.get(i).setRouteType("SP");
@@ -1668,7 +1671,7 @@ public class VisualNetForm extends javax.swing.JFrame implements GraphMouseListe
     		nodesList.add(randomwalkresult.get(i));
     	}
     	// remove old edges from graph
-    	for(Link l : edgesList){
+    	for(Link l : common.CommonData.edgesList){
     		this.graph.removeEdge(l);
     	}
     	// create new edges from randomWalk path with arrows
@@ -1680,7 +1683,7 @@ public class VisualNetForm extends javax.swing.JFrame implements GraphMouseListe
             // set edgeType to SP
             l.setArrowType("SP");
             // save all newly added edges to remove them later
-            newEdgesList.add(l);
+            common.CommonData.newEdgesList.add(l);
             // add directed type edges
     		this.graph.addEdge(l, l.getNode_left(), l.getNode_right(), EdgeType.DIRECTED);
     	}
@@ -1783,7 +1786,7 @@ public class VisualNetForm extends javax.swing.JFrame implements GraphMouseListe
     
     private void generateSmallWorld()
     {
-    	if (newEdgesList != null && edgesList != null) {
+    	if (common.CommonData.newEdgesList != null && common.CommonData.edgesList != null) {
     		refreshGraph();
     	}
     	common.CommonData.destinationNode = null;
@@ -1791,8 +1794,8 @@ public class VisualNetForm extends javax.swing.JFrame implements GraphMouseListe
 		common.CommonData.switchCount = 0;
 		common.CommonData.hostsCount = 0;
 		common.CommonData.controllerCount = 0;
-        newEdgesList = null;
-        edgesList = null;
+		common.CommonData.newEdgesList = null;
+		common.CommonData.edgesList = null;
 		
 		
 		//common.CommonData.selectedNode = "Switch";
@@ -1883,6 +1886,17 @@ public class VisualNetForm extends javax.swing.JFrame implements GraphMouseListe
 		} else {
 			JOptionPane.showMessageDialog(null, "Please select source and destination nodes.\nRight click a node to select it as source or destination.",
 					"No nodes selected", JOptionPane.ERROR_MESSAGE);
+			return false;
+		}
+	}
+	private boolean isSCGraph(){
+		StronglyConnectedComponents x = new StronglyConnectedComponents();
+		x.strongComponentsAsSets(this.graph);
+		if(x.isStronglyConnected){
+			return true;
+		} else {
+			JOptionPane.showMessageDialog(null, "Please craate a strongly connected graph.",
+					"Invalid graph", JOptionPane.ERROR_MESSAGE);
 			return false;
 		}
 	}
@@ -2437,6 +2451,34 @@ public class VisualNetForm extends javax.swing.JFrame implements GraphMouseListe
         //showPickedNode();
         updateSidePnl();
     }
+//	private List<Link> edgesList = null;
+//	private List<Link> newEdgesList = null;
+//    public void setNewEdgesList(List<Link> x){
+//    	this.newEdgesList = x;
+//    }
+//    public void setEdgesList(List<Link> x){
+//    	this.edgesList = x;
+//    }
+//    public List<Link> getNewEdgesList(){
+//    	return this.newEdgesList;
+//    }
+//    public List<Link> getEdgesList(){
+//    	return this.edgesList;
+//    }
+//    public boolean isEmptyNewEdgesList(){
+//    	if(this.newEdgesList == null){
+//    		return true;
+//    	} else {
+//    		return false;
+//    	}
+//    }
+//    public boolean isEmptyEdgesList(){
+//    	if(this.edgesList == null){
+//    		return true;
+//    	} else {
+//    		return false;
+//    	}
+//    }
 }
 
 	

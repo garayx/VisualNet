@@ -5,6 +5,7 @@ import java.util.Map;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.Random;
 import java.util.Set;
 
@@ -191,11 +192,42 @@ public class RandomWalk {
 		return resultList;
 	} // end of function searchNetwork
 
-	public List<Link> searchNetwork(Node sourceNode) {
+	public List<Link> searchNetwork() {
 		// get nodes and edges from graph
 		
-		List<Link> graphLinks = new ArrayList<Link>(this.graph.getEdges());
-		List<Node> graphNodes = new ArrayList<Node>(this.graph.getVertices());
+		//List<Node> x = new ArrayList<Node>();
+		
+		List<Link> completedAllSccEdges = new ArrayList<Link>();
+		
+		List<Set<Node>> componentCollector = (List<Set<Node>>) new StronglyConnectedComponents().strongComponentsAsSets(this.graph);
+		
+		
+		for(Set<Node> x : componentCollector){
+			System.out.println("SCC");
+			for(Node y : x){
+				System.out.println(y.getToolTip());
+			}
+		}
+		
+		Iterator<Set<Node>> sccItearator = componentCollector.iterator();
+		while (sccItearator.hasNext()) {
+			Set<Node> nodeComponent = sccItearator.next();
+			if(nodeComponent.size() != 1){
+				
+		//List<Link> graphLinks = new ArrayList<Link>(this.graph.getEdges());
+		//List<Node> graphNodes = new ArrayList<Node>(this.graph.getVertices());
+		List<Node> graphNodes = new ArrayList<Node>(nodeComponent);
+//		List<Node> unconnectedNodes = getUnVertex(graphNodes,this.graph);
+//		for (Node x : unconnectedNodes) {
+//			//System.out.println("unconnectedNodes: "+x.getToolTip());
+//			graphNodes.remove(x);
+//			//g.removeVertex(x);
+//		}
+		Random randx = new Random();
+		int randNum = randx.nextInt(graphNodes.size() - 1);
+		Node sourceNode = graphNodes.get(randNum);
+		
+		
 		// Lists to track compelted edges and nodes
 		List<Node> completedNodes = new ArrayList<Node>();
 		List<Link> completedEdges = new ArrayList<Link>();
@@ -210,7 +242,7 @@ public class RandomWalk {
 
 		lastNode = sourceNode;
 		currentPosition = sourceNode;
-
+		
 		while (looking) {
 			roundDone = false;
 			currentNode = currentPosition;
@@ -267,6 +299,7 @@ public class RandomWalk {
 			}
 			// else a node has only 1 neighbor
 			else if (currentNode.numNeighbors() == 1) {
+				//System.out.println("CurrentNode: "+ currentNode.getToolTip());
 				// just return to previous node
 				connections = currentNode.getConnections();
 				for (Map.Entry<Node, NIC> entry : connections.entrySet()) {
@@ -278,6 +311,8 @@ public class RandomWalk {
 						roundDone = true;
 						//System.out.println("currentPosition: "+currentPosition.getToolTip());
 						//System.out.println("currentIndex: "+currentIndex.getToolTip());
+						//System.out.println("lastNode: "+lastNode.getToolTip());
+						//System.out.println("pastNode: "+pastNode.getToolTip());
 						//Link currentEdge = this.graph.findEdge(pastNode, currentPosition);
 						//System.out.println(currentEdge);
 						//System.out.println("Edge: "+ "("+currentEdge.getNode_left().getToolTip()+", "+currentEdge.getNode_right().getToolTip()+")");
@@ -291,11 +326,13 @@ public class RandomWalk {
 //						}
 						
 						if (!completedNodes.contains(currentPosition)){
+							//System.out.println("No curPos in compNodes");
 							Link currentEdge = this.graph.findEdge(pastNode, currentPosition);
+							//System.out.println("Edge: "+ "("+currentEdge.getNode_left().getToolTip()+", "+currentEdge.getNode_right().getToolTip()+")");
 							// check if right is currentPosition if not create a new reverse link
 							if(currentEdge.getNode_right() == currentPosition){
 								completedEdges.add(currentEdge);
-//								completedNodes.add(currentPosition);
+								completedNodes.add(currentPosition);
 //
 //								System.out.println("currentPosition: "+currentPosition.getToolTip());
 //								System.out.println("Edge: "+ "("+currentEdge.getNode_left().getToolTip()+", "+currentEdge.getNode_right().getToolTip()+")");
@@ -319,7 +356,7 @@ public class RandomWalk {
 						// return false;
 					}
 				}
-				}
+				}// end for
 			}
 			// Node has no neighbors.. Isolated in space !
 			else {
@@ -348,14 +385,29 @@ public class RandomWalk {
 //			}
 //			System.out.println();
 //			System.out.println("Edge: "+ "("+currentEdge.getNode_left().getToolTip()+", "+currentEdge.getNode_right().getToolTip()+")");
-
+			System.out.print("completedNodes");
+			for (Node x : completedNodes) {
+				System.out.print(" " +x.getToolTip());
 			
+			}
+			System.out.println();
+			System.out.print("graphNodes");
+			for (Node x : graphNodes) {
+				System.out.print(" " +x.getToolTip());
+			
+			}
+			System.out.println();
 			if (listEqualsNoOrder(graphNodes, completedNodes)) {
 				looking = false;
 			}
 //			System.out.println("kKEK");
 		}
-		return completedEdges;
+		for(Link x : completedEdges){
+			completedAllSccEdges.add(x);
+		}
+		}
+		}
+		return completedAllSccEdges;
 	}
 
 	private <T> boolean listEqualsNoOrder(List<T> l1, List<T> l2) {
@@ -382,5 +434,16 @@ public class RandomWalk {
 	public String getFailReason() {
 		return failReason;
 	}
-
+	
+	private List<Node> getUnVertex(List<Node> nodesList, Graph<Node,Link> g){
+		List<Node> nodes = new ArrayList<Node>();
+		for(Node x : nodesList){
+			if(g.inDegree(x) == 0)
+				nodes.add(x);
+		}
+		
+		
+		
+		return nodes;
+	}
 }

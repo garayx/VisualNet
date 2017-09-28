@@ -21,6 +21,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.geom.Point2D;
+import java.util.Iterator;
+
 import javax.swing.Action;
 import javax.swing.JColorChooser;
 import javax.swing.JFrame;
@@ -30,6 +32,7 @@ import javax.swing.JPopupMenu;
 import javax.swing.SwingUtilities;
 
 import common.CommonData;
+import forms.VisualNetForm;
 
 
 /**
@@ -178,8 +181,41 @@ public class PopupMousePlugin<V,E> extends AbstractPopupGraphMousePlugin
                             });          
                             // TODO 
                             
+                            
+                            
+                            
+                            
+                            
+                            
+                            
+                            
+                            
+                            
                             //common.CommonData.idList.get(n.getType()).remove(n.getID());
                             common.CommonData.idList.remove(n.getType(), n.getID());
+                            
+                            
+                            
+                            // if SP path active delete like this
+                            if (common.CommonData.newEdgesList != null && common.CommonData.edgesList != null) {
+                        		for (Iterator<Link> iterator = common.CommonData.edgesList.iterator(); iterator.hasNext();) {
+                        			Link x = iterator.next();
+                        			if(x.getNode_left() == n || x.getNode_right() == n){
+                        				iterator.remove();
+                        			}
+                        		}
+                        	}
+                            
+                            
+                            
+                            
+                            
+                            
+                            
+                            
+                            
+                            
+                            
                             
                             
                             
@@ -294,11 +330,27 @@ public class PopupMousePlugin<V,E> extends AbstractPopupGraphMousePlugin
                         @Override
                         public void actionPerformed(ActionEvent ae)
                         {
+                        	//System.out.println(forms.VisualNetForm.updateSidePnl(););
                             Link l = (Link)e;
-                            ve.getGraphLayout().getGraph().removeEdge(e);
+                            
+                            // if SP path is active have to delete it like this
+                        	if (common.CommonData.newEdgesList != null && common.CommonData.edgesList != null) {
+                        		for (Iterator<Link> iterator = common.CommonData.edgesList.iterator(); iterator.hasNext();) {
+                        			Link x = iterator.next();
+                        			if((x.getNode_left() == l.getNode_left() && x.getNode_right() == l.getNode_right()) 
+                        					|| (x.getNode_right() == l.getNode_left() && x.getNode_left() == l.getNode_right())){
+                        				iterator.remove();
+                                        l.getNode_left().removeConnection(l.getNode_right());
+                                        l.getNode_right().removeConnection(l.getNode_left());
+                                        ve.getGraphLayout().getGraph().removeEdge(e);
+                        			}
+                        		}
+                        	} else {
+                                ve.getGraphLayout().getGraph().removeEdge(e);
 
-                            l.getNode_left().removeConnection(l.getNode_right());
-                            l.getNode_right().removeConnection(l.getNode_left());
+                                l.getNode_left().removeConnection(l.getNode_right());
+                                l.getNode_right().removeConnection(l.getNode_left());
+                        	}
                             
                             ve.repaint();
                         }
