@@ -19,9 +19,15 @@ public class NIC
     {
         this.mac = mac;
         this.ip = ip;
-        this.port = 228;
+        this.port = (Integer) null;
     }
-
+    
+    public NIC(String mac, String ip, int port)
+    {
+        this.mac = mac;
+        this.ip = ip;
+        this.port = port;
+    }
     public NIC(int i) {
 		// TODO Auto-generated constructor stub
         this.mac = common.Utils.generateMAC();

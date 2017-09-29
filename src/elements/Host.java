@@ -5,7 +5,7 @@ import java.util.ArrayList;
 public class Host extends Node
 {
     private ArrayList<NIC> nics;
-    private static int _id = 0;
+    //private static int _id = 0;
     private final int id;
     private String hid;
     private String type = "Host";
@@ -13,9 +13,9 @@ public class Host extends Node
     
     public Host()
     {
-        _id++;
+        //_id++;
         
-        this.id = _id;
+        this.id = common.CommonData.hostsCount+1;
         
         this.hid = "h" + this.id;        
     }

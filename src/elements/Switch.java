@@ -14,16 +14,16 @@ import java.util.HashMap;
  */
 public class Switch extends Node
 {
-    private ArrayList<SwitchPort> ports;
-    private HashMap<Integer, SwitchPort> portsMap;
-    private HashMap<String, Integer> connections;
-    private HashMap<String, Integer> adjacentSwitches;
-    private HashMap<String, Integer> adjacentHosts;
-    private HashMap<String, String> ipToMac;
-    private HashMap<String, String> routingTable;
+//    private ArrayList<SwitchPort> ports;
+//    private HashMap<Integer, SwitchPort> portsMap;
+    //private HashMap<String, Integer> connections;
+    //private HashMap<String, Integer> adjacentSwitches;
+   // private HashMap<String, Integer> adjacentHosts;
+   // private HashMap<String, String> ipToMac;
+    //private HashMap<String, String> routingTable;
    
     private String dpid;
-    private static int _id = 0;
+    //private static int _id = 0;
     private final int id;
     private String sid;
     private String type = "Switch";
@@ -31,43 +31,43 @@ public class Switch extends Node
     
     public Switch()
     {
-        this.initialize();
+//        this.initialize();
         
-        _id++;
+       // _id++;
         
-        this.id = _id;
+        this.id = common.CommonData.switchCount+1;
         
         this.sid = "s" + this.id;
     }
             
     
     
-    private void initialize()
-    {
-        this.ports = new ArrayList<>();
-        this.portsMap = new HashMap<>();
-        this.connections = new HashMap<>();
-        this.adjacentSwitches = new HashMap<>();
-        this.adjacentHosts = new HashMap<>();
-        this.ipToMac = new HashMap<>();
-        this.routingTable = new HashMap<>();
-    }
+//    private void initialize()
+//    {
+//        this.ports = new ArrayList<>();
+//        this.portsMap = new HashMap<>();
+//        //this.connections = new HashMap<>();
+//        //this.adjacentSwitches = new HashMap<>();
+//        //this.adjacentHosts = new HashMap<>();
+//        //this.ipToMac = new HashMap<>();
+//        //this.routingTable = new HashMap<>();
+//    }
 
-    /**
-     * @return the ports
-     */
-    public ArrayList getPorts()
-    {
-        return ports;
-    }
-
-    /**
-     * @param ports the ports to set
-     */
-    public void setPorts(ArrayList ports)
-    {
-        this.ports = ports;
-    }
+//    /**
+//     * @return the ports
+//     */
+//    public ArrayList getPorts()
+//    {
+//        return ports;
+//    }
+//
+//    /**
+//     * @param ports the ports to set
+//     */
+//    public void setPorts(ArrayList ports)
+//    {
+//        this.ports = ports;
+//    }
 
     /**
      * @return the dpid

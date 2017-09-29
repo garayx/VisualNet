@@ -28,7 +28,7 @@ public abstract class Node {
     }
 	
 	public NIC addConnection(Node node) {
-		NIC nic = new NIC(node.getMAC(), node.getIP());
+		NIC nic = new NIC(node.getMAC(), node.getIP(), Connections.size()+1);
 		Connections.put(node, nic);
 		return nic;
 	}

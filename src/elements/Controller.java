@@ -4,7 +4,7 @@ public class Controller extends Node
 {
     //private NIC nic;
 
-    private static int _id = 0;
+    //private static int _id = 0;
     private final int id;
     //private final int port = 0 + (int)(Math.random() * 65535);
     private String cid;
@@ -13,11 +13,9 @@ public class Controller extends Node
     
     public Controller()
     {
-        _id++;
+       // _id++;
         
-        this.id = _id;
-        
-        //0 to 65535
+    	this.id = common.CommonData.controllerCount+1;
         
         
         this.cid = "c" + this.id;        

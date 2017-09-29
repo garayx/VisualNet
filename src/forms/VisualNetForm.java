@@ -28,6 +28,7 @@ import edu.uci.ics.jung.algorithms.layout.FRLayout;
 import edu.uci.ics.jung.algorithms.layout.ISOMLayout;
 import edu.uci.ics.jung.algorithms.layout.SpringLayout;
 import edu.uci.ics.jung.algorithms.layout.StaticLayout;
+import edu.uci.ics.jung.algorithms.shortestpath.UnweightedShortestPath;
 import edu.uci.ics.jung.graph.Graph;
 import edu.uci.ics.jung.graph.SparseGraph;
 import edu.uci.ics.jung.graph.util.EdgeType;
@@ -1028,6 +1029,19 @@ public class VisualNetForm extends javax.swing.JFrame implements GraphMouseListe
         JMenu menuFile = new JMenu("File");
         this.menuBar.add(menuFile);
         
+        
+        
+        JMenuItem newGraphItem = new JMenuItem("New Graph");
+        newGraphItem.addActionListener(new ActionListener()
+        {
+            @Override
+            public void actionPerformed(ActionEvent e)
+            {
+            	newGraph();
+            }
+        });
+        menuFile.add(newGraphItem);
+        
         JMenu saveToMenu = new JMenu("Save To");
         menuFile.add(saveToMenu);
 
@@ -1055,7 +1069,7 @@ public class VisualNetForm extends javax.swing.JFrame implements GraphMouseListe
         //saveToMenu.add(exportPDFItem);
         //saveToMenu.add(exportItem);
         
-
+        //newGraph()
         JMenuItem closeItem = new JMenuItem("Close");
         closeItem.addActionListener(new ActionListener()
         {
@@ -1104,7 +1118,9 @@ public class VisualNetForm extends javax.swing.JFrame implements GraphMouseListe
         mouseMode.add(pickModeItem);
         mouseMode.add(transModeItem);
         //menuFile.add(exportItem);
+        
         menuFile.add(closeItem);
+        
 
         JMenu nodeMenu = new JMenu("Node Type");
 
@@ -1188,7 +1204,8 @@ public class VisualNetForm extends javax.swing.JFrame implements GraphMouseListe
             	// check if graph has errors
 				if (isGraphCreated() && isSourceDestSelected()) {
 					// run algorithm
-					generateShortestPathWithWeight();
+					if(isReacheable(CommonData.sourceNode, CommonData.destinationNode))
+						generateShortestPathWithWeight();
 				}
             }
         });
@@ -1201,7 +1218,8 @@ public class VisualNetForm extends javax.swing.JFrame implements GraphMouseListe
 			public void actionPerformed(ActionEvent e) {
 				// check if graph has errors
 				if (isGraphCreated() && isSourceDestSelected()) {
-					generateShortestPathWithoutWeight();
+					if(isReacheable(CommonData.sourceNode, CommonData.destinationNode))
+						generateShortestPathWithoutWeight();
 				}
 			}
         });
@@ -1215,8 +1233,8 @@ public class VisualNetForm extends javax.swing.JFrame implements GraphMouseListe
             {
 				// check if graph has errors
 				if (isGraphCreated() && isSourceDestSelected()) {
-					refreshGraph();
-					if(isSCGraph())
+					//refreshGraph();
+					if(isReacheable(CommonData.sourceNode, CommonData.destinationNode))
 						generateRandomWalk();
 				} 
             }
@@ -1643,7 +1661,7 @@ public class VisualNetForm extends javax.swing.JFrame implements GraphMouseListe
     // TODO add transformer for SP path to diplay edges number 1....N
     private void generateRandomWalk(){
     	// refresh graph before running
-    	//refreshGraph();
+    	refreshGraph();
     	CommonData.selectedVertex = null;
     	// init lists
     	List<Node> randomwalkresult;
@@ -1694,6 +1712,7 @@ public class VisualNetForm extends javax.swing.JFrame implements GraphMouseListe
     	// update topLBL
     	this.initToplbl(strTmp.toString());
     }
+
     /**
      * createSpanningTree
      */
@@ -1898,10 +1917,23 @@ public class VisualNetForm extends javax.swing.JFrame implements GraphMouseListe
 		if(x.isStronglyConnected){
 			return true;
 		} else {
-			JOptionPane.showMessageDialog(null, "Please craate a strongly connected graph.",
+			JOptionPane.showMessageDialog(null, "Please create a strongly connected graph.",
 					"Invalid graph", JOptionPane.ERROR_MESSAGE);
 			return false;
 		}
+	}
+    
+	private boolean isReacheable(Node src, Node dest) {
+		UnweightedShortestPath sp = new UnweightedShortestPath(this.graph);
+		
+		
+		
+		if(sp.getDistance(src, dest) == null){
+			JOptionPane.showMessageDialog(null, "The selected nodes are not reacheable from each other.",
+					"Invalid Nodes", JOptionPane.ERROR_MESSAGE);
+			return false;
+		} else
+			return true;
 	}
     
 	// 
@@ -1977,6 +2009,7 @@ public class VisualNetForm extends javax.swing.JFrame implements GraphMouseListe
 	/**
 	 * showDetailsBetweenCentrality()
 	 */
+	// TODO
 	private void showDetailsBetweenCentrality() {
 		// if maps isnt null -> create popup and show BC details from maps.
 		// else do nothing (maybe display on topPnl that need to run BC)
@@ -2011,7 +2044,12 @@ public class VisualNetForm extends javax.swing.JFrame implements GraphMouseListe
 			}
 			bcDetails.append("\nHighest Betweenness Centrality Edge:\n");
 			bcDetails.append(maxEdgeScoreEdge + " with score of: " + String.format("%.03f", maxEdgeScore));
-			showLongTextMessageInDialog(bcDetails.toString(), this, "Betweenness Centrality Details");
+			//showLongTextMessageInDialog(bcDetails.toString(), this, "Betweenness Centrality Details");
+			AlgsGUI kek = new AlgsGUI(this.graph, bcDetails.toString());
+	    	kek.pack();
+	    	kek.setSize(1104, 589);
+	    	kek.setLocationRelativeTo(null);
+	    	kek.setVisible(true);
 		} else {
 			initToplbl("Please run Betweenness Centrality algorithm to see details.");
 		}
@@ -2123,15 +2161,24 @@ public class VisualNetForm extends javax.swing.JFrame implements GraphMouseListe
 	 * @param longMessage
 	 * @param frame
 	 */
+//	private void showLongTextMessageInDialog(String longMessage, Frame frame, String title) {
+//	    JTextArea textArea = new JTextArea(33, 35);
+//	    textArea.setText(longMessage);
+//	    textArea.setEditable(false);
+//	    JScrollPane scrollPane = new JScrollPane(textArea);
+//	    
+//	    JOptionPane.showMessageDialog(frame, scrollPane, title, JOptionPane.INFORMATION_MESSAGE);
+//	}
+	//TODO
 	private void showLongTextMessageInDialog(String longMessage, Frame frame, String title) {
 	    JTextArea textArea = new JTextArea(33, 35);
 	    textArea.setText(longMessage);
 	    textArea.setEditable(false);
 	    JScrollPane scrollPane = new JScrollPane(textArea);
 	    
+	    
 	    JOptionPane.showMessageDialog(frame, scrollPane, title, JOptionPane.INFORMATION_MESSAGE);
 	}
-	
 	
 	private void showPickedNode(){
 		if(this.pickedState_.getPicked().size() == 1){
@@ -2251,6 +2298,27 @@ public class VisualNetForm extends javax.swing.JFrame implements GraphMouseListe
 		lblControllersNumber.setText(""+common.CommonData.controllerCount);
 		lblHostsNumber.setText(""+common.CommonData.hostsCount);
 		lblSwitchesNumber.setText(""+common.CommonData.switchCount);
+	}
+	
+	
+	
+	private void newGraph() {
+    	// re-init common variables
+    	common.CommonData.destinationNode = null;
+    	common.CommonData.sourceNode = null;
+		common.CommonData.switchCount = 0;
+		common.CommonData.hostsCount = 0;
+		common.CommonData.controllerCount = 0;
+		common.CommonData.selectedNode = "Switch";
+		common.CommonData.newEdgesList = null;
+		common.CommonData.edgesList = null;
+        updateSidePnlCentralities();
+        updateSidePnl();
+        initToplbl("");
+        
+		this.graph = new SparseGraph<Node, Link>();
+		this.viewer.setGraphLayout(new StaticLayout<Node, Link>(this.graph));
+		//this.viewer.repaint();
 	}
 	
 	@SuppressWarnings("unchecked")
