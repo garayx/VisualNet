@@ -35,12 +35,14 @@ public class BetweennessCentralityAlg {
 			Node tmpnode = nodeItearator.next();
 			nodeAvgBC += ranker.getVertexRankScore(tmpnode);
 			nodeBC.put(tmpnode, ranker.getVertexRankScore(tmpnode));
+			tmpnode.setBCScore(ranker.getVertexRankScore(tmpnode));
 		}
 		Iterator<Link> linkItearator = g.getEdges().iterator();
 		while (linkItearator.hasNext()) {
 			Link link = linkItearator.next();
 			linkAvgBC += ranker.getEdgeRankScore(link);
 			linkBC.put(link, ranker.getEdgeRankScore(link));
+			link.setBCScore(ranker.getEdgeRankScore(link));
 		}
 
 		nodeAvgBC /= g.getVertexCount();

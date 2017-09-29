@@ -10,6 +10,7 @@ public class Link {
 	private int capacity=1 + (int)(Math.random() * 10);
 	private String routeType = "";
 	private String arrowType = "";
+	private Number bcScore = null;
 	
 	public void setNode_left(Node x){
 		this.nodeLeft = x;
@@ -67,7 +68,16 @@ public class Link {
 	
 	
 	
-	
+    public double getBCScore(){
+    	return (double) this.bcScore;
+    }
+    /**
+     * set alg score methods
+     * @param num
+     */
+    public void setBCScore(double num){
+    	this.bcScore = num;
+    }
 	
 	
 	

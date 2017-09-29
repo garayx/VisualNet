@@ -10,6 +10,7 @@ import java.awt.Dimension;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.Map;
 
 import javax.swing.BorderFactory;
 import javax.swing.GroupLayout;
@@ -43,26 +44,55 @@ import edu.uci.ics.jung.visualization.picking.PickedState;
 import edu.uci.ics.jung.visualization.renderers.Renderer;
 import elements.Link;
 import elements.Node;
+import transformers.NodeAlgShapeTransformer;
+import transformers.NodeFillColorTransformer;
+import transformers.NodeShapeTransformer;
 
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
+import javax.swing.JTextPane;
 
 public class AlgsGUI extends JFrame{
 	JFrame frame = new JFrame();
 	VisualizationViewer<Node, Link> vv1;
 	//private Graph<Node, Link> graph = null;
+	private Map<Node, Double> nodeMapAlg = null;
+	private double algAvgScore =0.0;
+	
+	
+    private NodeAlgShapeTransformer<Node> nodeShapeTransformer_ = null;
+    private NodeFillColorTransformer<Node> nodeFillColorTransformer_ = null;
+    private PickedState<Node> pickedState_ = null;
+	
 	/**
 	 * Create the panel.
 	 */
-	public AlgsGUI(Graph<Node, Link> g, String str) {
+	public AlgsGUI(Graph<Node, Link> g, String str, Map<Node, Double> map) {
+		//this.algAvgScore = num;
+		this.nodeMapAlg = map;
 		setResizable(false);
 		Dimension preferredSizeRect = new Dimension(475, 335);
 		AbstractLayout<Node, Link> layout1 = new FRLayout<Node,Link>(g);
 		VisualizationModel<Node, Link> vm1 = new DefaultVisualizationModel<Node, Link>(layout1, preferredSizeRect);
 		
+
+		
+		
+		
 		vv1 = new VisualizationViewer<Node, Link>(vm1, preferredSizeRect);
+		pickedState_ = vv1.getPickedVertexState();
+		
+		
 		vv1.getRenderContext().setEdgeShapeTransformer(new EdgeShape.Line<Node, Link>());
 		//Color back = Color.decode("0xffffbb");
+		
+		
+		
+		
+    	nodeShapeTransformer_ = new NodeAlgShapeTransformer(this.nodeMapAlg);
+        nodeFillColorTransformer_ = new NodeFillColorTransformer(pickedState_);
+		
+		
 		vv1.setBackground(Color.white);
 		vv1.getRenderer().getVertexLabelRenderer().setPosition(Renderer.VertexLabel.Position.CNTR);
 		vv1.setForeground(Color.darkGray);
@@ -74,9 +104,16 @@ public class AlgsGUI extends JFrame{
 		// vv1.setLayout(new BorderLayout());
 		vv1.getRenderContext().setEdgeDrawPaintTransformer(
 				new PickableEdgePaintTransformer<Link>(vv1.getPickedEdgeState(), Color.black, Color.red));
-		vv1.getRenderContext().setVertexFillPaintTransformer(
-				new PickableVertexPaintTransformer<Node>(vv1.getPickedVertexState(), Color.ORANGE, Color.YELLOW));
+//		vv1.getRenderContext().setVertexFillPaintTransformer(
+//				new PickableVertexPaintTransformer<Node>(vv1.getPickedVertexState(), Color.ORANGE, Color.YELLOW));
 
+		
+		
+		vv1.getRenderContext().setVertexFillPaintTransformer(nodeFillColorTransformer_);
+		vv1.getRenderContext().setVertexShapeTransformer(nodeShapeTransformer_);
+		
+		
+		
 		//vv1.setVertexToolTipTransformer(new ToStringLabeller());
 		vv1.setVertexToolTipTransformer(this.vv1.getRenderContext().getVertexLabelTransformer());
 		
@@ -113,7 +150,7 @@ public class AlgsGUI extends JFrame{
         });
 		vv1.setLayout(new BorderLayout());
 
-		JLabel vv1Label = new JLabel("Random Spanning Trees");
+		JLabel vv1Label = new JLabel("Algorithm Results");
 		// vv1Label.setFont(font);
 		JPanel flow1 = new JPanel();
 		flow1.add(vv1Label);
@@ -188,10 +225,21 @@ public class AlgsGUI extends JFrame{
 				.addComponent(graphZoomScrollPane, GroupLayout.DEFAULT_SIZE, 349, Short.MAX_VALUE)
 		);
 		panel.setLayout(gl_panel);
-		 JTextArea textArea = new JTextArea(33, 35);
-		    textArea.setText(str);
-		    textArea.setEditable(false);
-		JScrollPane scrollPane = new JScrollPane(textArea);
+		
+		
+//		 JTextArea textArea = new JTextArea(33, 35);
+//		    textArea.setText(str);
+//		    textArea.setEditable(false);
+		
+		JTextPane textpane = new JTextPane();
+		textpane.setPreferredSize(new Dimension(333, 444));
+		textpane.setContentType("text/html");
+		textpane.setText(str);
+		textpane.setEditable(false);
+			textpane.setCaretPosition(0);
+		    
+		JScrollPane scrollPane = new JScrollPane(textpane,JScrollPane.VERTICAL_SCROLLBAR_ALWAYS,
+	            JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
 		GroupLayout gl_panel_1 = new GroupLayout(panel_1);
 		gl_panel_1.setHorizontalGroup(
 			gl_panel_1.createParallelGroup(Alignment.LEADING)

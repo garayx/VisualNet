@@ -1254,7 +1254,6 @@ public class VisualNetForm extends javax.swing.JFrame implements GraphMouseListe
             }
         });
         
-        // TODO FIX IF ONE NODE IS ISOLATED THE WHILE DOESNT STOP!
         // random spanning tree selector
         JMenuItem randomSpanningTreeItem = new JMenuItem("Random Spanning Tree");
         menuAlgs.add(randomSpanningTreeItem);
@@ -2006,10 +2005,30 @@ public class VisualNetForm extends javax.swing.JFrame implements GraphMouseListe
 	
 	
 	
+//	// TODO set scores of algs to nodes
+//	private void setAlgScores(String alg){
+//		if(alg == "BC"){
+//			if(nodeMapBC.size() > 0){
+//				
+//			} else {
+//				//error no BCmap
+//			}
+//		} else if (alg == "CC"){
+//			
+//		} else if (alg == "RWCC"){
+//			
+//		} else if (alg == "EVC"){
+//			
+//		} else if (alg == "EVCW"){
+//			
+//		} else {
+//			
+//		}
+//	}
+	
 	/**
 	 * showDetailsBetweenCentrality()
 	 */
-	// TODO
 	private void showDetailsBetweenCentrality() {
 		// if maps isnt null -> create popup and show BC details from maps.
 		// else do nothing (maybe display on topPnl that need to run BC)
@@ -2017,10 +2036,16 @@ public class VisualNetForm extends javax.swing.JFrame implements GraphMouseListe
 		String maxNodeScoreNode = null;
 		double maxEdgeScore = 0.0;
 		String maxEdgeScoreEdge = null;
+		//double avg = 0.0;
+		
 		if (nodeMapBC != null && linkMapBC != null) {
 			// DecimalFormat df2 = new DecimalFormat(".##");
 			StringBuilder bcDetails = new StringBuilder();
-			bcDetails.append("Nodes Betweenness Centrality:\n");
+			bcDetails.append("<b><font size=\"5\">Nodes Betweenness Centrality:</font></b>"+"<br>");
+			bcDetails.append("<table>"
+					+ "<tbody>"
+						+ "<tr>"
+						+ "<td><b>Node:</b></td>"+"<td><b>Score:</b></td></tr>");
 			for (Map.Entry<Node, Double> entry : nodeMapBC.entrySet()) {
 				String key = entry.getKey().getToolTip();
 				double value = entry.getValue();
@@ -2028,11 +2053,16 @@ public class VisualNetForm extends javax.swing.JFrame implements GraphMouseListe
 					maxNodeScore = value;
 					maxNodeScoreNode = key;
 				}
-				bcDetails.append("Node:"+"\t"+key + "\t" + "Score:" + "\t" + String.format("%.03f", value) + "\n");
+				bcDetails.append("<tr><td>"+key + "</td>" + "<td>" + String.format("%.03f", value) +"</td></tr>");
 			}
-			bcDetails.append("\nHighest Betweenness Centrality Node:\n");
-			bcDetails.append(maxNodeScoreNode + " with score of: " + String.format("%.03f", maxNodeScore)+"\n");
-			bcDetails.append("\nEdges Betweenness Centrality:\n");
+			bcDetails.append("</tbody></table><br>");
+			bcDetails.append("<b><font size=\"5\">Highest Betweenness Centrality Node:</font></b>"+"<br>");
+			bcDetails.append("<b>"+maxNodeScoreNode + "</b> with score of: <b>" + String.format("%.03f", maxNodeScore)+"</b><br>");
+			bcDetails.append("<br><b><font size=\"5\">Edges Betweenness Centrality:</font></b><br>");
+			bcDetails.append("<table>"
+					+ "<tbody>"
+						+ "<tr>"
+						+ "<td><b>Edge:</b></td>"+"<td><b>Score:</b></td></tr>");
 			for (Map.Entry<Link, Double> entry : linkMapBC.entrySet()) {
 				String key = entry.getKey().toString();
 				double value = entry.getValue();
@@ -2040,16 +2070,19 @@ public class VisualNetForm extends javax.swing.JFrame implements GraphMouseListe
 					maxEdgeScore = value;
 					maxEdgeScoreEdge = key;
 				}
-				bcDetails.append("Edge:"+"\t"+key + "\t" + "Score:" + "\t" + String.format("%.03f", value) + "\n");
+				bcDetails.append("<tr><td>"+key + "</td>" + "<td>" + String.format("%.03f", value) +"</td></tr>");
 			}
-			bcDetails.append("\nHighest Betweenness Centrality Edge:\n");
-			bcDetails.append(maxEdgeScoreEdge + " with score of: " + String.format("%.03f", maxEdgeScore));
+			bcDetails.append("</tbody></table><br>");
+			bcDetails.append("<b><font size=\"5\">Highest Betweenness Centrality Edge:</font></b>"+"<br>");
+			bcDetails.append("<b>"+maxEdgeScoreEdge + "</b> with score of: <b>" + String.format("%.03f", maxEdgeScore)+"</b>");
+			
 			//showLongTextMessageInDialog(bcDetails.toString(), this, "Betweenness Centrality Details");
-			AlgsGUI kek = new AlgsGUI(this.graph, bcDetails.toString());
-	    	kek.pack();
-	    	kek.setSize(1104, 589);
-	    	kek.setLocationRelativeTo(null);
-	    	kek.setVisible(true);
+			AlgsGUI bc = new AlgsGUI(this.graph, bcDetails.toString(), nodeMapBC);
+	    	bc.pack();
+	    	bc.setSize(1104, 589);
+	    	bc.setLocationRelativeTo(null);
+	    	bc.setTitle("Betweenness Centrality");
+	    	bc.setVisible(true);
 		} else {
 			initToplbl("Please run Betweenness Centrality algorithm to see details.");
 		}
@@ -2063,7 +2096,11 @@ public class VisualNetForm extends javax.swing.JFrame implements GraphMouseListe
 			double maxScore = 0.0;
 			String maxScoreNode = null;
 			StringBuilder ccDetails = new StringBuilder();
-			ccDetails.append("Nodes ClosenessCentrality:\n");
+			ccDetails.append("<b><font size=\"5\">Nodes Closeness Centrality:</font></b>"+"<br>");
+			ccDetails.append("<table>"
+					+ "<tbody>"
+						+ "<tr>"
+						+ "<td><b>Node:</b></td>"+"<td><b>Score:</b></td></tr>");
 			for (Map.Entry<Node, Double> entry : nodeMapCC.entrySet()) {
 				String key = entry.getKey().getToolTip();
 				double value = entry.getValue();
@@ -2071,11 +2108,19 @@ public class VisualNetForm extends javax.swing.JFrame implements GraphMouseListe
 					maxScore = value;
 					maxScoreNode = entry.getKey().getToolTip();
 				}
-				ccDetails.append("Node:"+"\t"+key + "\t" + "Score:" + "\t" + String.format("%.03f", value) + "\n");
+				ccDetails.append("<tr><td>"+key + "</td>" + "<td>" + String.format("%.03f", value) +"</td></tr>");
 			}
-			ccDetails.append("\nHighest Closeness Centrality Node:\n");
-			ccDetails.append(maxScoreNode + " with score of: " + String.format("%.03f", maxScore));
-			showLongTextMessageInDialog(ccDetails.toString(), this, "Closeness Centrality Details");
+			ccDetails.append("</tbody></table><br>");
+			ccDetails.append("<b><font size=\"5\">Highest Closeness Centrality Node:</font></b>"+"<br>");
+			ccDetails.append("<b>"+maxScoreNode + "</b> with score of: <b>" + String.format("%.03f", maxScore)+"</b><br>");
+			//showLongTextMessageInDialog(ccDetails.toString(), this, "Closeness Centrality Details");
+			
+			AlgsGUI cc = new AlgsGUI(this.graph, ccDetails.toString(), nodeMapCC);
+	    	cc.pack();
+	    	cc.setSize(1104, 589);
+	    	cc.setLocationRelativeTo(null);
+	    	cc.setTitle("Closeness Centrality");
+	    	cc.setVisible(true);
 		} else {
 			initToplbl("Please run Closeness Centrality algorithm to see details.");
 		}
@@ -2089,7 +2134,11 @@ public class VisualNetForm extends javax.swing.JFrame implements GraphMouseListe
 			double maxScore = 0.0;
 			String maxScoreNode = null;
 			StringBuilder ccDetails = new StringBuilder();
-			ccDetails.append("Nodes RandomWalk ClosenessCentrality:\n");
+			ccDetails.append("<b><font size=\"4\">Nodes Random Walk Closeness Centrality:</font></b>"+"<br>");
+			ccDetails.append("<table>"
+					+ "<tbody>"
+						+ "<tr>"
+						+ "<td><b>Node:</b></td>"+"<td><b>Score:</b></td></tr>");
 			for (Map.Entry<Node, Double> entry : nodeMapRWCC.entrySet()) {
 				String key = entry.getKey().getToolTip();
 				double value = entry.getValue();
@@ -2097,11 +2146,18 @@ public class VisualNetForm extends javax.swing.JFrame implements GraphMouseListe
 					maxScore = value;
 					maxScoreNode = entry.getKey().getToolTip();
 				}
-				ccDetails.append("Node:"+"\t"+key + "\t" + "Score:" + "\t" + String.format("%.03f", value) + "\n");
+				ccDetails.append("<tr><td>"+key + "</td>" + "<td>" + String.format("%.03f", value) +"</td></tr>");
 			}
-			ccDetails.append("\nHighest RandomWalk Closeness Centrality Node:\n");
-			ccDetails.append(maxScoreNode + " with score of: " + String.format("%.03f", maxScore));
-			showLongTextMessageInDialog(ccDetails.toString(), this, "RandomWalk Closeness Centrality Details");
+			ccDetails.append("</tbody></table><br>");
+			//ccDetails.append("\nHighest RandomWalk Closeness Centrality Node:\n");
+			ccDetails.append("<b><font size=\"4\">Highest Random Walk Closeness Centrality Node:</font></b>"+"<br>");
+			ccDetails.append("<b>"+maxScoreNode + "</b> with score of: <b>" + String.format("%.03f", maxScore)+"</b><br>");
+			AlgsGUI cc = new AlgsGUI(this.graph, ccDetails.toString(), nodeMapRWCC);
+	    	cc.pack();
+	    	cc.setSize(1104, 589);
+	    	cc.setLocationRelativeTo(null);
+	    	cc.setTitle("Random Walk Closeness Centrality");
+	    	cc.setVisible(true);
 		} else {
 			initToplbl("Please run RandomWalk Closeness Centrality algorithm to see details.");
 		}
@@ -2112,7 +2168,12 @@ public class VisualNetForm extends javax.swing.JFrame implements GraphMouseListe
 			double maxScore = 0.0;
 			String maxScoreNode = null;
 			StringBuilder evDetails = new StringBuilder();
-			evDetails.append("Nodes Eigenvector Centrality:\n");
+			//evDetails.append("Nodes Eigenvector Centrality:\n");
+			evDetails.append("<b><font size=\"5\">Nodes Eigenvector Centrality:</font></b>"+"<br>");
+			evDetails.append("<table>"
+					+ "<tbody>"
+						+ "<tr>"
+						+ "<td><b>Node:</b></td>"+"<td><b>Score:</b></td></tr>");
 			for (Map.Entry<Node, Double> entry : nodeMapEVC.entrySet()) {
 				String key = entry.getKey().getToolTip();
 				double value = entry.getValue();
@@ -2120,11 +2181,22 @@ public class VisualNetForm extends javax.swing.JFrame implements GraphMouseListe
 					maxScore = value;
 					maxScoreNode = entry.getKey().getToolTip();
 				}
-				evDetails.append("Node:"+"\t"+key + "\t" + "Score:" + "\t" + String.format("%.03f", value) + "\n");
+				//evDetails.append("Node:"+"\t"+key + "\t" + "Score:" + "\t" + String.format("%.03f", value) + "\n");
+				evDetails.append("<tr><td>"+key + "</td>" + "<td>" + String.format("%.03f", value) +"</td></tr>");
 			}
-			evDetails.append("\nHighest Eigenvector Centrality Node:\n");
-			evDetails.append(maxScoreNode + " with score of: " + String.format("%.03f", maxScore));
-			showLongTextMessageInDialog(evDetails.toString(), this, "Eigenvector Centrality Details");
+			evDetails.append("</tbody></table><br>");
+			//evDetails.append("\nHighest Eigenvector Centrality Node:\n");
+			evDetails.append("<b><font size=\"5\">Highest Closeness Centrality Node:</font></b>"+"<br>");
+			//evDetails.append(maxScoreNode + " with score of: " + String.format("%.03f", maxScore));
+			evDetails.append("<b>"+maxScoreNode + "</b> with score of: <b>" + String.format("%.03f", maxScore)+"</b><br>");
+			//showLongTextMessageInDialog(evDetails.toString(), this, "Eigenvector Centrality Details");
+			
+			AlgsGUI evc = new AlgsGUI(this.graph, evDetails.toString(), nodeMapEVC);
+			evc.pack();
+			evc.setSize(1104, 589);
+			evc.setLocationRelativeTo(null);
+			evc.setTitle("Eigenvector Centrality");
+			evc.setVisible(true);
 		} else {
 			initToplbl("Please run Eigenvector Centrality algorithm to see details.");
 		}
@@ -2136,7 +2208,12 @@ public class VisualNetForm extends javax.swing.JFrame implements GraphMouseListe
 			double maxScore = 0.0;
 			String maxScoreNode = null;
 			StringBuilder evDetails = new StringBuilder();
-			evDetails.append("Nodes Weighted Eigenvector Centrality:\n");
+			//evDetails.append("Nodes Weighted Eigenvector Centrality:\n");
+			evDetails.append("<b><font size=\"4\">Nodes Weighted Eigenvector Centrality:</font></b>"+"<br>");
+			evDetails.append("<table>"
+					+ "<tbody>"
+						+ "<tr>"
+						+ "<td><b>Node:</b></td>"+"<td><b>Score:</b></td></tr>");
 			for (Map.Entry<Node, Double> entry : nodeMapEVCW.entrySet()) {
 				String key = entry.getKey().getToolTip();
 				double value = entry.getValue();
@@ -2144,13 +2221,24 @@ public class VisualNetForm extends javax.swing.JFrame implements GraphMouseListe
 					maxScore = value;
 					maxScoreNode = entry.getKey().getToolTip();
 				}
-				evDetails.append("Node:"+"\t"+key + "\t" + "Score:" + "\t" + String.format("%6.3e", value) + "\n");
+				//evDetails.append("Node:"+"\t"+key + "\t" + "Score:" + "\t" + String.format("%6.3e", value) + "\n");
 				//evDetails.append(key + "\t" + "CC:" + "\t" + value + "\n");
+				evDetails.append("<tr><td>"+key + "</td>" + "<td>" + String.format("%6.3e", value) +"</td></tr>");
 			}
-			evDetails.append("\nHighest Weighted Eigenvector Centrality Node:\n");
-			evDetails.append(maxScoreNode + " with score of: " + String.format("%6.3e", maxScore));
+			evDetails.append("</tbody></table><br>");
+			//evDetails.append("\nHighest Weighted Eigenvector Centrality Node:\n");
+			evDetails.append("<b><font size=\"4\">Highest Weighted Eigenvector Centrality Node:</font></b>"+"<br>");
+			//evDetails.append(maxScoreNode + " with score of: " + String.format("%6.3e", maxScore));
 			//evDetails.append(maxScoreNode + " with score of: " + maxScore);
-			showLongTextMessageInDialog(evDetails.toString(), this, "Weighted Eigenvector Centrality Details");
+			evDetails.append("<b>"+maxScoreNode + "</b> with score of: <b>" + String.format("%6.3e", maxScore)+"</b><br>");
+			
+			//showLongTextMessageInDialog(evDetails.toString(), this, "Weighted Eigenvector Centrality Details");
+			AlgsGUI evc = new AlgsGUI(this.graph, evDetails.toString(), nodeMapEVCW);
+			evc.pack();
+			evc.setSize(1104, 589);
+			evc.setLocationRelativeTo(null);
+			evc.setTitle("Weighted Eigenvector Centrality");
+			evc.setVisible(true);
 		} else {
 			initToplbl("Please run Weighted Eigenvector Centrality algorithm to see details.");
 		}
@@ -2169,16 +2257,15 @@ public class VisualNetForm extends javax.swing.JFrame implements GraphMouseListe
 //	    
 //	    JOptionPane.showMessageDialog(frame, scrollPane, title, JOptionPane.INFORMATION_MESSAGE);
 //	}
-	//TODO
-	private void showLongTextMessageInDialog(String longMessage, Frame frame, String title) {
-	    JTextArea textArea = new JTextArea(33, 35);
-	    textArea.setText(longMessage);
-	    textArea.setEditable(false);
-	    JScrollPane scrollPane = new JScrollPane(textArea);
-	    
-	    
-	    JOptionPane.showMessageDialog(frame, scrollPane, title, JOptionPane.INFORMATION_MESSAGE);
-	}
+//	private void showLongTextMessageInDialog(String longMessage, Frame frame, String title) {
+//	    JTextArea textArea = new JTextArea(33, 35);
+//	    textArea.setText(longMessage);
+//	    textArea.setEditable(false);
+//	    JScrollPane scrollPane = new JScrollPane(textArea);
+//	    
+//	    
+//	    JOptionPane.showMessageDialog(frame, scrollPane, title, JOptionPane.INFORMATION_MESSAGE);
+//	}
 	
 	private void showPickedNode(){
 		if(this.pickedState_.getPicked().size() == 1){
@@ -2215,14 +2302,34 @@ public class VisualNetForm extends javax.swing.JFrame implements GraphMouseListe
 				Node node = nodeItearator.next();
 				//node.get
 				Map<Node, NIC> nodeConnectrions = node.getConnections();
-				nodesDetails.append("<b>"+node.getToolTip()+"</b>" + "<br>");
-				nodesDetails.append("IP: " +node.getIP()+ "<br>");
-				nodesDetails.append("MAC: " +node.getMAC().toUpperCase()+ "<br>");
+				nodesDetails.append("<b><font size=\"5\">"+node.getToolTip()+"</font></b>" + "<br>");
+				nodesDetails.append("<table>"
+					+ "<tbody>"
+						+ "<tr>");
+				nodesDetails.append("<td><b>IP:</b></td>" +"<td>"+node.getIP()+ "</td></tr>");
+				nodesDetails.append("<tr><td><b>MAC:</b></td>" +"<td>"+node.getMAC().toUpperCase()+ "</td></tr>");
+				// show Algs scores
+				if(nodeMapBC != null){
+					nodesDetails.append("<tr><td><b>BC Score:</b></td>" +"<td>"+String.format("%.03f", node.getBCScore())+ "</td></tr>");
+				}
+				if(nodeMapCC != null){
+					nodesDetails.append("<tr><td><b>CC Score:</b></td>" +"<td>"+String.format("%.03f", node.getCCScore())+ "</td></tr>");
+				}
+				if(nodeMapRWCC != null){
+					nodesDetails.append("<tr><td><b>RWCC Score:</b></td>" +"<td>"+String.format("%.03f", node.getRWCCScore())+ "</td></tr>");
+				}
+				if(nodeMapEVC != null){
+					nodesDetails.append("<tr><td><b>EVC Score:</b></td>" +"<td>"+String.format("%.03f", node.getEVCScore())+ "</td></tr>");
+				}
+				if(nodeMapEVCW != null){
+					nodesDetails.append("<tr><td><b>EVCW Score:</b></td>" +"<td>"+String.format("%6.3e", node.getEVCWScore())+ "</td></tr>");
+				}
+				nodesDetails.append("</tbody></table>");
 				if(nodeConnectrions.isEmpty() == false){
-				nodesDetails.append("Connections:<br><table>"
+				nodesDetails.append("<b><font size=\"4.5\">"+node.getToolTip()+" Connections:</font></b><br><table>"
 						+ "<tbody>"
 						+ "<tr>"
-						+ "<td>Node:</td>"+"<td>IP:</td>" + "<td>MAC:</td>" + "<td>PORT:</td></tr>" + "<br>");
+						+ "<td><b>Node:</b></td>"+"<td><b>IP:</b></td>" + "<td><b>MAC:</b></td>" + "<td><b>PORT:</b></td></tr>" + "<br>");
 				for (Map.Entry<Node, NIC> entry : nodeConnectrions.entrySet()) {
 					String key = entry.getKey().getToolTip();
 					NIC value = entry.getValue();
@@ -2230,10 +2337,11 @@ public class VisualNetForm extends javax.swing.JFrame implements GraphMouseListe
 					nodesDetails
 							.append("<tr><td>"+key  + "</td><td>" + value.getIp() + "</td><td>" + value.getMac().toUpperCase() + "</td><td>" + value.getPort() + "</td></tr>");
 				}
-				nodesDetails.append("</tbody></table><br>");
+				nodesDetails.append("</tbody></table>");
 			} else {
-				nodesDetails.append("No Connections<br>");
+				nodesDetails.append("No Connections");
 			}
+				nodesDetails.append("<hr>");
 			}
 			JTextPane textpane = new JTextPane();
 			textpane.setPreferredSize(new Dimension(333, 444));
@@ -2252,22 +2360,30 @@ public class VisualNetForm extends javax.swing.JFrame implements GraphMouseListe
 		if(this.pickedStateLink_.getPicked().size() == 0){
 			//Show error
 		} else {
-			StringBuilder nodesDetails = new StringBuilder();
+			StringBuilder edgesDetails = new StringBuilder();
 			Iterator<Link> nodeItearator = this.pickedStateLink_.getPicked().iterator();
 			while (nodeItearator.hasNext()) {
 				Link link = nodeItearator.next();
 				//node.get
 				//Map<Node, NIC> nodeConnectrions = node.getConnections();
-				nodesDetails.append("<b>Link: "+link.toString()+"</b>" + "<br>");
-				nodesDetails.append("Capacity: " +link.getCapacity()+ "<br>");
-				nodesDetails.append("Link nodes: " +link.getNode_left().getToolTip()+", "+link.getNode_right().getToolTip()+ "<br>");
+				edgesDetails.append("<b><font size=\"5\">Link: "+link.toString()+"</font></b>" + "<br>");
+				edgesDetails.append("<table>"
+						+ "<tbody>"
+							+ "<tr>");
+				edgesDetails.append("<td><b>Capacity:</b></td>" + "<td>" + link.getCapacity() + "</td></tr>");
+				edgesDetails.append("<td><b>Link nodes:</b></td>" + "<td>" + link.getNode_left().getToolTip()+", "+link.getNode_right().getToolTip()+ "</td></tr>");
+				if(linkMapBC != null){
+					edgesDetails.append("<tr><td><b>BC Score:</b></td>" +"<td>"+String.format("%.03f", link.getBCScore())+ "</td></tr>");
+				}
+				edgesDetails.append("</tbody></table>");
+				//edgesDetails.append("<hr>");
 			}
-			
+			//edgesDetails.append("</tbody></table>");
 			JTextPane textpane = new JTextPane();
 			textpane.setPreferredSize(new Dimension(333, 444));
 			
 			textpane.setContentType("text/html");
-			textpane.setText(nodesDetails.toString());
+			textpane.setText(edgesDetails.toString());
 			textpane.setEditable(false);
 			textpane.setCaretPosition(0);
 
@@ -2321,7 +2437,7 @@ public class VisualNetForm extends javax.swing.JFrame implements GraphMouseListe
 		//this.viewer.repaint();
 	}
 	
-	@SuppressWarnings("unchecked")
+	//@SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">                          
     private void initComponents()
     {

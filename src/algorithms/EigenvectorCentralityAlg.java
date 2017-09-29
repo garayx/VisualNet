@@ -38,6 +38,10 @@ public class EigenvectorCentralityAlg {
 				 highestEVCnode = tmpnode;
 			 }
 			nodeEC.put(tmpnode, ec.getVertexScore(tmpnode));
+			if(!isWeighted)
+				tmpnode.setEVCScore(ec.getVertexScore(tmpnode));
+			else
+				tmpnode.setEVCWScore(ec.getVertexScore(tmpnode));
 		}
 //		System.out.println("isWeighted: "+isWeighted);
 //		System.out.println("Node Eigenvector Centrality:");

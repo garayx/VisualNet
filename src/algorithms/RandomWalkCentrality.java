@@ -40,6 +40,7 @@ public class RandomWalkCentrality {
 				 highestCCnode = sourceNode;
 			 }
 			 nodesRWCC.put(sourceNode, rwcc);
+			 sourceNode.setRWCCScore(rwcc);
 		 }
 		 
 		 

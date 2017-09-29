@@ -36,6 +36,7 @@ public class ClosenessCentralityAlg {
 				 highestCCnode = node;
 			 }
 			 nodeCC.put(node, cc.getVertexScore(node));
+			 node.setCCScore(cc.getVertexScore(node));
 		 }
 //		 System.out.println("Node ClosenessCentrality:");
 //		 for (Map.Entry<Node, Double> entry : nodeCC.entrySet()) {
