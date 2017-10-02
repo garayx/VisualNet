@@ -15,7 +15,6 @@ import transformers.NodeShapeTransformer;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
 import java.util.ArrayList;
 import java.util.Iterator;
 
@@ -27,7 +26,6 @@ import edu.uci.ics.jung.algorithms.layout.CircleLayout;
 import edu.uci.ics.jung.algorithms.layout.FRLayout;
 import edu.uci.ics.jung.algorithms.layout.ISOMLayout;
 import edu.uci.ics.jung.algorithms.layout.SpringLayout;
-import edu.uci.ics.jung.algorithms.layout.StaticLayout;
 import edu.uci.ics.jung.algorithms.shortestpath.UnweightedShortestPath;
 import edu.uci.ics.jung.graph.Graph;
 import edu.uci.ics.jung.graph.SparseGraph;
@@ -257,48 +255,54 @@ public class VisualNetForm extends javax.swing.JFrame implements GraphMouseListe
 
         this.viewer.addKeyListener(graphMouse.getModeKeyListener());
         
-
+        // TODO
         this.viewer.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
 				showPickedNode();
 				showPickedEdge();
 			}
-//        	@Override
-//        	public void mousePressed(MouseEvent e) {
-//        		//Object source = e.getItem();
-//        		Object source = viewer.getComponentAt(e.getPoint());
-//        		
-//        		System.out.println(source.toString());
-//	            if (e.getButton() == MouseEvent.BUTTON3)
-//	            {
-//	            	if(source instanceof Node)
-//	            		System.out.println("kek");
-//	            doPop(e);
-//	            }
-////	            System.out.println(e.getSource().equals(Switch.class));
-////	            System.out.println(graph.getVertices().iterator().next());
-//        	}
+        	@Override
+        	public void mousePressed(MouseEvent e) {
+        		Object n = viewer.getPickSupport().getVertex(layout, e.getPoint().getX(), e.getPoint().getY());
+        		Object edge = viewer.getPickSupport().getEdge(layout, e.getPoint().getX(), e.getPoint().getY());
+	            if (e.getButton() == MouseEvent.BUTTON3)
+	            {
+	            	if(n instanceof Node){
+	            		//System.out.println("Instance of node");
+	            	} else if (edge instanceof Link){
+	            		//System.out.println("Instance of edge");
+	            	} else {
+	            		doPop(e);
+	            	}
+	            	//doPop(e);
+	            }
+//	            System.out.println(e.getSource().equals(Switch.class));
+//	            System.out.println(graph.getVertices().iterator().next());
+        	}
 			@Override
 			public void mouseReleased(MouseEvent e) {
-//				Object source = viewer.getComponentAt(e.getPoint());
 				showPickedNode();
 				showPickedEdge();
-//	            if (e.getButton() == MouseEvent.BUTTON3)
-//	            {
-//	            	System.out.println(source.toString());
-//	            	if(source instanceof Node)
-//	            		System.out.println("kek");
-//				doPop(e);
-//	            }
-//	            System.out.println(e.getSource().equals(Switch));
-//	            System.out.println(graph.getVertices().iterator().next());
+        		Object n = viewer.getPickSupport().getVertex(layout, e.getPoint().getX(), e.getPoint().getY());
+        		Object edge = viewer.getPickSupport().getEdge(layout, e.getPoint().getX(), e.getPoint().getY());
+	            if (e.getButton() == MouseEvent.BUTTON3)
+	            {
+	            	if(n instanceof Node){
+	            		//System.out.println("Instance of node");
+	            	} else if (edge instanceof Link){
+	            		//System.out.println("Instance of edge");
+	            	} else {
+	            		doPop(e);
+	            	}
+	            	//doPop(e);
+	            }
 			}
-//		    private void doPop(MouseEvent e){
-//		    	PopupViewerMenu menu = new PopupViewerMenu();
-//		    	//System.out.println("doPop");
-//		        menu.show(e.getComponent(), e.getX(), e.getY());
-//		    }
+		    private void doPop(MouseEvent e){
+		    	PopupViewerMenu menu = new PopupViewerMenu(graphMouse);
+		    	//System.out.println("doPop");
+		        menu.show(e.getComponent(), e.getX(), e.getY());
+		    }
         });
         
         this.viewer.addMouseMotionListener(new MouseMotionListener()
@@ -1380,30 +1384,34 @@ public class VisualNetForm extends javax.swing.JFrame implements GraphMouseListe
             @Override
             public void actionPerformed(ActionEvent e)
             {
-            	if(isGraphCreated())
-                	viewer.setGraphLayout(new ISOMLayout<>(graph));
+            	if(isGraphCreated()){
+            		layout = new ISOMLayout<Node,Link>(graph);
+                	viewer.setGraphLayout(layout);
+            	}
             }
         });
 
-        JMenuItem springLayout = new JMenuItem("Spring Layout");
-        springLayout.addActionListener(new ActionListener()
-        {
-            @Override
-            public void actionPerformed(ActionEvent e)
-            {
-            	if(isGraphCreated())
-            		viewer.setGraphLayout(new SpringLayout<>(graph));
-            }
-        });
-        
+		JMenuItem springLayout = new JMenuItem("Spring Layout");
+		springLayout.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				if (isGraphCreated()) {
+					layout = new SpringLayout<Node,Link>(graph);
+					viewer.setGraphLayout(layout);
+				}
+			}
+		});
+
         JMenuItem circleLayout = new JMenuItem("Circle Layout");
         circleLayout.addActionListener(new ActionListener()
         {
             @Override
             public void actionPerformed(ActionEvent e)
             {
-            	if(isGraphCreated())
-            		viewer.setGraphLayout(new CircleLayout<>(graph));
+            	if(isGraphCreated()){
+            		layout = new CircleLayout<Node,Link>(graph);
+            		viewer.setGraphLayout(layout);
+            	}
             }
         });
         
@@ -1499,7 +1507,14 @@ public class VisualNetForm extends javax.swing.JFrame implements GraphMouseListe
         addController();
         // adds hosts to the switches
         generateHosts();
-        this.viewer.setGraphLayout(new ISOMLayout<Node, Link>(this.graph));
+        
+        
+
+		this.layout = new ISOMLayout<Node, Link>(this.graph);
+        
+        
+        this.viewer.setGraphLayout(this.layout);
+        
     }
     
     /**
@@ -1819,8 +1834,9 @@ public class VisualNetForm extends javax.swing.JFrame implements GraphMouseListe
 		common.CommonData.newEdgesList = null;
 		common.CommonData.edgesList = null;
 
-        this.graph = new WattsStrogatzSmallWorldGenerator(new EdgeFactory(), new VertexFactory(), 50, 8, 0.2f).create();                
-        this.viewer.setGraphLayout(new ISOMLayout<Node, Link>(this.graph));
+        this.graph = new WattsStrogatzSmallWorldGenerator(new EdgeFactory(), new VertexFactory(), 50, 8, 0.2f).create();      
+        this.layout = new ISOMLayout<Node, Link>(this.graph);
+        this.viewer.setGraphLayout(this.layout);
         //update side pnl
         updateSidePnl();
     }
@@ -1843,8 +1859,10 @@ public class VisualNetForm extends javax.swing.JFrame implements GraphMouseListe
                 }
         );
         
-        queue.stream().forEach(e -> this.graph.addEdge(e, e.getNode_left(), e.getNode_right()));                        
-        this.viewer.setGraphLayout(new ISOMLayout<Node, Link>(this.graph));
+        queue.stream().forEach(e -> this.graph.addEdge(e, e.getNode_left(), e.getNode_right()));
+        
+        this.layout = new ISOMLayout<Node, Link>(this.graph);
+        this.viewer.setGraphLayout(this.layout);
     	}
         //update side pnl
         updateSidePnl();
@@ -1867,7 +1885,10 @@ public class VisualNetForm extends javax.swing.JFrame implements GraphMouseListe
         });
         
         queue.stream().forEach(l -> graph.addEdge(l, l.getNode_left(), l.getNode_right()));
-        this.viewer.setGraphLayout(new ISOMLayout<Node, Link>(this.graph));
+        
+        
+        this.layout = new ISOMLayout<Node, Link>(this.graph);
+        this.viewer.setGraphLayout(this.layout);
         
         common.CommonData.controllerCount = common.CommonData.controllerCount + 1;
         
@@ -2467,7 +2488,8 @@ public class VisualNetForm extends javax.swing.JFrame implements GraphMouseListe
         initToplbl("");
         
 		this.graph = new SparseGraph<Node, Link>();
-		this.viewer.setGraphLayout(new StaticLayout<Node, Link>(this.graph));
+		this.layout = new FRLayout<Node,Link>(this.graph, this.pnlMain.getSize());
+		this.viewer.setGraphLayout(this.layout);
 	}
 	
 	
@@ -2515,8 +2537,8 @@ public class VisualNetForm extends javax.swing.JFrame implements GraphMouseListe
             // init graph 
             this.graph = new SparseGraph<Node, Link>();
 			ImportGraph importGraph = new ImportGraph(this.graph, chooser.getSelectedFile());
-			
-			this.viewer.setGraphLayout(new ISOMLayout<Node, Link>(this.graph));
+			this.layout = new ISOMLayout<Node, Link>(this.graph);
+			this.viewer.setGraphLayout(this.layout);
 			// refresh graph
 			refreshGraph();
 			// set top label
