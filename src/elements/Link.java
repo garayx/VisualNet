@@ -11,6 +11,7 @@ public class Link {
 	private String routeType = "";
 	private String arrowType = "";
 	private Number bcScore = null;
+	private String orderNum = "";
 	
 	public void setNode_left(Node x){
 		this.nodeLeft = x;
@@ -36,6 +37,14 @@ public class Link {
 	public int getPort_right(){
 		return this.portRight;
 	}
+	
+	public void setOrderNum(String x){
+		this.orderNum = x;
+	}
+	public String getOrderNum(){
+		return this.orderNum;
+	}
+	
 	
 	
 	public void setCapacity(int x){

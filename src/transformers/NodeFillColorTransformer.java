@@ -25,6 +25,13 @@ public class NodeFillColorTransformer<Node> implements Transformer<Node,Paint> {
 	    private Color spColor_ = null;
 	    /** Color of the SP vertex. */
 	    private Color defaultNodeColor  = null;
+	    /** Color of the SP vertex. */
+	    private Color srcNodeColor  = null;
+	    /** Color of the SP vertex. */
+	    private Color destNodeColor  = null;
+	    
+	    
+	    
 	    
 	    public NodeFillColorTransformer(PickedInfo<Node> pi) {
 	        pi_ = pi;
@@ -35,6 +42,9 @@ public class NodeFillColorTransformer<Node> implements Transformer<Node,Paint> {
 	        defaultHostColor = new Color(127, 127, 0);
 	        pickedColor_ = Color.YELLOW;
 	        spColor_ = Color.RED;
+	        //srcNodeColor = new Color(255, 102, 102);
+	        srcNodeColor = new Color(204, 0, 0);
+	        destNodeColor = new Color(204, 0, 0);;
 	    }
 	    public Paint transform(Node v) {
 	    	if (pi_.isPicked(v))
@@ -45,18 +55,21 @@ public class NodeFillColorTransformer<Node> implements Transformer<Node,Paint> {
 	            	return defaultHostColor;
 	            } else if(((Host) v).getRouteType().equals("SP")){
 	            	return spColor_;
+	            } else if(((Host) v).getRouteType().equals("src")){
+	            	return srcNodeColor;
+	            } else if(((Host) v).getRouteType().equals("dest")){
+	            	return destNodeColor;
 	            }
-//	    		if(n.getRouteType().equals("")){
-//	            	return defaultHostColor;
-//	            } else if(n.getRouteType().equals("SP")){
-//	            	return spColor_;
-//	            }
 	    	}
 	    	else if (v instanceof Switch){
 	            if(((Switch)v).getRouteType().equals("")){
 	            	return defaultSwitchColor;
 	            } else if(((Switch)v).getRouteType().equals("SP")){
 	            	return spColor_;
+	            } else if(((Switch)v).getRouteType().equals("src")){
+	            	return srcNodeColor;
+	            } else if(((Switch)v).getRouteType().equals("dest")){
+	            	return destNodeColor;
 	            }
 	    	}
 	    	else if (v instanceof Controller){
@@ -64,6 +77,10 @@ public class NodeFillColorTransformer<Node> implements Transformer<Node,Paint> {
 	            	return defaultControllerColor;
 	            } else if(((Controller)v).getRouteType().equals("SP")){
 	            	return spColor_;
+	            } else if (((Controller)v).getRouteType().equals("src")){
+	            	return srcNodeColor;
+	            } else if (((Controller)v).getRouteType().equals("dest")){
+	            	return destNodeColor;
 	            }
 	    	}
 			return defaultNodeColor;

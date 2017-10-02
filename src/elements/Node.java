@@ -17,7 +17,7 @@ public abstract class Node {
 	private String type = "Node";
 	private Map<Node,NIC> Connections = new HashMap<Node, NIC>();
 	private String routeType = "";
-	private final int port = 0 + (int)(Math.random() * 65535);
+	//private final int port = 0 + (int)(Math.random() * 65535);
 	//private NIC nNic;
 	
 	private Number bcScore = null;
@@ -35,14 +35,14 @@ public abstract class Node {
     }
 	
 	public NIC addConnection(Node node) {
-		NIC nic = new NIC(node.getMAC(), node.getIP(), Connections.size()+1);
-		Connections.put(node, nic);
+		NIC nic = new NIC(node.getMAC(), node.getIP(), this.Connections.size()+1);
+		this.Connections.put(node, nic);
 		return nic;
 	}
 	
 	public NIC addConnection(Node node, int num) {
 		NIC nic = new NIC(node.getMAC(), node.getIP(), num);
-		Connections.put(node, nic);
+		this.Connections.put(node, nic);
 		return nic;
 	}
 	

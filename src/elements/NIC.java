@@ -68,7 +68,7 @@ public class NIC
     }
     public int getPort()
     {
-        return port;
+        return this.port;
     }
     
     

@@ -244,7 +244,16 @@ public class PopupMousePlugin<V,E> extends AbstractPopupGraphMousePlugin
                         @Override
                         public void actionPerformed(ActionEvent e)
                         {
-                      	  CommonData.sourceNode = n;
+                        	if(CommonData.sourceNode == null){
+	                      	  CommonData.sourceNode = n;
+	                      	  n.setRouteType("src");
+	                      	  ve.repaint();
+                        	} else {
+                        		CommonData.sourceNode.setRouteType("");
+  	                      	  	CommonData.sourceNode = n;
+	  	                      	n.setRouteType("src");
+	  	                      	ve.repaint();
+                        	}
                         }
                     });
                     
@@ -254,7 +263,16 @@ public class PopupMousePlugin<V,E> extends AbstractPopupGraphMousePlugin
                         @Override
                         public void actionPerformed(ActionEvent e)
                         {
-                      	  CommonData.destinationNode = n;
+                        	if(CommonData.destinationNode == null){
+		                      	  CommonData.destinationNode = n;
+		                      	  n.setRouteType("dest");
+		                      	  ve.repaint();
+                        	} else {
+                        		CommonData.destinationNode.setRouteType("");
+  	                      	  	CommonData.destinationNode = n;
+	  	                      	n.setRouteType("dest");
+	  	                      	ve.repaint();
+                        	}
                         }
                     });
                     
