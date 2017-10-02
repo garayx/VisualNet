@@ -1,0 +1,121 @@
+{
+  "nodes_connections" : [ {
+    "nicIp" : "10.0.0.5",
+    "src" : "h3",
+    "nicPort" : 1,
+    "dest" : "s2",
+    "nicMac" : "f2:2f:c7:6a:1c:ce"
+  }, {
+    "nicIp" : "10.0.0.6",
+    "src" : "s1",
+    "nicPort" : 1,
+    "dest" : "c1",
+    "nicMac" : "94:e2:3f:d9:a8:cb"
+  }, {
+    "nicIp" : "10.0.0.1",
+    "src" : "s1",
+    "nicPort" : 2,
+    "dest" : "h1",
+    "nicMac" : "00:bd:e2:09:24:71"
+  }, {
+    "nicIp" : "10.0.0.4",
+    "src" : "c1",
+    "nicPort" : 1,
+    "dest" : "s1",
+    "nicMac" : "84:f3:b5:d0:a8:41"
+  }, {
+    "nicIp" : "10.0.0.5",
+    "src" : "c1",
+    "nicPort" : 2,
+    "dest" : "s2",
+    "nicMac" : "f2:2f:c7:6a:1c:ce"
+  }, {
+    "nicIp" : "10.0.0.3",
+    "src" : "s2",
+    "nicPort" : 2,
+    "dest" : "h3",
+    "nicMac" : "aa:92:ac:86:cc:9a"
+  }, {
+    "nicIp" : "10.0.0.6",
+    "src" : "s2",
+    "nicPort" : 3,
+    "dest" : "c1",
+    "nicMac" : "94:e2:3f:d9:a8:cb"
+  }, {
+    "nicIp" : "10.0.0.2",
+    "src" : "s2",
+    "nicPort" : 1,
+    "dest" : "h2",
+    "nicMac" : "2e:af:25:c4:40:a3"
+  }, {
+    "nicIp" : "10.0.0.4",
+    "src" : "h1",
+    "nicPort" : 1,
+    "dest" : "s1",
+    "nicMac" : "84:f3:b5:d0:a8:41"
+  }, {
+    "nicIp" : "10.0.0.5",
+    "src" : "h2",
+    "nicPort" : 2,
+    "dest" : "s2",
+    "nicMac" : "f2:2f:c7:6a:1c:ce"
+  } ],
+  "hosts" : [ {
+    "ip" : "10.0.0.3",
+    "id" : 3,
+    "mac" : "aa:92:ac:86:cc:9a"
+  }, {
+    "ip" : "10.0.0.1",
+    "id" : 1,
+    "mac" : "00:bd:e2:09:24:71"
+  }, {
+    "ip" : "10.0.0.2",
+    "id" : 2,
+    "mac" : "2e:af:25:c4:40:a3"
+  } ],
+  "switches" : [ {
+    "ip" : "10.0.0.4",
+    "id" : 1,
+    "mac" : "84:f3:b5:d0:a8:41"
+  }, {
+    "ip" : "10.0.0.5",
+    "id" : 2,
+    "mac" : "f2:2f:c7:6a:1c:ce"
+  } ],
+  "controllers" : [ {
+    "ip" : "10.0.0.6",
+    "id" : 1,
+    "mac" : "94:e2:3f:d9:a8:cb"
+  } ],
+  "links" : [ {
+    "nodeLeft" : "s2",
+    "portRight" : 2,
+    "nodeRight" : "h2",
+    "portLeft" : 1,
+    "capacity" : 7
+  }, {
+    "nodeLeft" : "s2",
+    "portRight" : 2,
+    "nodeRight" : "c1",
+    "portLeft" : 3,
+    "capacity" : 1
+  }, {
+    "nodeLeft" : "s1",
+    "portRight" : 1,
+    "nodeRight" : "h1",
+    "portLeft" : 2,
+    "capacity" : 6
+  }, {
+    "nodeLeft" : "s2",
+    "portRight" : 1,
+    "nodeRight" : "h3",
+    "portLeft" : 2,
+    "capacity" : 4
+  }, {
+    "nodeLeft" : "c1",
+    "portRight" : 1,
+    "nodeRight" : "s1",
+    "portLeft" : 1,
+    "capacity" : 1
+  } ]
+}

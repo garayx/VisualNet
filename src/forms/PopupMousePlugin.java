@@ -317,8 +317,8 @@ public class PopupMousePlugin<V,E> extends AbstractPopupGraphMousePlugin
                             Link l = (Link)e;
                             
                             String capStr = JOptionPane.showInputDialog("Enter Capacity:");
-                            
-                            l.setCapacity(Integer.parseInt(capStr));
+                            if(capStr != null)
+                            	l.setCapacity(Integer.parseInt(capStr));
                             
                             ve.repaint();
                         }

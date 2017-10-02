@@ -202,12 +202,12 @@ public class RandomWalk {
 		List<Set<Node>> componentCollector = (List<Set<Node>>) new StronglyConnectedComponents().strongComponentsAsSets(this.graph);
 		
 		
-		for(Set<Node> x : componentCollector){
-			System.out.println("SCC");
-			for(Node y : x){
-				System.out.println(y.getToolTip());
-			}
-		}
+//		for(Set<Node> x : componentCollector){
+//			//System.out.println("SCC");
+//			for(Node y : x){
+//				//System.out.println(y.getToolTip());
+//			}
+//		}
 		
 		Iterator<Set<Node>> sccItearator = componentCollector.iterator();
 		while (sccItearator.hasNext()) {
@@ -385,22 +385,22 @@ public class RandomWalk {
 //			}
 //			System.out.println();
 //			System.out.println("Edge: "+ "("+currentEdge.getNode_left().getToolTip()+", "+currentEdge.getNode_right().getToolTip()+")");
-			System.out.print("completedNodes");
-			for (Node x : completedNodes) {
-				System.out.print(" " +x.getToolTip());
-			
-			}
-			System.out.println();
-			System.out.print("graphNodes");
-			for (Node x : graphNodes) {
-				System.out.print(" " +x.getToolTip());
-			
-			}
-			System.out.println();
+//			System.out.print("completedNodes");
+//			for (Node x : completedNodes) {
+//				System.out.print(" " +x.getToolTip());
+//			
+//			}
+//			System.out.println();
+//			System.out.print("graphNodes");
+//			for (Node x : graphNodes) {
+//				System.out.print(" " +x.getToolTip());
+//			
+//			}
+//			System.out.println();
 			if (listEqualsNoOrder(graphNodes, completedNodes)) {
 				looking = false;
 			}
-//			System.out.println("kKEK");
+//			`out.println("kKEK");
 		}
 		for(Link x : completedEdges){
 			completedAllSccEdges.add(x);

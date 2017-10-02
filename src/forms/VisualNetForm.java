@@ -61,6 +61,7 @@ import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.awt.event.MouseMotionListener;
 import java.awt.geom.Point2D;
+import java.io.File;
 import java.text.DecimalFormat;
 import java.util.LinkedList;
 import java.util.List;
@@ -73,6 +74,7 @@ import javax.swing.BoxLayout;
 import javax.swing.ButtonGroup;
 import javax.swing.JButton;
 import javax.swing.JColorChooser;
+import javax.swing.JFileChooser;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
@@ -84,6 +86,8 @@ import javax.swing.JTextPane;
 import javax.swing.SpinnerNumberModel;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
+import javax.swing.filechooser.FileNameExtensionFilter;
+
 import org.apache.commons.collections15.Transformer;
 
 import javax.swing.GroupLayout.Alignment;
@@ -142,6 +146,11 @@ public class VisualNetForm extends javax.swing.JFrame implements GraphMouseListe
     private PickedState<Link> pickedStateLink_ = null;
     //static String mouseMode;
     
+    
+    
+    // 
+    // TODO Run algorithms (atleast randomWalks with threads)
+    // TODO restrict create loop edges (node to same node)
 	public VisualNetForm()
     {
         initComponents();
@@ -1045,15 +1054,15 @@ public class VisualNetForm extends javax.swing.JFrame implements GraphMouseListe
         JMenu saveToMenu = new JMenu("Save To");
         menuFile.add(saveToMenu);
 
-/*        JMenuItem exportItem = new JMenuItem("JSON");
+        JMenuItem exportItem = new JMenuItem("JSON");
         exportItem.addActionListener(new ActionListener()
         {
             @Override
             public void actionPerformed(ActionEvent e)
             {
-                export();                
+                export();              
             }
-        });*/
+        });
         
 /*        JMenuItem exportPDFItem = new JMenuItem("PDF");
         exportPDFItem.addActionListener(new ActionListener()
@@ -1067,7 +1076,22 @@ public class VisualNetForm extends javax.swing.JFrame implements GraphMouseListe
         });*/
         
         //saveToMenu.add(exportPDFItem);
-        //saveToMenu.add(exportItem);
+        saveToMenu.add(exportItem);
+        
+        JMenu loadFromMenu = new JMenu("Load From");
+        menuFile.add(loadFromMenu);
+        JMenuItem importItem = new JMenuItem("JSON");
+        importItem.addActionListener(new ActionListener()
+        {
+            @Override
+            public void actionPerformed(ActionEvent e)
+            {
+                importGraph();              
+            }
+        });
+        
+        loadFromMenu.add(importItem);
+        
         
         //newGraph()
         JMenuItem closeItem = new JMenuItem("Close");
@@ -1302,8 +1326,11 @@ public class VisualNetForm extends javax.swing.JFrame implements GraphMouseListe
             @Override
             public void actionPerformed(ActionEvent e)
             {
-            	if (isGraphCreated() && isSCGraph()) {
-            		getRWclosenessCentrality();
+            	if (isGraphCreated()) {
+                	// refresh graph
+                	refreshGraph();
+            		if(isSCGraph())
+            			getRWclosenessCentrality();
             	}
             }
         });
@@ -1773,7 +1800,7 @@ public class VisualNetForm extends javax.swing.JFrame implements GraphMouseListe
     // getRWclosenessCentrality
     private void  getRWclosenessCentrality(){
     	// refresh graph
-    	refreshGraph();
+    	//refreshGraph();
     	// run algorithm
     	RandomWalkCentrality ccrw = new RandomWalkCentrality(this.graph);
     	// set lbls on right panel
@@ -2056,8 +2083,15 @@ public class VisualNetForm extends javax.swing.JFrame implements GraphMouseListe
 				bcDetails.append("<tr><td>"+key + "</td>" + "<td>" + String.format("%.03f", value) +"</td></tr>");
 			}
 			bcDetails.append("</tbody></table><br>");
-			bcDetails.append("<b><font size=\"5\">Highest Betweenness Centrality Node:</font></b>"+"<br>");
-			bcDetails.append("<b>"+maxNodeScoreNode + "</b> with score of: <b>" + String.format("%.03f", maxNodeScore)+"</b><br>");
+			if(maxNodeScoreNode == null){
+				bcDetails.insert(0, "<b>No Highest Betweenness Centrality Node</b>"+"<br><br>");
+			} else {
+			bcDetails.insert(0, "<b>"
+									+ "<font size=\"5\">Highest Betweenness Centrality Node:</font></b>"
+									+ "<br>" + "<b>" + maxNodeScoreNode + "</b> with score of: <b>" 
+									+ String.format("%.03f", maxNodeScore)+"</b>"
+											+ "<br><br>");
+			}
 			bcDetails.append("<br><b><font size=\"5\">Edges Betweenness Centrality:</font></b><br>");
 			bcDetails.append("<table>"
 					+ "<tbody>"
@@ -2111,9 +2145,12 @@ public class VisualNetForm extends javax.swing.JFrame implements GraphMouseListe
 				ccDetails.append("<tr><td>"+key + "</td>" + "<td>" + String.format("%.03f", value) +"</td></tr>");
 			}
 			ccDetails.append("</tbody></table><br>");
-			ccDetails.append("<b><font size=\"5\">Highest Closeness Centrality Node:</font></b>"+"<br>");
-			ccDetails.append("<b>"+maxScoreNode + "</b> with score of: <b>" + String.format("%.03f", maxScore)+"</b><br>");
-			//showLongTextMessageInDialog(ccDetails.toString(), this, "Closeness Centrality Details");
+			if(maxScoreNode == null){
+				ccDetails.insert(0, "<b>No Highest Betweenness Centrality Node</b>"+"<br><br>");
+			} else {
+				ccDetails.insert(0,"<b><font size=\"5\">Highest Closeness Centrality Node:</font></b>"+"<br><b>"+maxScoreNode + "</b> with score of: <b>" + String.format("%.03f", maxScore)+"</b><br><br>");
+			}
+				//showLongTextMessageInDialog(ccDetails.toString(), this, "Closeness Centrality Details");
 			
 			AlgsGUI cc = new AlgsGUI(this.graph, ccDetails.toString(), nodeMapCC);
 	    	cc.pack();
@@ -2150,8 +2187,11 @@ public class VisualNetForm extends javax.swing.JFrame implements GraphMouseListe
 			}
 			ccDetails.append("</tbody></table><br>");
 			//ccDetails.append("\nHighest RandomWalk Closeness Centrality Node:\n");
-			ccDetails.append("<b><font size=\"4\">Highest Random Walk Closeness Centrality Node:</font></b>"+"<br>");
-			ccDetails.append("<b>"+maxScoreNode + "</b> with score of: <b>" + String.format("%.03f", maxScore)+"</b><br>");
+			if(maxScoreNode == null){
+				ccDetails.insert(0, "<b>No Highest Betweenness Centrality Node</b>"+"<br><br>");
+			} else {
+				ccDetails.insert(0,"<b><font size=\"4\">Highest Random Walk Closeness Centrality Node:</font></b>"+"<br><b>"+maxScoreNode + "</b> with score of: <b>" + String.format("%.03f", maxScore)+"</b><br><br>");
+			}
 			AlgsGUI cc = new AlgsGUI(this.graph, ccDetails.toString(), nodeMapRWCC);
 	    	cc.pack();
 	    	cc.setSize(1104, 589);
@@ -2181,16 +2221,14 @@ public class VisualNetForm extends javax.swing.JFrame implements GraphMouseListe
 					maxScore = value;
 					maxScoreNode = entry.getKey().getToolTip();
 				}
-				//evDetails.append("Node:"+"\t"+key + "\t" + "Score:" + "\t" + String.format("%.03f", value) + "\n");
 				evDetails.append("<tr><td>"+key + "</td>" + "<td>" + String.format("%.03f", value) +"</td></tr>");
 			}
 			evDetails.append("</tbody></table><br>");
-			//evDetails.append("\nHighest Eigenvector Centrality Node:\n");
-			evDetails.append("<b><font size=\"5\">Highest Closeness Centrality Node:</font></b>"+"<br>");
-			//evDetails.append(maxScoreNode + " with score of: " + String.format("%.03f", maxScore));
-			evDetails.append("<b>"+maxScoreNode + "</b> with score of: <b>" + String.format("%.03f", maxScore)+"</b><br>");
-			//showLongTextMessageInDialog(evDetails.toString(), this, "Eigenvector Centrality Details");
-			
+			if(maxScoreNode == null){
+				evDetails.insert(0, "<b>No Highest Betweenness Centrality Node</b>"+"<br><br>");
+			} else {
+				evDetails.insert(0,"<b><font size=\"5\">Highest Closeness Centrality Node:</font></b>"+"<br><b>"+maxScoreNode + "</b> with score of: <b>" + String.format("%.03f", maxScore)+"</b><br><br>");
+			}
 			AlgsGUI evc = new AlgsGUI(this.graph, evDetails.toString(), nodeMapEVC);
 			evc.pack();
 			evc.setSize(1104, 589);
@@ -2226,13 +2264,11 @@ public class VisualNetForm extends javax.swing.JFrame implements GraphMouseListe
 				evDetails.append("<tr><td>"+key + "</td>" + "<td>" + String.format("%6.3e", value) +"</td></tr>");
 			}
 			evDetails.append("</tbody></table><br>");
-			//evDetails.append("\nHighest Weighted Eigenvector Centrality Node:\n");
-			evDetails.append("<b><font size=\"4\">Highest Weighted Eigenvector Centrality Node:</font></b>"+"<br>");
-			//evDetails.append(maxScoreNode + " with score of: " + String.format("%6.3e", maxScore));
-			//evDetails.append(maxScoreNode + " with score of: " + maxScore);
-			evDetails.append("<b>"+maxScoreNode + "</b> with score of: <b>" + String.format("%6.3e", maxScore)+"</b><br>");
-			
-			//showLongTextMessageInDialog(evDetails.toString(), this, "Weighted Eigenvector Centrality Details");
+			if(maxScoreNode == null){
+				evDetails.insert(0, "<b>No Highest Betweenness Centrality Node</b>"+"<br><br>");
+			} else {
+				evDetails.insert(0,"<b><font size=\"4\">Highest Weighted Eigenvector Centrality Node:</font></b>"+"<br><b>"+maxScoreNode + "</b> with score of: <b>" + String.format("%6.3e", maxScore)+"</b><br><br>");
+			}
 			AlgsGUI evc = new AlgsGUI(this.graph, evDetails.toString(), nodeMapEVCW);
 			evc.pack();
 			evc.setSize(1104, 589);
@@ -2369,9 +2405,14 @@ public class VisualNetForm extends javax.swing.JFrame implements GraphMouseListe
 				edgesDetails.append("<b><font size=\"5\">Link: "+link.toString()+"</font></b>" + "<br>");
 				edgesDetails.append("<table>"
 						+ "<tbody>"
-							+ "<tr>");
-				edgesDetails.append("<td><b>Capacity:</b></td>" + "<td>" + link.getCapacity() + "</td></tr>");
-				edgesDetails.append("<td><b>Link nodes:</b></td>" + "<td>" + link.getNode_left().getToolTip()+", "+link.getNode_right().getToolTip()+ "</td></tr>");
+							//+ "<tr>"
+						);
+				edgesDetails.append("<tr><td><b>Capacity:</b></td>" + "<td>" + link.getCapacity() + "</td></tr>");
+				edgesDetails.append("<tr><td><b>Link left node:</b></td>" + "<td>" + link.getNode_left().getToolTip()+"</td></tr>");
+				edgesDetails.append("<tr><td><b>Link left port:</b></td>" + "<td>" + link.getPort_left()+"</td></tr>");
+
+				edgesDetails.append("<tr><td><b>Link right node:</b></td>" + "<td>" + link.getNode_right().getToolTip()+"</td></tr>");
+				edgesDetails.append("<tr><td><b>Link right port:</b></td>" + "<td>" + link.getPort_right()+"</td></tr>");
 				if(linkMapBC != null){
 					edgesDetails.append("<tr><td><b>BC Score:</b></td>" +"<td>"+String.format("%.03f", link.getBCScore())+ "</td></tr>");
 				}
@@ -2400,12 +2441,29 @@ public class VisualNetForm extends javax.swing.JFrame implements GraphMouseListe
 		initEigenvectorCentrality(false);
 		initEigenvectorCentralityW(false);
 	}
-	
+
 	private void initToplbl(String lbltext){
 		pnlTop.removeAll();
-        JLabel lblTop = new JLabel(lbltext);
-        lblTop.setHorizontalAlignment(SwingConstants.CENTER);
-        lblTop.setIcon(null);
+		JLabel lblTop = null;
+		
+		if(lbltext.length() > 200){
+			String txt = lbltext.substring(0, 200) + "...";
+			lblTop = new JLabel(txt);
+			
+			StringBuffer str = new StringBuffer(lbltext);
+			for(int i=50; i<lbltext.length(); i=i+50){
+				str.insert(i, "<br>");
+			}
+			str.toString();
+			String tooltip = "<html>"+ str + "</html>";
+			lblTop.setToolTipText(tooltip);
+	        lblTop.setHorizontalAlignment(SwingConstants.CENTER);
+	        lblTop.setIcon(null);
+		} else {
+	        lblTop = new JLabel(lbltext);
+	        lblTop.setHorizontalAlignment(SwingConstants.CENTER);
+	        lblTop.setIcon(null);
+		}
         pnlTop.add(lblTop);
         pnlTop.updateUI();
         //pnlTop.ref
@@ -2437,6 +2495,66 @@ public class VisualNetForm extends javax.swing.JFrame implements GraphMouseListe
 		//this.viewer.repaint();
 	}
 	
+	
+	// export graph Json
+	private void export(){
+		ExportGraph export = new ExportGraph(this.graph);
+	}
+	// import graph json
+	private void importGraph(){
+		//add file selector
+		// pass file to ImporGraph class
+		
+		// get project dir
+		File workingDirectory = new File(System.getProperty("user.dir"));
+		JFileChooser chooser = new JFileChooser();
+		// show only json files
+		FileNameExtensionFilter filter = new FileNameExtensionFilter("JSON File", "json");
+		chooser.setFileFilter(filter);
+		//chooser.addChoosableFileFilter(filter);
+		chooser.setAcceptAllFileFilterUsed(true);
+		
+		
+		chooser.setCurrentDirectory(workingDirectory);
+		int returnVal = chooser.showOpenDialog(null);
+		String filextension = chooser.getSelectedFile().getName().substring(chooser.getSelectedFile().getName().lastIndexOf("."),chooser.getSelectedFile().getName().length());
+		//System.out.println(filextension);
+		if(returnVal == JFileChooser.APPROVE_OPTION && filextension.equals(".json")) {
+            System.out.println("You chose to open this file: " +
+            chooser.getSelectedFile().getAbsolutePath());
+            
+            
+        	common.CommonData.destinationNode = null;
+        	common.CommonData.sourceNode = null;
+    		common.CommonData.switchCount = 0;
+    		common.CommonData.hostsCount = 0;
+    		common.CommonData.controllerCount = 0;
+    		common.CommonData.selectedNode = "Switch";
+    		common.CommonData.newEdgesList = null;
+    		common.CommonData.edgesList = null;
+            updateSidePnlCentralities();
+            updateSidePnl();
+            initToplbl("");
+            this.graph = new SparseGraph<Node, Link>();
+            
+			ImportGraph importGraph = new ImportGraph(this.graph, chooser.getSelectedFile());
+			
+			this.viewer.setGraphLayout(new ISOMLayout<Node, Link>(this.graph));
+        } else if (returnVal == JFileChooser.CANCEL_OPTION){
+        	System.out.println("You canceled");
+        } else {
+        	System.out.println("error selecting file");
+        	// add popup with error
+        }
+		
+		//ImportGraph importGraph = new ImportGraph(this.graph, chooser.getSelectedFile());
+	}
+	
+	
+	
+	
+	
+	
 	//@SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">                          
     private void initComponents()
@@ -2445,6 +2563,7 @@ public class VisualNetForm extends javax.swing.JFrame implements GraphMouseListe
         pnlMain = new javax.swing.JPanel();
         menuBar = new javax.swing.JMenuBar();
         pnlTop = new javax.swing.JPanel();
+        pnlTop.setMaximumSize(new Dimension(1366, 32767));
         pnlGraphProperties = new JPanel();
         
         
@@ -2505,19 +2624,19 @@ public class VisualNetForm extends javax.swing.JFrame implements GraphMouseListe
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         layout.setHorizontalGroup(
         	layout.createParallelGroup(Alignment.LEADING)
-        		.addComponent(pnlBot, Alignment.TRAILING, GroupLayout.DEFAULT_SIZE, 421, Short.MAX_VALUE)
+        		.addComponent(pnlBot, Alignment.TRAILING, GroupLayout.DEFAULT_SIZE, 431, Short.MAX_VALUE)
         		.addGroup(layout.createSequentialGroup()
         			.addContainerGap()
-        			.addComponent(pnlMain, GroupLayout.DEFAULT_SIZE, 401, Short.MAX_VALUE)
+        			.addComponent(pnlMain, GroupLayout.DEFAULT_SIZE, 411, Short.MAX_VALUE)
         			.addContainerGap())
-        		.addComponent(pnlTop, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+        		.addComponent(pnlTop, GroupLayout.DEFAULT_SIZE, 431, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
         	layout.createParallelGroup(Alignment.LEADING)
         		.addGroup(layout.createSequentialGroup()
         			.addComponent(pnlTop, GroupLayout.PREFERRED_SIZE, 20, GroupLayout.PREFERRED_SIZE)
         			.addPreferredGap(ComponentPlacement.RELATED)
-        			.addComponent(pnlMain, GroupLayout.DEFAULT_SIZE, 333, Short.MAX_VALUE)
+        			.addComponent(pnlMain, GroupLayout.DEFAULT_SIZE, 642, Short.MAX_VALUE)
         			.addPreferredGap(ComponentPlacement.RELATED)
         			.addComponent(pnlBot, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
         );

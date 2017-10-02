@@ -5,7 +5,7 @@ public class Controller extends Node
     //private NIC nic;
 
     //private static int _id = 0;
-    private final int id;
+    private int id;
     //private final int port = 0 + (int)(Math.random() * 65535);
     private String cid;
     private String type = "Controller";
@@ -41,6 +41,12 @@ public class Controller extends Node
     {
         return this.id;        
     }
+    public void setID(int x)
+    {
+        this.id = x;        
+    }
+    
+    
 	public String getType() {
 		// TODO Auto-generated method stub
 		return this.type;

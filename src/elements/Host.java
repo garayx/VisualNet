@@ -6,7 +6,7 @@ public class Host extends Node
 {
     private ArrayList<NIC> nics;
     //private static int _id = 0;
-    private final int id;
+    private int id;
     private String hid;
     private String type = "Host";
     private String routeType = "";
@@ -55,6 +55,10 @@ public class Host extends Node
     public int getID()
     {
         return this.id;        
+    }
+    public void setID(int x)
+    {
+        this.id = x;        
     }
 	public String getType() {
 		// TODO Auto-generated method stub

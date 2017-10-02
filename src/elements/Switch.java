@@ -24,7 +24,7 @@ public class Switch extends Node
    
     private String dpid;
     //private static int _id = 0;
-    private final int id;
+    private int id;
     private String sid;
     private String type = "Switch";
     private String routeType = "";
@@ -92,6 +92,10 @@ public class Switch extends Node
     public int getID()
     {
         return this.id;        
+    }
+    public void setID(int x)
+    {
+        this.id = x;        
     }
     /**
      * @return the sid

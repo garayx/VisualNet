@@ -30,6 +30,14 @@ public class Link {
 	public void setPort_right(int x){
 		this.portRight = x;
 	}
+	public int getPort_left(){
+		return this.portLeft;
+	}
+	public int getPort_right(){
+		return this.portRight;
+	}
+	
+	
 	public void setCapacity(int x){
 		this.capacity = x;
 	}

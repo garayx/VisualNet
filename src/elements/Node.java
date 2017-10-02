@@ -39,6 +39,13 @@ public abstract class Node {
 		Connections.put(node, nic);
 		return nic;
 	}
+	
+	public NIC addConnection(Node node, int num) {
+		NIC nic = new NIC(node.getMAC(), node.getIP(), num);
+		Connections.put(node, nic);
+		return nic;
+	}
+	
 	// TODO
 	public void removeConnection(Node x){
 //		for(Map.Entry<Node, NIC> entry: Connections.entrySet()){
@@ -168,4 +175,13 @@ public abstract class Node {
     public void setEVCWScore(double num){
     	this.evcwScore = num;
     }
+
+	public void setIP(String x) {
+		// TODO Auto-generated method stub
+		this.ip = x;
+	}
+	public void setMAC(String x) {
+		// TODO Auto-generated method stub
+		this.mac = x;
+	}
 }

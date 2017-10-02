@@ -2,13 +2,17 @@ package visualnet;
 
 import java.awt.Font;
 import javax.swing.JFrame;
+import javax.swing.UIManager;
+
 import forms.VisualNetForm;
 
 public class VisualNet {
 
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub/
-		
+		 try {
+		UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+		 } catch (Exception e) { }
         System.setProperty("org.graphstream.ui.renderer", "org.graphstream.ui.j2dviewer.J2DGraphRenderer");
         
         common.CommonData.initialize();
