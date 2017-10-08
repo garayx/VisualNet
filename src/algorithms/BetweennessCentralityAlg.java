@@ -24,17 +24,19 @@ public class BetweennessCentralityAlg {
 		
 		BetweennessCentrality<Node, Link> ranker = new BetweennessCentrality<Node, Link>(g);
 		ranker.setRemoveRankScoresOnFinalize(false);
+		ranker.setNormalizeRankings(false);
+		
 //		if(withWeights){
 //			System.out.println("WITH WEIGHTS");
 //			ranker.setEdgeWeights(getWeights(g));
 //		}
 		ranker.evaluate();
-
 		Iterator<Node> nodeItearator = g.getVertices().iterator();
 		while (nodeItearator.hasNext()) {
 			Node tmpnode = nodeItearator.next();
 			nodeAvgBC += ranker.getVertexRankScore(tmpnode);
-			nodeBC.put(tmpnode, ranker.getVertexRankScore(tmpnode));
+			double score = (ranker.getVertexRankScore(tmpnode) / 2) / (((g.getVertexCount() - 1)*(g.getVertexCount()-2)) / 2);
+			nodeBC.put(tmpnode, score);
 			tmpnode.setBCScore(ranker.getVertexRankScore(tmpnode));
 		}
 		Iterator<Link> linkItearator = g.getEdges().iterator();

@@ -8,6 +8,7 @@ import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.awt.geom.Ellipse2D;
 import java.awt.image.BufferedImage;
+import java.lang.reflect.Method;
 
 import javax.swing.ImageIcon;
 import javax.swing.JMenuItem;
@@ -21,7 +22,7 @@ import elements.Link;
 import elements.Node;
 
 public class PopupViewerMenu extends JPopupMenu{
-	
+	public boolean refreshGraph = false;
 	public PopupViewerMenu(EditingModalGraphMouse<Node, Link> graphMouse) {
 		JRadioButtonMenuItem hostItem = new JRadioButtonMenuItem("Host", createIcon("host"));
 		hostItem.setSelected(false);
@@ -103,6 +104,21 @@ public class PopupViewerMenu extends JPopupMenu{
             }
         });
         
+//        JMenuItem refreshGraphItem = new JMenuItem("Refresh Graph");
+//        refreshGraphItem.addActionListener(new ActionListener()
+//        {
+//            @Override
+//            public void actionPerformed(ActionEvent e)
+//            {
+//                //VisualNetForm.refreshGraph();
+//                //Method m = VisualNetForm.class.getDeclaredMethod(refreshGraph());
+//            	//VisualNetForm d = new VisualNetForm();
+//            	//Method m = VisualNetForm.class.getDeclaredMethod("refreshGraph");
+//            	
+//            	
+//            }
+//        });
+        
         
 		add(editModeItem);
 		add(pickModeItem);
@@ -111,8 +127,8 @@ public class PopupViewerMenu extends JPopupMenu{
 		add(hostItem);
 		add(switchItem);
 		add(controllerItem);
-		
-		
+//		this.addSeparator();
+//		add(refreshGraphItem);
 		
 	}
 	

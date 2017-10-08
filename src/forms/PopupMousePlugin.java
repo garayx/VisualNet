@@ -127,29 +127,29 @@ public class PopupMousePlugin<V,E> extends AbstractPopupGraphMousePlugin
 //                        }
 //                    });
                     
-                    JMenuItem changeColor = new JMenuItem("Change Color");
-                    changeColor.addActionListener(new ActionListener()
-                    {
-                        @Override
-                        public void actionPerformed(ActionEvent e)
-                        {
-                            
-                            Color color = JColorChooser.showDialog(null, "Select Color", sw.getColor());
-                            
-                            
-                            if( color != null )
-                            {
-                                sw.setColor(color);
-                                ve.repaint();
-                            }
-                        }
-                    });
+//                    JMenuItem changeColor = new JMenuItem("Change Color");
+//                    changeColor.addActionListener(new ActionListener()
+//                    {
+//                        @Override
+//                        public void actionPerformed(ActionEvent e)
+//                        {
+//                            
+//                            Color color = JColorChooser.showDialog(null, "Select Color", sw.getColor());
+//                            
+//                            
+//                            if( color != null )
+//                            {
+//                                sw.setColor(color);
+//                                ve.repaint();
+//                            }
+//                        }
+//                    });
                                         
 //                    menu.add(routingItem);            
 //                    menu.add(routeTypeItem);
 //                    menu.add(ipMacItem);
 //                    menu.add(domainIndex);
-                    menu.add(changeColor);
+                    //menu.add(changeColor);
                 }
                 else if (v instanceof Host)
                 {
@@ -168,30 +168,13 @@ public class PopupMousePlugin<V,E> extends AbstractPopupGraphMousePlugin
                             
                             n.removeNode();
                             
-//                            if(n instanceof Host)
-//                            {
-//                            	// TODO
-////                                common.CommonData.macAddresses.remove( ((Host)n).getNics().get(0).getMac() );
-////                                common.CommonData.ipAddresses.remove( ((Host)n).getNics().get(0).getIp() );                                
-//                            }
                             
                             n.getConnections().keySet().stream().forEach((node) ->
                             {                                
                                 node.removeConnection(n);
                             });          
-                            // TODO 
                             
-                            
-                            
-                            
-                            
-                            
-                            
-                            
-                            
-                            
-                            
-                            //common.CommonData.idList.get(n.getType()).remove(n.getID());
+
                             common.CommonData.idList.remove(n.getType(), n.getID());
                             
                             
@@ -205,23 +188,6 @@ public class PopupMousePlugin<V,E> extends AbstractPopupGraphMousePlugin
                         			}
                         		}
                         	}
-                            
-                            
-                            
-                            
-                            
-                            
-                            
-                            
-                            
-                            
-                            
-                            
-                            
-                            
-                            
-                            // TODO create func to decrease host/switch/controller num
-                            
                             if(n instanceof Host){
                             	common.CommonData.hostsCount -= 1;
                             } else if (n instanceof Switch){
@@ -232,85 +198,145 @@ public class PopupMousePlugin<V,E> extends AbstractPopupGraphMousePlugin
                             
                             
                             forms.VisualNetForm.updateSidePnl();
-                            
+                            forms.VisualNetForm.initToplbl(n.getToolTip()+" successfully removed!");
                             
                             ve.repaint();
                         }
                     });
                               
-                    JMenuItem setSourceItem = new JMenuItem("Set as Source Node");
-                    setSourceItem.addActionListener(new ActionListener()
-                    {
-                        @Override
-                        public void actionPerformed(ActionEvent e)
-                        {
-                        	if(CommonData.sourceNode == null){
-	                      	  CommonData.sourceNode = n;
-	                      	  n.setRouteType("src");
-	                      	  ve.repaint();
-                        	} else {
-                        		CommonData.sourceNode.setRouteType("");
-  	                      	  	CommonData.sourceNode = n;
-	  	                      	n.setRouteType("src");
-	  	                      	ve.repaint();
-                        	}
-                        }
-                    });
+//                    JMenuItem setSourceItem = new JMenuItem("Set as Source Node");
+//                    setSourceItem.addActionListener(new ActionListener()
+//                    {
+//                        @Override
+//                        public void actionPerformed(ActionEvent e)
+//                        {
+//                        	if(CommonData.sourceNode == null){
+//	                      	  CommonData.sourceNode = n;
+//	                      	  n.setRouteType("src");
+//	                      	  ve.repaint();
+//                        	} else {
+//                        		CommonData.sourceNode.setRouteType("");
+//  	                      	  	CommonData.sourceNode = n;
+//	  	                      	n.setRouteType("src");
+//	  	                      	ve.repaint();
+//                        	}
+//                        }
+//                    });
                     
-                    JMenuItem setDestinationItem = new JMenuItem("Set as Destination Node");
-                    setDestinationItem.addActionListener(new ActionListener()
-                    {
-                        @Override
-                        public void actionPerformed(ActionEvent e)
-                        {
-                        	if(CommonData.destinationNode == null){
-		                      	  CommonData.destinationNode = n;
-		                      	  n.setRouteType("dest");
-		                      	  ve.repaint();
-                        	} else {
-                        		CommonData.destinationNode.setRouteType("");
-  	                      	  	CommonData.destinationNode = n;
-	  	                      	n.setRouteType("dest");
-	  	                      	ve.repaint();
-                        	}
-                        }
-                    });
+//                    JMenuItem setDestinationItem = new JMenuItem("Set as Destination Node");
+//                    setDestinationItem.addActionListener(new ActionListener()
+//                    {
+//                        @Override
+//                        public void actionPerformed(ActionEvent e)
+//                        {
+//                        	if(CommonData.destinationNode == null){
+//		                      	  CommonData.destinationNode = n;
+//		                      	  n.setRouteType("dest");
+//		                      	  ve.repaint();
+//                        	} else {
+//                        		CommonData.destinationNode.setRouteType("");
+//  	                      	  	CommonData.destinationNode = n;
+//	  	                      	n.setRouteType("dest");
+//	  	                      	ve.repaint();
+//                        	}
+//                        }
+//                    });
                     
-                    /*JMenuItem renameItem = new JMenuItem("Rename");
-                    renameItem.addActionListener(new ActionListener()
-                    {
-                        @Override
-                        public void actionPerformed(ActionEvent e)
+//                    menu.add(setSourceItem);
+//                    menu.add(setDestinationItem);
+                    
+                    
+                    
+                    if(n == CommonData.sourceNode){
+                        JMenuItem setRemoveSourceItem = new JMenuItem("Clear Source Node");
+                        setRemoveSourceItem.addActionListener(new ActionListener()
                         {
-                            String name = JOptionPane.showInputDialog("Enter node name:");
-                            
-                            if( name != null && name.isEmpty() == false )
+                            @Override
+                            public void actionPerformed(ActionEvent e)
                             {
-                                if( common.CommonData.idList.get(n.getType()).contains(name) == false )
-                                {
-                                                                        
-                                    common.CommonData.idList.get(n.getType()).remove(n.getID());
-                                    common.CommonData.switches.remove(n.getID());
-                                    
-                                    n.setID(name);
-                                    
-                                    common.CommonData.idList.get(n.getType()).add(name);
-                                    common.CommonData.switches.add(n.getID());
-                                    
-                                                                
-                                    ve.repaint();
-                                }
-                                else
-                                {
-                                    JOptionPane.showMessageDialog(null, "Node name exists");
-                                }
+                            	if(CommonData.sourceNode != null){
+                            		CommonData.sourceNode.setRouteType("");
+      	                      	  	CommonData.sourceNode = null;
+    	  	                      	ve.repaint();
+    	  	                      forms.VisualNetForm.initToplbl("Source node cleared!");
+                            	}
                             }
-                        }
-                    });*/
+                        });
+                        menu.add(setRemoveSourceItem);
+                    } else {
+                    	if(CommonData.destinationNode != n){
+                        JMenuItem setSourceItem = new JMenuItem("Set as Source Node");
+                        setSourceItem.addActionListener(new ActionListener()
+                        {
+                            @Override
+                            public void actionPerformed(ActionEvent e)
+                            {
+                            	if(CommonData.sourceNode == null){
+    	                      	  CommonData.sourceNode = n;
+    	                      	  n.setRouteType("src");
+    	                      	  ve.repaint();
+    	                      	 forms.VisualNetForm.initToplbl(n.getToolTip()+" successfully set as Source node!");
+                            	} else {
+                            		CommonData.sourceNode.setRouteType("");
+      	                      	  	CommonData.sourceNode = n;
+    	  	                      	n.setRouteType("src");
+    	  	                      forms.VisualNetForm.initToplbl(n.getToolTip()+" successfully set as Source node!");
+    	  	                      	ve.repaint();
+                            	}
+                            }
+                        });
+                        menu.add(setSourceItem);
+                    	} else {
+                    		
+                    	}
+                    }
+                    if(n == CommonData.destinationNode){
+                        JMenuItem setRemoveDestinationItem = new JMenuItem("Clear Destination Node");
+                        setRemoveDestinationItem.addActionListener(new ActionListener()
+                        {
+                            @Override
+                            public void actionPerformed(ActionEvent e)
+                            {
+                            	if(CommonData.destinationNode != null){
+                            		CommonData.destinationNode.setRouteType("");
+      	                      	  	CommonData.destinationNode = null;
+    	  	                      	ve.repaint();
+    	  	                      forms.VisualNetForm.initToplbl("Destination node cleared!");
+                            	}
+                            	
+                            }
+                        });
+                        menu.add(setRemoveDestinationItem);
+                    } else {
+                    	if(CommonData.sourceNode != n){
+                        JMenuItem setDestinationItem = new JMenuItem("Set as Destination Node");
+                        setDestinationItem.addActionListener(new ActionListener()
+                        {
+                            @Override
+                            public void actionPerformed(ActionEvent e)
+                            {
+                            	if(CommonData.destinationNode == null){
+    		                      	  CommonData.destinationNode = n;
+    		                      	  n.setRouteType("dest");
+    		                      	  ve.repaint();
+    		                      	forms.VisualNetForm.initToplbl(n.getToolTip()+" successfully set as Destination node!");
+                            	} else {
+                            		CommonData.destinationNode.setRouteType("");
+      	                      	  	CommonData.destinationNode = n;
+    	  	                      	n.setRouteType("dest");
+    	  	                      	ve.repaint();
+    	  	                      forms.VisualNetForm.initToplbl(n.getToolTip()+" successfully set as Destination node!");
+                            	}
+                            }
+                        });
+                        menu.add(setDestinationItem);
+                    	}
+                    }
                     
-                    //menu.add(renameItem);
-                    menu.add(setSourceItem);
-                    menu.add(setDestinationItem);
+                    
+                    
+                    
+                    
                     menu.add(removeItem);
                     
                 }
@@ -339,6 +365,7 @@ public class PopupMousePlugin<V,E> extends AbstractPopupGraphMousePlugin
                             	l.setCapacity(Integer.parseInt(capStr));
                             
                             ve.repaint();
+                            forms.VisualNetForm.initToplbl(l.toString()+" capacity changed to "+ Integer.parseInt(capStr)+"!");
                         }
                     });
                     
@@ -371,6 +398,7 @@ public class PopupMousePlugin<V,E> extends AbstractPopupGraphMousePlugin
                         	}
                             
                             ve.repaint();
+                            forms.VisualNetForm.initToplbl(l.toString()+" removed!");
                         }
                     });
                     

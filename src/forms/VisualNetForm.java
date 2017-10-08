@@ -126,13 +126,7 @@ public class VisualNetForm extends javax.swing.JFrame implements GraphMouseListe
     // picked stated for edges and nodes
     private PickedState<Node> pickedState_ = null;
     private PickedState<Link> pickedStateLink_ = null;
-    //static String mouseMode;
     
-    
-    
-    // 
-    // TODO Run algorithms (atleast randomWalks with threads)
-    // TODO restrict create loop edges (node to same node)
 	public VisualNetForm()
     {
         initComponents();
@@ -264,10 +258,12 @@ public class VisualNetForm extends javax.swing.JFrame implements GraphMouseListe
 			}
         	@Override
         	public void mousePressed(MouseEvent e) {
-        		Object n = viewer.getPickSupport().getVertex(layout, e.getPoint().getX(), e.getPoint().getY());
-        		Object edge = viewer.getPickSupport().getEdge(layout, e.getPoint().getX(), e.getPoint().getY());
+//        		Object n = viewer.getPickSupport().getVertex(layout, e.getPoint().getX(), e.getPoint().getY());
+//        		Object edge = viewer.getPickSupport().getEdge(layout, e.getPoint().getX(), e.getPoint().getY());
 	            if (e.getButton() == MouseEvent.BUTTON3)
 	            {
+	        		Object n = viewer.getPickSupport().getVertex(layout, e.getPoint().getX(), e.getPoint().getY());
+	        		Object edge = viewer.getPickSupport().getEdge(layout, e.getPoint().getX(), e.getPoint().getY());
 	            	if(n instanceof Node){
 	            		//System.out.println("Instance of node");
 	            	} else if (edge instanceof Link){
@@ -284,10 +280,12 @@ public class VisualNetForm extends javax.swing.JFrame implements GraphMouseListe
 			public void mouseReleased(MouseEvent e) {
 				showPickedNode();
 				showPickedEdge();
-        		Object n = viewer.getPickSupport().getVertex(layout, e.getPoint().getX(), e.getPoint().getY());
-        		Object edge = viewer.getPickSupport().getEdge(layout, e.getPoint().getX(), e.getPoint().getY());
+//        		Object n = viewer.getPickSupport().getVertex(layout, e.getPoint().getX(), e.getPoint().getY());
+//        		Object edge = viewer.getPickSupport().getEdge(layout, e.getPoint().getX(), e.getPoint().getY());
 	            if (e.getButton() == MouseEvent.BUTTON3)
 	            {
+	        		Object n = viewer.getPickSupport().getVertex(layout, e.getPoint().getX(), e.getPoint().getY());
+	        		Object edge = viewer.getPickSupport().getEdge(layout, e.getPoint().getX(), e.getPoint().getY());
 	            	if(n instanceof Node){
 	            		//System.out.println("Instance of node");
 	            	} else if (edge instanceof Link){
@@ -302,6 +300,12 @@ public class VisualNetForm extends javax.swing.JFrame implements GraphMouseListe
 		    	PopupViewerMenu menu = new PopupViewerMenu(graphMouse);
 		    	//System.out.println("doPop");
 		        menu.show(e.getComponent(), e.getX(), e.getY());
+		        //menu.getSe
+//		        if(menu.refreshGraph == true){
+//		        	//System.out.println("kek");
+//		        	refreshGraph();
+//		        	menu.refreshGraph = false;
+//		        }
 		    }
         });
         
@@ -1014,6 +1018,8 @@ public class VisualNetForm extends javax.swing.JFrame implements GraphMouseListe
         });
         menuFile.add(newGraphItem);
         
+        menuFile.addSeparator();
+        
         JMenu saveToMenu = new JMenu("Save To");
         menuFile.add(saveToMenu);
 
@@ -1054,7 +1060,7 @@ public class VisualNetForm extends javax.swing.JFrame implements GraphMouseListe
         });
         
         loadFromMenu.add(importItem);
-        
+        menuFile.addSeparator();
         
         //newGraph()
         JMenuItem closeItem = new JMenuItem("Close");
@@ -1111,7 +1117,7 @@ public class VisualNetForm extends javax.swing.JFrame implements GraphMouseListe
 
         JMenu nodeMenu = new JMenu("Node Type");
 
-        ButtonGroup nodeGroup = new ButtonGroup();
+        //ButtonGroup nodeGroup = new ButtonGroup();
 
         JRadioButtonMenuItem hostItem = new JRadioButtonMenuItem("Host");
         hostItem.setSelected(false);
@@ -1126,12 +1132,13 @@ public class VisualNetForm extends javax.swing.JFrame implements GraphMouseListe
                 {
                     //common.CommonData.selectedNode = common.CommonData.NodeType.Host;
                 	common.CommonData.selectedNode = "Host";
+                	hostItem.setSelected(false);
                 }
             }
         });
 
         JRadioButtonMenuItem switchItem = new JRadioButtonMenuItem("Switch");
-        switchItem.setSelected(true);
+        switchItem.setSelected(false);
         nodeMenu.add(switchItem);
 
         switchItem.addItemListener(new ItemListener()
@@ -1143,6 +1150,7 @@ public class VisualNetForm extends javax.swing.JFrame implements GraphMouseListe
                 {
                     //common.CommonData.selectedNode = common.CommonData.NodeType.Switch;
                     common.CommonData.selectedNode = "Switch";
+                    switchItem.setSelected(false);
                 }
             }
         });
@@ -1160,13 +1168,14 @@ public class VisualNetForm extends javax.swing.JFrame implements GraphMouseListe
                 {
                     //common.CommonData.selectedNode = common.CommonData.NodeType.Controller;
                     common.CommonData.selectedNode = "Controller";
+                    controllerItem.setSelected(false);
                 }
             }
         });
 
-        nodeGroup.add(hostItem);
-        nodeGroup.add(switchItem);
-        nodeGroup.add(controllerItem);
+        //nodeGroup.add(hostItem);
+        //nodeGroup.add(switchItem);
+        //nodeGroup.add(controllerItem);
 
         common.CommonData.selectedNode = "Switch";
 
@@ -1219,6 +1228,10 @@ public class VisualNetForm extends javax.swing.JFrame implements GraphMouseListe
 				} 
             }
         });
+        
+        
+        menuAlgs.addSeparator();
+        
         // spanning tree selector
         JMenuItem spanningTreeItem = new JMenuItem("Spanning Tree");
         menuAlgs.add(spanningTreeItem);
@@ -1247,6 +1260,9 @@ public class VisualNetForm extends javax.swing.JFrame implements GraphMouseListe
             	}
             }
         });
+        
+        
+        menuAlgs.addSeparator();
         
         // Betweenness centrality
         JMenuItem betweennessCentralityItem = new JMenuItem("Betweenness Centrality");
@@ -1442,6 +1458,7 @@ public class VisualNetForm extends javax.swing.JFrame implements GraphMouseListe
         toolsMenu.add(graphMenu);        
         toolsMenu.add(networkMenu);
         toolsMenu.add(layoutMenu);
+        toolsMenu.addSeparator();
         toolsMenu.add(refreshGraphItem);
         
         this.menuBar.add(nodeMenu);
@@ -1478,7 +1495,7 @@ public class VisualNetForm extends javax.swing.JFrame implements GraphMouseListe
 		common.CommonData.newEdgesList = null;
 		common.CommonData.edgesList = null;
 		// update top panel
-		this.initToplbl("");
+		initToplbl("");
 		// update side pnl
 		updateSidePnl();
 		// repaint the graph
@@ -1581,7 +1598,7 @@ public class VisualNetForm extends javax.swing.JFrame implements GraphMouseListe
     	}
 		// update topLBL
     	this.viewer.repaint();
-    	this.initToplbl(strTmp.toString());
+    	initToplbl(strTmp.toString());
     }
     
  /**
@@ -1650,7 +1667,7 @@ public class VisualNetForm extends javax.swing.JFrame implements GraphMouseListe
     	}
 		// update topLBL
     	this.viewer.repaint();
-    	this.initToplbl(strTmp.toString());
+    	initToplbl(strTmp.toString());
     }
     /**
      * generateRandomWalk method
@@ -1716,7 +1733,7 @@ public class VisualNetForm extends javax.swing.JFrame implements GraphMouseListe
     	}
     	this.viewer.repaint();
     	// update topLBL
-    	this.initToplbl(strTmp.toString());
+    	initToplbl(strTmp.toString());
     }
 
     /**
@@ -2417,7 +2434,7 @@ public class VisualNetForm extends javax.swing.JFrame implements GraphMouseListe
 			
 		    JScrollPane scrollPane = new JScrollPane(textpane,JScrollPane.VERTICAL_SCROLLBAR_ALWAYS,
 		            JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
-		    JOptionPane.showMessageDialog(null, scrollPane, "Selected Nodes Details", JOptionPane.PLAIN_MESSAGE);
+		    JOptionPane.showMessageDialog(null, scrollPane, "Selected Links Details", JOptionPane.PLAIN_MESSAGE);
 		}
 	}
 	/**
@@ -2435,7 +2452,7 @@ public class VisualNetForm extends javax.swing.JFrame implements GraphMouseListe
 	 * method to update top label
 	 * @param lbltext
 	 */
-	private void initToplbl(String lbltext){
+	public static void initToplbl(String lbltext){
 		pnlTop.removeAll();
 		JLabel lblTop = null;
 		
@@ -2551,11 +2568,11 @@ public class VisualNetForm extends javax.swing.JFrame implements GraphMouseListe
 			JOptionPane.showMessageDialog(null, "Invalid file selected please select JSON file.",
 					"File error", JOptionPane.ERROR_MESSAGE);
         }
+		
+		
+		
+		
 	}
-	
-	
-	
-	
 	
 	
 	//@SuppressWarnings("unchecked")
@@ -2659,7 +2676,7 @@ public class VisualNetForm extends javax.swing.JFrame implements GraphMouseListe
 	// panels
     private javax.swing.JMenuBar menuBar;
     private javax.swing.JPanel pnlMain;
-    private javax.swing.JPanel pnlTop;
+    private static javax.swing.JPanel pnlTop;
     private javax.swing.JPanel pnlGraphProperties;
     // labels
     private static javax.swing.JLabel lblSwitchesNumber;
@@ -2788,6 +2805,10 @@ public class VisualNetForm extends javax.swing.JFrame implements GraphMouseListe
 //    		return false;
 //    	}
 //    }
+    
+    
+    
+
 }
 
 	

@@ -28,12 +28,14 @@ public class EigenvectorCentralityAlg {
 		ec.setEdgeWeights(weights);
 		}
 		ec.acceptDisconnectedGraph(true);
+		
 		ec.evaluate();
 		Iterator<Node> nodeItearator = g.getVertices().iterator();
 		while (nodeItearator.hasNext()) {
 			Node tmpnode = nodeItearator.next();
 			//nodeAvgEC += ec.getVertexRankScore(tmpnode);
 			 if(ec.getVertexScore(tmpnode) > highestEVCscore){
+				 //highestEVCscore = ec.getVertexScore(tmpnode);
 				 highestEVCscore = ec.getVertexScore(tmpnode);
 				 highestEVCnode = tmpnode;
 			 }

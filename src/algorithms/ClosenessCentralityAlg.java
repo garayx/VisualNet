@@ -23,7 +23,10 @@ public class ClosenessCentralityAlg {
 		}
 	};
 	public ClosenessCentralityAlg(Graph<Node, Link> g){
+		//weighted
 		ClosenessCentrality<Node, Link> cc = new ClosenessCentrality<Node, Link>(g, weights);
+		//unweighted
+		//ClosenessCentrality<Node, Link> cc = new ClosenessCentrality<Node, Link>(g);
 		 Iterator<Node> nodeItearator = g.getVertices().iterator();
 		 
 		 //double highestCCscore = 0.0;

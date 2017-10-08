@@ -52,18 +52,24 @@ public class RandomGraphGenerator
         {
             for( int j = 0; j < this.numNodes; j++)
             {
-                if( r.nextGaussian() > beta )
+                if( r.nextGaussian() > beta)
                 {
                     
                     common.CommonData.nodeLeft = (Node)nodes[i];
                     common.CommonData.nodeRight = (Node)nodes[j];
-                                        
-                    if( CommonData.nodeLeft.equals(CommonData.nodeRight) == false )
+//                    System.out.println(common.CommonData.nodeLeft.getToolTip()+" "+
+//                    		common.CommonData.nodeRight.getToolTip() + " " +
+//                    graph.findEdge(common.CommonData.nodeLeft, common.CommonData.nodeRight
+//                    		));
+                    if(CommonData.nodeLeft.equals(CommonData.nodeRight) == false)
                     {
-                    
+                    	// if there no same edge created
+                    	if(graph.findEdge(common.CommonData.nodeLeft, common.CommonData.nodeRight) == null){
+                    		
                         Link l = edgeFactory.create();
 
-                        graph.addEdge(l, common.CommonData.nodeLeft, common.CommonData.nodeRight, EdgeType.UNDIRECTED);           
+                        graph.addEdge(l, common.CommonData.nodeLeft, common.CommonData.nodeRight, EdgeType.UNDIRECTED);       
+                    	}
                     }
                                                
                 }

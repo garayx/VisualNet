@@ -1,437 +1,401 @@
 {
   "nodes_connections" : [ {
-    "nicIp" : "10.0.0.9",
+    "nicIp" : "10.0.0.3",
     "src" : "h2",
     "nicPort" : 1,
-    "dest" : "s4",
-    "nicMac" : "38:40:bc:b8:8e:8f"
-  }, {
-    "nicIp" : "10.0.0.9",
-    "src" : "s3",
-    "nicPort" : 3,
-    "dest" : "s4",
-    "nicMac" : "38:40:bc:b8:8e:8f"
-  }, {
-    "nicIp" : "10.0.0.13",
-    "src" : "s3",
-    "nicPort" : 5,
-    "dest" : "h1",
-    "nicMac" : "d2:a0:9c:1a:fb:ce"
-  }, {
-    "nicIp" : "10.0.0.7",
-    "src" : "s3",
-    "nicPort" : 1,
-    "dest" : "s2",
-    "nicMac" : "7e:ea:da:3f:7d:66"
-  }, {
-    "nicIp" : "10.0.0.6",
-    "src" : "s3",
-    "nicPort" : 2,
-    "dest" : "s1",
-    "nicMac" : "d8:9f:13:2f:86:01"
-  }, {
-    "nicIp" : "10.0.0.12",
-    "src" : "s3",
-    "nicPort" : 4,
-    "dest" : "c1",
-    "nicMac" : "d4:d2:7a:88:96:86"
-  }, {
-    "nicIp" : "10.0.0.14",
-    "src" : "s4",
-    "nicPort" : 6,
-    "dest" : "h2",
-    "nicMac" : "9c:96:ef:80:26:b1"
-  }, {
-    "nicIp" : "10.0.0.8",
-    "src" : "s4",
-    "nicPort" : 3,
     "dest" : "s3",
-    "nicMac" : "96:fc:5b:58:4e:e8"
+    "nicMac" : "cc:20:56:55:fd:81"
   }, {
-    "nicIp" : "10.0.0.7",
-    "src" : "s4",
-    "nicPort" : 1,
-    "dest" : "s2",
-    "nicMac" : "7e:ea:da:3f:7d:66"
-  }, {
-    "nicIp" : "10.0.0.6",
-    "src" : "s4",
-    "nicPort" : 2,
-    "dest" : "s1",
-    "nicMac" : "d8:9f:13:2f:86:01"
-  }, {
-    "nicIp" : "10.0.0.12",
-    "src" : "s4",
-    "nicPort" : 5,
-    "dest" : "c1",
-    "nicMac" : "d4:d2:7a:88:96:86"
-  }, {
-    "nicIp" : "10.0.0.10",
-    "src" : "s4",
-    "nicPort" : 5,
-    "dest" : "s5",
-    "nicMac" : "56:4f:4e:2b:c0:1f"
-  }, {
-    "nicIp" : "10.0.0.8",
-    "src" : "h1",
-    "nicPort" : 1,
-    "dest" : "s3",
-    "nicMac" : "96:fc:5b:58:4e:e8"
-  }, {
-    "nicIp" : "10.0.0.8",
-    "src" : "s2",
-    "nicPort" : 1,
-    "dest" : "s3",
-    "nicMac" : "96:fc:5b:58:4e:e8"
-  }, {
-    "nicIp" : "10.0.0.9",
-    "src" : "s2",
-    "nicPort" : 2,
-    "dest" : "s4",
-    "nicMac" : "38:40:bc:b8:8e:8f"
-  }, {
-    "nicIp" : "10.0.0.12",
-    "src" : "s2",
-    "nicPort" : 4,
-    "dest" : "c1",
-    "nicMac" : "d4:d2:7a:88:96:86"
-  }, {
-    "nicIp" : "10.0.0.15",
-    "src" : "s2",
-    "nicPort" : 5,
-    "dest" : "h3",
-    "nicMac" : "40:cb:ba:b0:d4:2f"
-  }, {
-    "nicIp" : "10.0.0.11",
-    "src" : "s2",
-    "nicPort" : 4,
-    "dest" : "s6",
-    "nicMac" : "94:87:00:44:7a:a6"
-  }, {
-    "nicIp" : "10.0.0.8",
-    "src" : "c1",
-    "nicPort" : 1,
-    "dest" : "s3",
-    "nicMac" : "96:fc:5b:58:4e:e8"
-  }, {
-    "nicIp" : "10.0.0.9",
-    "src" : "c1",
-    "nicPort" : 2,
-    "dest" : "s4",
-    "nicMac" : "38:40:bc:b8:8e:8f"
-  }, {
-    "nicIp" : "10.0.0.7",
-    "src" : "c1",
-    "nicPort" : 3,
-    "dest" : "s2",
-    "nicMac" : "7e:ea:da:3f:7d:66"
-  }, {
-    "nicIp" : "10.0.0.6",
-    "src" : "c1",
-    "nicPort" : 4,
-    "dest" : "s1",
-    "nicMac" : "d8:9f:13:2f:86:01"
-  }, {
-    "nicIp" : "10.0.0.10",
-    "src" : "c1",
-    "nicPort" : 5,
-    "dest" : "s5",
-    "nicMac" : "56:4f:4e:2b:c0:1f"
-  }, {
-    "nicIp" : "10.0.0.11",
-    "src" : "c1",
-    "nicPort" : 6,
-    "dest" : "s6",
-    "nicMac" : "94:87:00:44:7a:a6"
-  }, {
-    "nicIp" : "10.0.0.6",
-    "src" : "h4",
-    "nicPort" : 1,
-    "dest" : "s1",
-    "nicMac" : "d8:9f:13:2f:86:01"
-  }, {
-    "nicIp" : "10.0.0.18",
-    "src" : "s6",
-    "nicPort" : 4,
-    "dest" : "h6",
-    "nicMac" : "ac:29:ff:09:67:8d"
-  }, {
-    "nicIp" : "10.0.0.7",
-    "src" : "s6",
-    "nicPort" : 2,
-    "dest" : "s2",
-    "nicMac" : "7e:ea:da:3f:7d:66"
-  }, {
-    "nicIp" : "10.0.0.12",
-    "src" : "s6",
-    "nicPort" : 3,
-    "dest" : "c1",
-    "nicMac" : "d4:d2:7a:88:96:86"
-  }, {
-    "nicIp" : "10.0.0.10",
-    "src" : "s6",
-    "nicPort" : 2,
-    "dest" : "s5",
-    "nicMac" : "56:4f:4e:2b:c0:1f"
-  }, {
-    "nicIp" : "10.0.0.10",
-    "src" : "h5",
-    "nicPort" : 1,
-    "dest" : "s5",
-    "nicMac" : "56:4f:4e:2b:c0:1f"
-  }, {
-    "nicIp" : "10.0.0.11",
+    "nicIp" : "10.0.0.1",
     "src" : "h6",
     "nicPort" : 1,
+    "dest" : "s1",
+    "nicMac" : "6c:18:e7:48:ee:5b"
+  }, {
+    "nicIp" : "10.0.0.6",
+    "src" : "h1",
+    "nicPort" : 1,
     "dest" : "s6",
-    "nicMac" : "94:87:00:44:7a:a6"
+    "nicMac" : "f2:bd:77:ee:92:46"
+  }, {
+    "nicIp" : "10.0.0.5",
+    "src" : "s2",
+    "nicPort" : 4,
+    "dest" : "s5",
+    "nicMac" : "06:b2:70:95:fe:30"
+  }, {
+    "nicIp" : "10.0.0.7",
+    "src" : "s2",
+    "nicPort" : 4,
+    "dest" : "c1",
+    "nicMac" : "b2:0f:65:dc:d1:74"
+  }, {
+    "nicIp" : "10.0.0.11",
+    "src" : "s2",
+    "nicPort" : 5,
+    "dest" : "h4",
+    "nicMac" : "ca:79:9d:19:1d:30"
+  }, {
+    "nicIp" : "10.0.0.4",
+    "src" : "s2",
+    "nicPort" : 2,
+    "dest" : "s4",
+    "nicMac" : "b0:fb:22:64:68:ae"
+  }, {
+    "nicIp" : "10.0.0.1",
+    "src" : "s2",
+    "nicPort" : 2,
+    "dest" : "s1",
+    "nicMac" : "6c:18:e7:48:ee:5b"
+  }, {
+    "nicIp" : "10.0.0.12",
+    "src" : "s4",
+    "nicPort" : 5,
+    "dest" : "h5",
+    "nicMac" : "a0:2e:3b:13:92:33"
+  }, {
+    "nicIp" : "10.0.0.6",
+    "src" : "s4",
+    "nicPort" : 3,
+    "dest" : "s6",
+    "nicMac" : "f2:bd:77:ee:92:46"
+  }, {
+    "nicIp" : "10.0.0.7",
+    "src" : "s4",
+    "nicPort" : 4,
+    "dest" : "c1",
+    "nicMac" : "b2:0f:65:dc:d1:74"
+  }, {
+    "nicIp" : "10.0.0.2",
+    "src" : "s4",
+    "nicPort" : 1,
+    "dest" : "s2",
+    "nicMac" : "d6:e4:ce:2b:83:a4"
+  }, {
+    "nicIp" : "10.0.0.1",
+    "src" : "s4",
+    "nicPort" : 2,
+    "dest" : "s1",
+    "nicMac" : "6c:18:e7:48:ee:5b"
+  }, {
+    "nicIp" : "10.0.0.4",
+    "src" : "h5",
+    "nicPort" : 1,
+    "dest" : "s4",
+    "nicMac" : "b0:fb:22:64:68:ae"
+  }, {
+    "nicIp" : "10.0.0.7",
+    "src" : "s6",
+    "nicPort" : 3,
+    "dest" : "c1",
+    "nicMac" : "b2:0f:65:dc:d1:74"
   }, {
     "nicIp" : "10.0.0.8",
+    "src" : "s6",
+    "nicPort" : 4,
+    "dest" : "h1",
+    "nicMac" : "62:d8:6a:9c:77:11"
+  }, {
+    "nicIp" : "10.0.0.4",
+    "src" : "s6",
+    "nicPort" : 2,
+    "dest" : "s4",
+    "nicMac" : "b0:fb:22:64:68:ae"
+  }, {
+    "nicIp" : "10.0.0.1",
+    "src" : "s6",
+    "nicPort" : 2,
+    "dest" : "s1",
+    "nicMac" : "6c:18:e7:48:ee:5b"
+  }, {
+    "nicIp" : "10.0.0.7",
+    "src" : "s3",
+    "nicPort" : 2,
+    "dest" : "c1",
+    "nicMac" : "b2:0f:65:dc:d1:74"
+  }, {
+    "nicIp" : "10.0.0.9",
+    "src" : "s3",
+    "nicPort" : 3,
+    "dest" : "h2",
+    "nicMac" : "80:26:90:87:9c:29"
+  }, {
+    "nicIp" : "10.0.0.1",
+    "src" : "s3",
+    "nicPort" : 1,
+    "dest" : "s1",
+    "nicMac" : "6c:18:e7:48:ee:5b"
+  }, {
+    "nicIp" : "10.0.0.7",
+    "src" : "s5",
+    "nicPort" : 2,
+    "dest" : "c1",
+    "nicMac" : "b2:0f:65:dc:d1:74"
+  }, {
+    "nicIp" : "10.0.0.2",
+    "src" : "s5",
+    "nicPort" : 2,
+    "dest" : "s2",
+    "nicMac" : "d6:e4:ce:2b:83:a4"
+  }, {
+    "nicIp" : "10.0.0.10",
+    "src" : "s5",
+    "nicPort" : 3,
+    "dest" : "h3",
+    "nicMac" : "be:54:cb:f5:d3:da"
+  }, {
+    "nicIp" : "10.0.0.6",
+    "src" : "c1",
+    "nicPort" : 1,
+    "dest" : "s6",
+    "nicMac" : "f2:bd:77:ee:92:46"
+  }, {
+    "nicIp" : "10.0.0.3",
+    "src" : "c1",
+    "nicPort" : 2,
+    "dest" : "s3",
+    "nicMac" : "cc:20:56:55:fd:81"
+  }, {
+    "nicIp" : "10.0.0.5",
+    "src" : "c1",
+    "nicPort" : 3,
+    "dest" : "s5",
+    "nicMac" : "06:b2:70:95:fe:30"
+  }, {
+    "nicIp" : "10.0.0.2",
+    "src" : "c1",
+    "nicPort" : 4,
+    "dest" : "s2",
+    "nicMac" : "d6:e4:ce:2b:83:a4"
+  }, {
+    "nicIp" : "10.0.0.4",
+    "src" : "c1",
+    "nicPort" : 5,
+    "dest" : "s4",
+    "nicMac" : "b0:fb:22:64:68:ae"
+  }, {
+    "nicIp" : "10.0.0.1",
+    "src" : "c1",
+    "nicPort" : 6,
+    "dest" : "s1",
+    "nicMac" : "6c:18:e7:48:ee:5b"
+  }, {
+    "nicIp" : "10.0.0.2",
+    "src" : "h4",
+    "nicPort" : 1,
+    "dest" : "s2",
+    "nicMac" : "d6:e4:ce:2b:83:a4"
+  }, {
+    "nicIp" : "10.0.0.6",
+    "src" : "s1",
+    "nicPort" : 5,
+    "dest" : "s6",
+    "nicMac" : "f2:bd:77:ee:92:46"
+  }, {
+    "nicIp" : "10.0.0.3",
     "src" : "s1",
     "nicPort" : 2,
     "dest" : "s3",
-    "nicMac" : "96:fc:5b:58:4e:e8"
-  }, {
-    "nicIp" : "10.0.0.9",
-    "src" : "s1",
-    "nicPort" : 3,
-    "dest" : "s4",
-    "nicMac" : "38:40:bc:b8:8e:8f"
-  }, {
-    "nicIp" : "10.0.0.12",
-    "src" : "s1",
-    "nicPort" : 4,
-    "dest" : "c1",
-    "nicMac" : "d4:d2:7a:88:96:86"
-  }, {
-    "nicIp" : "10.0.0.16",
-    "src" : "s1",
-    "nicPort" : 5,
-    "dest" : "h4",
-    "nicMac" : "1e:2c:5c:58:b7:3d"
-  }, {
-    "nicIp" : "10.0.0.10",
-    "src" : "s1",
-    "nicPort" : 1,
-    "dest" : "s5",
-    "nicMac" : "56:4f:4e:2b:c0:1f"
+    "nicMac" : "cc:20:56:55:fd:81"
   }, {
     "nicIp" : "10.0.0.7",
+    "src" : "s1",
+    "nicPort" : 5,
+    "dest" : "c1",
+    "nicMac" : "b2:0f:65:dc:d1:74"
+  }, {
+    "nicIp" : "10.0.0.13",
+    "src" : "s1",
+    "nicPort" : 6,
+    "dest" : "h6",
+    "nicMac" : "0a:67:9d:55:8b:d2"
+  }, {
+    "nicIp" : "10.0.0.2",
+    "src" : "s1",
+    "nicPort" : 4,
+    "dest" : "s2",
+    "nicMac" : "d6:e4:ce:2b:83:a4"
+  }, {
+    "nicIp" : "10.0.0.4",
+    "src" : "s1",
+    "nicPort" : 4,
+    "dest" : "s4",
+    "nicMac" : "b0:fb:22:64:68:ae"
+  }, {
+    "nicIp" : "10.0.0.5",
     "src" : "h3",
     "nicPort" : 1,
-    "dest" : "s2",
-    "nicMac" : "7e:ea:da:3f:7d:66"
-  }, {
-    "nicIp" : "10.0.0.17",
-    "src" : "s5",
-    "nicPort" : 5,
-    "dest" : "h5",
-    "nicMac" : "b6:01:51:b2:73:40"
-  }, {
-    "nicIp" : "10.0.0.9",
-    "src" : "s5",
-    "nicPort" : 3,
-    "dest" : "s4",
-    "nicMac" : "38:40:bc:b8:8e:8f"
-  }, {
-    "nicIp" : "10.0.0.6",
-    "src" : "s5",
-    "nicPort" : 1,
-    "dest" : "s1",
-    "nicMac" : "d8:9f:13:2f:86:01"
-  }, {
-    "nicIp" : "10.0.0.12",
-    "src" : "s5",
-    "nicPort" : 4,
-    "dest" : "c1",
-    "nicMac" : "d4:d2:7a:88:96:86"
-  }, {
-    "nicIp" : "10.0.0.11",
-    "src" : "s5",
-    "nicPort" : 3,
-    "dest" : "s6",
-    "nicMac" : "94:87:00:44:7a:a6"
+    "dest" : "s5",
+    "nicMac" : "06:b2:70:95:fe:30"
   } ],
   "hosts" : [ {
-    "ip" : "10.0.0.14",
+    "ip" : "10.0.0.9",
     "id" : 2,
-    "mac" : "9c:96:ef:80:26:b1"
+    "mac" : "80:26:90:87:9c:29"
   }, {
     "ip" : "10.0.0.13",
-    "id" : 1,
-    "mac" : "d2:a0:9c:1a:fb:ce"
-  }, {
-    "ip" : "10.0.0.16",
-    "id" : 4,
-    "mac" : "1e:2c:5c:58:b7:3d"
-  }, {
-    "ip" : "10.0.0.17",
-    "id" : 5,
-    "mac" : "b6:01:51:b2:73:40"
-  }, {
-    "ip" : "10.0.0.18",
     "id" : 6,
-    "mac" : "ac:29:ff:09:67:8d"
+    "mac" : "0a:67:9d:55:8b:d2"
   }, {
-    "ip" : "10.0.0.15",
-    "id" : 3,
-    "mac" : "40:cb:ba:b0:d4:2f"
-  } ],
-  "switches" : [ {
     "ip" : "10.0.0.8",
-    "id" : 3,
-    "mac" : "96:fc:5b:58:4e:e8"
+    "id" : 1,
+    "mac" : "62:d8:6a:9c:77:11"
   }, {
-    "ip" : "10.0.0.9",
-    "id" : 4,
-    "mac" : "38:40:bc:b8:8e:8f"
-  }, {
-    "ip" : "10.0.0.7",
-    "id" : 2,
-    "mac" : "7e:ea:da:3f:7d:66"
+    "ip" : "10.0.0.12",
+    "id" : 5,
+    "mac" : "a0:2e:3b:13:92:33"
   }, {
     "ip" : "10.0.0.11",
-    "id" : 6,
-    "mac" : "94:87:00:44:7a:a6"
-  }, {
-    "ip" : "10.0.0.6",
-    "id" : 1,
-    "mac" : "d8:9f:13:2f:86:01"
+    "id" : 4,
+    "mac" : "ca:79:9d:19:1d:30"
   }, {
     "ip" : "10.0.0.10",
+    "id" : 3,
+    "mac" : "be:54:cb:f5:d3:da"
+  } ],
+  "switches" : [ {
+    "ip" : "10.0.0.2",
+    "id" : 2,
+    "mac" : "d6:e4:ce:2b:83:a4"
+  }, {
+    "ip" : "10.0.0.4",
+    "id" : 4,
+    "mac" : "b0:fb:22:64:68:ae"
+  }, {
+    "ip" : "10.0.0.6",
+    "id" : 6,
+    "mac" : "f2:bd:77:ee:92:46"
+  }, {
+    "ip" : "10.0.0.3",
+    "id" : 3,
+    "mac" : "cc:20:56:55:fd:81"
+  }, {
+    "ip" : "10.0.0.5",
     "id" : 5,
-    "mac" : "56:4f:4e:2b:c0:1f"
+    "mac" : "06:b2:70:95:fe:30"
+  }, {
+    "ip" : "10.0.0.1",
+    "id" : 1,
+    "mac" : "6c:18:e7:48:ee:5b"
   } ],
   "controllers" : [ {
-    "ip" : "10.0.0.12",
+    "ip" : "10.0.0.7",
     "id" : 1,
-    "mac" : "d4:d2:7a:88:96:86"
+    "mac" : "b2:0f:65:dc:d1:74"
   } ],
   "links" : [ {
-    "nodeLeft" : "s4",
-    "portRight" : 3,
-    "nodeRight" : "s1",
-    "portLeft" : 2,
-    "capacity" : 6
-  }, {
-    "nodeLeft" : "c1",
-    "portRight" : 5,
-    "nodeRight" : "s4",
-    "portLeft" : 2,
-    "capacity" : 2
-  }, {
-    "nodeLeft" : "s2",
+    "nodeLeft" : "s3",
     "portRight" : 1,
-    "nodeRight" : "s6",
+    "nodeRight" : "h2",
     "portLeft" : 3,
-    "capacity" : 8
-  }, {
-    "nodeLeft" : "s5",
-    "portRight" : 1,
-    "nodeRight" : "h5",
-    "portLeft" : 5,
-    "capacity" : 1
+    "capacity" : 9
   }, {
     "nodeLeft" : "c1",
     "portRight" : 4,
     "nodeRight" : "s2",
-    "portLeft" : 3,
-    "capacity" : 7
-  }, {
-    "nodeLeft" : "s2",
-    "portRight" : 1,
-    "nodeRight" : "h3",
-    "portLeft" : 5,
-    "capacity" : 4
-  }, {
-    "nodeLeft" : "s6",
-    "portRight" : 3,
-    "nodeRight" : "s5",
-    "portLeft" : 2,
-    "capacity" : 5
-  }, {
-    "nodeLeft" : "c1",
-    "portRight" : 3,
-    "nodeRight" : "s6",
-    "portLeft" : 6,
-    "capacity" : 9
-  }, {
-    "nodeLeft" : "s3",
-    "portRight" : 1,
-    "nodeRight" : "h1",
-    "portLeft" : 5,
-    "capacity" : 10
-  }, {
-    "nodeLeft" : "s6",
-    "portRight" : 1,
-    "nodeRight" : "h6",
     "portLeft" : 4,
-    "capacity" : 9
+    "capacity" : 3
   }, {
     "nodeLeft" : "c1",
-    "portRight" : 4,
-    "nodeRight" : "s3",
-    "portLeft" : 1,
-    "capacity" : 2
-  }, {
-    "nodeLeft" : "s2",
-    "portRight" : 1,
-    "nodeRight" : "s4",
-    "portLeft" : 2,
-    "capacity" : 4
-  }, {
-    "nodeLeft" : "s4",
-    "portRight" : 3,
-    "nodeRight" : "s3",
-    "portLeft" : 3,
-    "capacity" : 6
-  }, {
-    "nodeLeft" : "s4",
     "portRight" : 2,
-    "nodeRight" : "s5",
-    "portLeft" : 4,
-    "capacity" : 10
+    "nodeRight" : "s3",
+    "portLeft" : 2,
+    "capacity" : 1
   }, {
     "nodeLeft" : "s2",
-    "portRight" : 1,
-    "nodeRight" : "s3",
-    "portLeft" : 1,
-    "capacity" : 6
-  }, {
-    "nodeLeft" : "c1",
-    "portRight" : 4,
-    "nodeRight" : "s1",
-    "portLeft" : 4,
-    "capacity" : 6
-  }, {
-    "nodeLeft" : "s1",
     "portRight" : 1,
     "nodeRight" : "h4",
     "portLeft" : 5,
     "capacity" : 5
   }, {
-    "nodeLeft" : "s1",
+    "nodeLeft" : "s2",
     "portRight" : 1,
     "nodeRight" : "s5",
-    "portLeft" : 1,
+    "portLeft" : 3,
     "capacity" : 3
   }, {
     "nodeLeft" : "s4",
     "portRight" : 1,
-    "nodeRight" : "h2",
-    "portLeft" : 6,
-    "capacity" : 7
-  }, {
-    "nodeLeft" : "s3",
-    "portRight" : 2,
-    "nodeRight" : "s1",
-    "portLeft" : 2,
+    "nodeRight" : "h5",
+    "portLeft" : 5,
     "capacity" : 8
   }, {
     "nodeLeft" : "c1",
-    "portRight" : 4,
+    "portRight" : 2,
     "nodeRight" : "s5",
-    "portLeft" : 5,
+    "portLeft" : 3,
+    "capacity" : 1
+  }, {
+    "nodeLeft" : "s1",
+    "portRight" : 1,
+    "nodeRight" : "s2",
+    "portLeft" : 1,
+    "capacity" : 3
+  }, {
+    "nodeLeft" : "s6",
+    "portRight" : 1,
+    "nodeRight" : "h1",
+    "portLeft" : 4,
     "capacity" : 2
+  }, {
+    "nodeLeft" : "s1",
+    "portRight" : 1,
+    "nodeRight" : "s3",
+    "portLeft" : 2,
+    "capacity" : 6
+  }, {
+    "nodeLeft" : "c1",
+    "portRight" : 4,
+    "nodeRight" : "s4",
+    "portLeft" : 5,
+    "capacity" : 4
+  }, {
+    "nodeLeft" : "s4",
+    "portRight" : 4,
+    "nodeRight" : "s1",
+    "portLeft" : 2,
+    "capacity" : 6
+  }, {
+    "nodeLeft" : "s1",
+    "portRight" : 1,
+    "nodeRight" : "s6",
+    "portLeft" : 3,
+    "capacity" : 10
+  }, {
+    "nodeLeft" : "s5",
+    "portRight" : 1,
+    "nodeRight" : "h3",
+    "portLeft" : 3,
+    "capacity" : 6
+  }, {
+    "nodeLeft" : "c1",
+    "portRight" : 5,
+    "nodeRight" : "s1",
+    "portLeft" : 6,
+    "capacity" : 5
+  }, {
+    "nodeLeft" : "s1",
+    "portRight" : 1,
+    "nodeRight" : "h6",
+    "portLeft" : 6,
+    "capacity" : 6
+  }, {
+    "nodeLeft" : "c1",
+    "portRight" : 3,
+    "nodeRight" : "s6",
+    "portLeft" : 1,
+    "capacity" : 10
+  }, {
+    "nodeLeft" : "s6",
+    "portRight" : 3,
+    "nodeRight" : "s4",
+    "portLeft" : 2,
+    "capacity" : 1
+  }, {
+    "nodeLeft" : "s2",
+    "portRight" : 1,
+    "nodeRight" : "s4",
+    "portLeft" : 2,
+    "capacity" : 10
   } ]
 }
